@@ -9,10 +9,3 @@
 | Monad x402 facilitator | Exists and lists batch-settlement for Monad. Not called. |
 | Sponsor SDKs (Dynamic, Privy) | Not integrated. |
 | Indexer | Built on plain RPC. Not run against a live deployment. |
-
-## Adversarial Defense & Negative Invariant Proof
-
-- **Synthetic Negative Probe**: Rejected (`BLOCK`)
-- **Negative Invariant**: Kernel/solver strictly rejects tampered, forged, or unbound inputs (verdict !== "ALLOW")
-- **Defense Mechanism**: Policy engine rejected forged spend intent
-- **Proof Status**: PASS (Deterministic fail-closed rejection verified)
