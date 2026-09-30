@@ -1,0 +1,771 @@
+{
+  "generatedAt": "2026-09-30T04:41:20.372Z",
+  "verificationMode": "ANVIL_FORK_MONAD_TESTNET",
+  "note": "CreditVault run against the real x402BatchSettlement contract on a local Anvil fork of Monad testnet. State changes stay in the fork; nothing was broadcast to Monad. The token is MockAUSD. No facilitator was involved.",
+  "chainId": 10143,
+  "forkedFrom": "https://testnet-rpc.monad.xyz",
+  "contracts": {
+    "MockAUSD": "0x7fe8f693e40de8380a846a94b92b33d59bbb30c7",
+    "CreditVault": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "x402BatchSettlement": "0x4020074e9dF2ce1deE5A9C1b5c3f541D02a10003"
+  },
+  "accounts": {
+    "lender": "0x134A30A799d4846cD521a7641F1A12cAec0fD566",
+    "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+    "sponsor2": "0x2E73c124F2bC36593526D2f53415bb7D422dcA60",
+    "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+    "vendor": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+    "vendorAuthorizer": "0xd90057BABCbBB9ff0ed5DB28FD5361398b2219eA",
+    "customer": "0xD9E899573787F9B9Ab693A5E9861Ad2587EE2e08",
+    "keeper": "0x298D9F30F0fE143bBcD079A51d235bE879a49Df5"
+  },
+  "runs": [
+    {
+      "id": "run-01-channel",
+      "title": "Vault funds an x402 channel; agent signs vouchers; vendor claims; vendor refunds; reconcile books it",
+      "agentTokensChangeAusd": "0.00",
+      "escrowedAusd": "40.00",
+      "debtAfterFundAusd": "40.00",
+      "vendorReceivedAusd": "25.00",
+      "unbookedRefundAusd": "15.00",
+      "shareValueBeforeReconcileAusd": "5000.00",
+      "shareValueAfterReconcileAusd": "5000.00",
+      "debtAfterReconcileAusd": "25.00"
+    },
+    {
+      "id": "run-02-graduation",
+      "title": "Repayments raise the agent's tier; collateral supports more credit",
+      "tierBefore": 0,
+      "tierAfter": 1,
+      "ltvBpsBefore": 7500,
+      "ltvBpsAfter": 10000,
+      "repaidPrincipalAusd": "145.00",
+      "creditLimitBeforeAusd": "100.00",
+      "creditLimitAfterAusd": "245.00"
+    },
+    {
+      "id": "run-03-revenue",
+      "title": "A customer pays the agent through the vault; the loan is repaid first",
+      "debtBeforeAusd": "40.00",
+      "customerPaidAusd": "100.00",
+      "agentReceivedAusd": "60.00",
+      "debtAfterAusd": "0.00"
+    },
+    {
+      "id": "run-04-portable-record",
+      "title": "The record follows the agent to a new sponsor",
+      "sponsor2CreditLimitAusd": "100.00"
+    },
+    {
+      "id": "run-05-default",
+      "title": "An overdue line is liquidated; the default pins the agent to tier 0",
+      "debtAtLiquidationAusd": "40.33",
+      "returnedToSponsorAusd": "59.66",
+      "defaults": 1,
+      "tierAfter": 0,
+      "ltvBpsAfter": 7500
+    },
+    {
+      "id": "refusals",
+      "title": "Attempts refused by the vault or the real x402 contract",
+      "refusals": [
+        {
+          "attempt": "agent tries to fund a channel paying itself",
+          "expected": "ReceiverNotAllowed",
+          "refusedWith": "ReceiverNotAllowed"
+        },
+        {
+          "attempt": "agent tries to fund a wallet the sponsor never approved",
+          "expected": "ReceiverNotAllowed",
+          "refusedWith": "ReceiverNotAllowed"
+        },
+        {
+          "attempt": "agent funds 41 (cap is 40)",
+          "expected": "OverPerBorrowCap",
+          "refusedWith": "OverPerBorrowCap"
+        },
+        {
+          "attempt": "a wallet that is not the agent funds on the agent's line",
+          "expected": "LineInactive",
+          "refusedWith": "LineInactive"
+        },
+        {
+          "attempt": "agent funds past its credit ceiling",
+          "expected": "OverCreditLimit",
+          "refusedWith": "OverCreditLimit"
+        },
+        {
+          "attempt": "vendor claims a voucher signed by someone other than the agent",
+          "expected": "InvalidSignature",
+          "refusedWith": "InvalidSignature"
+        },
+        {
+          "attempt": "agent funds after revoke",
+          "expected": "LineInactive",
+          "refusedWith": "LineInactive"
+        },
+        {
+          "attempt": "a fresh agent asks for the same terms (base 90 on 100 collateral)",
+          "expected": "BadTerms",
+          "refusedWith": "BadTerms"
+        }
+      ]
+    }
+  ],
+  "x402Events": [
+    {
+      "event": "Deposited",
+      "tx": "0x05e3a7a85c677a9196ef6eb3ebc0f65796f5f9395427265f077af401620b729f",
+      "block": "66878637"
+    },
+    {
+      "event": "Claimed",
+      "tx": "0x715a4616703f332a7cd207f3fd612656c5d4e0a238545e84742b758bba7e3adb",
+      "block": "66878638"
+    },
+    {
+      "event": "Settled",
+      "tx": "0x1956e2c13e5bd888b67e50ae5310277255b0aa20f9c3ab071a9640e9a6ca1d4a",
+      "block": "66878639"
+    },
+    {
+      "event": "Claimed",
+      "tx": "0xcfbe1b5b7701bf043df0e365ef44fbf9fb362a458d631b9d2893bf45addaa5c7",
+      "block": "66878640"
+    },
+    {
+      "event": "Settled",
+      "tx": "0x20c59585b38b0b587e18b73080ae3eb3f1e6c9425e398dffad8b678b298852a8",
+      "block": "66878641"
+    },
+    {
+      "event": "Refunded",
+      "tx": "0x3692fa987a1290bc98ff31fbe0b8b7e27684a716426aab409197c2e65aa364c6",
+      "block": "66878642"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0x1361c8a3790b2815a885271885545c14de26e7c11b5850bca64eccee725107ac",
+      "block": "66878645"
+    },
+    {
+      "event": "Claimed",
+      "tx": "0x4766e1e6b97b64ef952104b81210e2514e85d3a911bea0fbea492cf28d90906a",
+      "block": "66878646"
+    },
+    {
+      "event": "Settled",
+      "tx": "0xaeb566c76b0e18875d1b1dfc5853289c6e909685ac41a36e3dce265c72695bef",
+      "block": "66878647"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0x90f497463a98302199eacb2f4880026585a16935d064c39c2706f7c3b6700554",
+      "block": "66878649"
+    },
+    {
+      "event": "Claimed",
+      "tx": "0xdbf65644582b9caeb1e2e57eea380bda0504d16ce535a7c50a0e9bddeb58e0be",
+      "block": "66878650"
+    },
+    {
+      "event": "Settled",
+      "tx": "0xe48de7a0335524b0e2589e91f60d2c0f334aaf5d44a5d4f35616c9efc78b9f94",
+      "block": "66878651"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0x1b26491b1ad232b6ae46c39acce90e60f964f71f8698e48f1794f90ad55b4dfc",
+      "block": "66878653"
+    },
+    {
+      "event": "Claimed",
+      "tx": "0xfa4a0b23f3dc3b9b6506aea2dcfabcef9b8779d2ab92feb9b876dbd6bff5b644",
+      "block": "66878654"
+    },
+    {
+      "event": "Settled",
+      "tx": "0x549135ce78e8aacc981597ef42fc4f54003483ad78bff4d343b662c4da67d330",
+      "block": "66878655"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0x08d04d94f12d9da4ef4f66d9add838e29e11aa3966bd66535342da87325f3701",
+      "block": "66878657"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0x41093b991f1db72c12a9234891720743c339a358664e11f61d874222ff76a61e",
+      "block": "66878659"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0xe0574c810e034f97252cc34e97beea90dcb8fbeef8752d26c1666875d9df8135",
+      "block": "66878660"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0x072db31b601e1eca991a47e2581986f8d0f94c3fdeb75355098f315f7036075f",
+      "block": "66878661"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0x96d8c4a8515656d6db18ce9b0dd670385da492f576774b07f322c2d66d45eb22",
+      "block": "66878662"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0xc4ee81b4910bf1c2ba9a9f08bd99110547239788f7bd5b8501e305f63f0058d6",
+      "block": "66878663"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0x4ae52d988ca61f12fbb83668039fdb267db0afb48fef8a7c74fb14e8fb862a49",
+      "block": "66878664"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0x5c1a884de9779bb38e2c1ffddc90dd18f53caf6f8a0047637dc5e9af2567fa99",
+      "block": "66878665"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0xeccf2867fa9d362ee69b977865e443b3055196848e6f4f9fa68890b040842cf8",
+      "block": "66878666"
+    },
+    {
+      "event": "Deposited",
+      "tx": "0xb6ecab4935220aa8f1f8f82c7810de2f76260fa329a270ebbf1fde56a20329b0",
+      "block": "66878670"
+    }
+  ],
+  "transactions": [
+    {
+      "step": "deploy MockAUSD (stand in for the real stablecoin)",
+      "hash": "0x22839997b6db558f80b6fa8457103f736ae62689dda2231fe3cbab2bca11946e",
+      "block": "66878622"
+    },
+    {
+      "step": "deploy CreditVault",
+      "hash": "0x4a22d4bab87f2b3d853f8e057332ac15d522bdc248aabbb4aad6e88aff7cf9bc",
+      "block": "66878623"
+    },
+    {
+      "step": "mint 10000 to lender",
+      "hash": "0x81a8e27ad28619e59df8dfdaddc1947b7801b1bf504772e6ced605fc627b39a1",
+      "block": "66878624"
+    },
+    {
+      "step": "mint 2000 to sponsor",
+      "hash": "0xee603fc192663f70486e91b6a4cd172fd3d093d3d825fe6e2cc63fe9d620d49f",
+      "block": "66878625"
+    },
+    {
+      "step": "mint 500 to sponsor2",
+      "hash": "0xd8bf8ef120d1d730caa0e89bcf5f0e3e1c9335fe4d8aa1d6b03322e8ff922a89",
+      "block": "66878626"
+    },
+    {
+      "step": "mint 5000 to customer",
+      "hash": "0xe13ae6a1a1d4f9071db27da08bd7b3efcefb1a6f64aaafd20174c48617beaba5",
+      "block": "66878627"
+    },
+    {
+      "step": "lender approves the vault",
+      "hash": "0xb0f355ce1596dd0b9dea65f09c9471abddcb9051e2bfa149e478dd1acec058bc",
+      "block": "66878628"
+    },
+    {
+      "step": "sponsor approves the vault",
+      "hash": "0x9891603a0f819b7fd99a358751d579da381178778d1188f4bf70fa9bfae3866f",
+      "block": "66878629"
+    },
+    {
+      "step": "sponsor2 approves the vault",
+      "hash": "0x0ee7d757ca29456212b158a5b167104b9e81fb8796928287258c4f3babf9d7f0",
+      "block": "66878630"
+    },
+    {
+      "step": "customer approves the vault",
+      "hash": "0x7a372e4fd10103f7cc57a1e0a70c1ef1d88afdf2ab607429d6f630621156ace4",
+      "block": "66878631"
+    },
+    {
+      "step": "agent approves the vault",
+      "hash": "0x59f5f4b938cecd392b252285c3d5e8333e6f48bd169f77f285c7c0831d7e6a9a",
+      "block": "66878632"
+    },
+    {
+      "step": "lender supplies 5000",
+      "hash": "0xd49274098a594536a858b11c091cb93b6a1ccd6c5e0a1c64d6b840aa839052b3",
+      "block": "66878633"
+    },
+    {
+      "step": "sponsor opens line: 400 collateral, 100 base, 40 per channel, 10% APR, 30 days, 50% revenue share",
+      "hash": "0xadcbb046d61a04e5eea8de0fa01f6f23baab1cb678fac2c27952615ead3e101f",
+      "block": "66878634"
+    },
+    {
+      "step": "sponsor allowlists the vendor and its claim authorizer",
+      "hash": "0x8c40fc8f5af0bf3d4c5adf1341fdf9cc31069c77289bc6230c53b965fa8ab46b",
+      "block": "66878635"
+    },
+    {
+      "step": "sponsor allowlists the customer as a revenue payer",
+      "hash": "0xec0bc359185fc950f3805bee4a06da5a8b6e25641560e5f584f1475b854d0ffb",
+      "block": "66878636"
+    },
+    {
+      "step": "agent funds a 40 channel for the vendor (vault pays, agent holds nothing)",
+      "hash": "0x05e3a7a85c677a9196ef6eb3ebc0f65796f5f9395427265f077af401620b729f",
+      "block": "66878637"
+    },
+    {
+      "step": "vendor claims a voucher for 12.30",
+      "hash": "0x715a4616703f332a7cd207f3fd612656c5d4e0a238545e84742b758bba7e3adb",
+      "block": "66878638"
+    },
+    {
+      "step": "anyone settles claimed funds to the vendor",
+      "hash": "0x1956e2c13e5bd888b67e50ae5310277255b0aa20f9c3ab071a9640e9a6ca1d4a",
+      "block": "66878639"
+    },
+    {
+      "step": "vendor claims a later voucher for 25",
+      "hash": "0xcfbe1b5b7701bf043df0e365ef44fbf9fb362a458d631b9d2893bf45addaa5c7",
+      "block": "66878640"
+    },
+    {
+      "step": "anyone settles claimed funds to the vendor",
+      "hash": "0x20c59585b38b0b587e18b73080ae3eb3f1e6c9425e398dffad8b678b298852a8",
+      "block": "66878641"
+    },
+    {
+      "step": "vendor refunds the 15 it did not use (goes straight to the vault)",
+      "hash": "0x3692fa987a1290bc98ff31fbe0b8b7e27684a716426aab409197c2e65aa364c6",
+      "block": "66878642"
+    },
+    {
+      "step": "anyone reconciles the refund: debt drops by 15",
+      "hash": "0x6e317dd17b8a1ebd6a2cbb254437f7bc11fa8db5983890daa6fd02e9ef8f8f09",
+      "block": "66878643"
+    },
+    {
+      "step": "sponsor repays the outstanding 25",
+      "hash": "0xb16519550c42f90ce428a581253cdf435d614c851865b79dffda19853be30902",
+      "block": "66878644"
+    },
+    {
+      "step": "agent funds a 40 channel (round 1)",
+      "hash": "0x1361c8a3790b2815a885271885545c14de26e7c11b5850bca64eccee725107ac",
+      "block": "66878645"
+    },
+    {
+      "step": "vendor claims 40 (round 1)",
+      "hash": "0x4766e1e6b97b64ef952104b81210e2514e85d3a911bea0fbea492cf28d90906a",
+      "block": "66878646"
+    },
+    {
+      "step": "anyone settles claimed funds to the vendor",
+      "hash": "0xaeb566c76b0e18875d1b1dfc5853289c6e909685ac41a36e3dce265c72695bef",
+      "block": "66878647"
+    },
+    {
+      "step": "sponsor repays 40 (round 1)",
+      "hash": "0x4aeef6e7dcf8a1bb77a3cfbdd863c2fa86cb8ef71f63da8e894f451b89ade77a",
+      "block": "66878648"
+    },
+    {
+      "step": "agent funds a 40 channel (round 2)",
+      "hash": "0x90f497463a98302199eacb2f4880026585a16935d064c39c2706f7c3b6700554",
+      "block": "66878649"
+    },
+    {
+      "step": "vendor claims 40 (round 2)",
+      "hash": "0xdbf65644582b9caeb1e2e57eea380bda0504d16ce535a7c50a0e9bddeb58e0be",
+      "block": "66878650"
+    },
+    {
+      "step": "anyone settles claimed funds to the vendor",
+      "hash": "0xe48de7a0335524b0e2589e91f60d2c0f334aaf5d44a5d4f35616c9efc78b9f94",
+      "block": "66878651"
+    },
+    {
+      "step": "sponsor repays 40 (round 2)",
+      "hash": "0x706ad29a495dcf656bea2a4f08c4484f356cc4a0d3d37d975762485b95e778ac",
+      "block": "66878652"
+    },
+    {
+      "step": "agent funds a 40 channel (round 3)",
+      "hash": "0x1b26491b1ad232b6ae46c39acce90e60f964f71f8698e48f1794f90ad55b4dfc",
+      "block": "66878653"
+    },
+    {
+      "step": "vendor claims 40 (round 3)",
+      "hash": "0xfa4a0b23f3dc3b9b6506aea2dcfabcef9b8779d2ab92feb9b876dbd6bff5b644",
+      "block": "66878654"
+    },
+    {
+      "step": "anyone settles claimed funds to the vendor",
+      "hash": "0x549135ce78e8aacc981597ef42fc4f54003483ad78bff4d343b662c4da67d330",
+      "block": "66878655"
+    },
+    {
+      "step": "sponsor repays 40 (round 3)",
+      "hash": "0xa08746f53d474c162aa2110ab527a542017895d22c0cbc3a85c9f810f4802e37",
+      "block": "66878656"
+    },
+    {
+      "step": "agent funds a 40 channel to have debt",
+      "hash": "0x08d04d94f12d9da4ef4f66d9add838e29e11aa3966bd66535342da87325f3701",
+      "block": "66878657"
+    },
+    {
+      "step": "customer pays the agent 100 through the vault",
+      "hash": "0xc4b172af32bec9d7b37d81b680ed7b46a84874be121b9ed18fd6fbaacf51fe07",
+      "block": "66878658"
+    },
+    {
+      "step": "agent funds toward its credit ceiling (1)",
+      "hash": "0x41093b991f1db72c12a9234891720743c339a358664e11f61d874222ff76a61e",
+      "block": "66878659"
+    },
+    {
+      "step": "agent funds toward its credit ceiling (2)",
+      "hash": "0xe0574c810e034f97252cc34e97beea90dcb8fbeef8752d26c1666875d9df8135",
+      "block": "66878660"
+    },
+    {
+      "step": "agent funds toward its credit ceiling (3)",
+      "hash": "0x072db31b601e1eca991a47e2581986f8d0f94c3fdeb75355098f315f7036075f",
+      "block": "66878661"
+    },
+    {
+      "step": "agent funds toward its credit ceiling (4)",
+      "hash": "0x96d8c4a8515656d6db18ce9b0dd670385da492f576774b07f322c2d66d45eb22",
+      "block": "66878662"
+    },
+    {
+      "step": "agent funds toward its credit ceiling (5)",
+      "hash": "0xc4ee81b4910bf1c2ba9a9f08bd99110547239788f7bd5b8501e305f63f0058d6",
+      "block": "66878663"
+    },
+    {
+      "step": "agent funds toward its credit ceiling (6)",
+      "hash": "0x4ae52d988ca61f12fbb83668039fdb267db0afb48fef8a7c74fb14e8fb862a49",
+      "block": "66878664"
+    },
+    {
+      "step": "agent funds toward its credit ceiling (7)",
+      "hash": "0x5c1a884de9779bb38e2c1ffddc90dd18f53caf6f8a0047637dc5e9af2567fa99",
+      "block": "66878665"
+    },
+    {
+      "step": "agent funds toward its credit ceiling (8)",
+      "hash": "0xeccf2867fa9d362ee69b977865e443b3055196848e6f4f9fa68890b040842cf8",
+      "block": "66878666"
+    },
+    {
+      "step": "sponsor revokes the line",
+      "hash": "0xaf9519f88b74e0cbed678a0a5c517fa1a7a1730951cb250314dc9e7b6f5981b2",
+      "block": "66878667"
+    },
+    {
+      "step": "sponsor2 allowlists the vendor for the proven agent",
+      "hash": "0xa4865a66dde0b51a3ebcfb9bd0990a237f83fa8125073b6ae47ac5c8eab9929c",
+      "block": "66878668"
+    },
+    {
+      "step": "sponsor2 opens the same terms for the proven agent (allowed by its tier)",
+      "hash": "0x4b74811293d65b8b86442572a2bd06583fc203e71a1822b3b223a8ba48e55373",
+      "block": "66878669"
+    },
+    {
+      "step": "agent funds 40 on sponsor2's line",
+      "hash": "0xb6ecab4935220aa8f1f8f82c7810de2f76260fa329a270ebbf1fde56a20329b0",
+      "block": "66878670"
+    },
+    {
+      "step": "keeper liquidates the overdue line",
+      "hash": "0xb544013231e07680cf2a00ac5d73ebaa3fc8a4323a342f1a45256ef7bb46849c",
+      "block": "66878672"
+    }
+  ],
+  "receipts": [
+    {
+      "kind": "supplied",
+      "id": "0xd49274098a594536a858b11c091cb93b6a1ccd6c5e0a1c64d6b840aa839052b3:1",
+      "from": "0x134A30A799d4846cD521a7641F1A12cAec0fD566",
+      "to": "0x134A30A799d4846cD521a7641F1A12cAec0fD566",
+      "amountUnits": "5000000000",
+      "amountAusd": "5000.00",
+      "txHash": "0xd49274098a594536a858b11c091cb93b6a1ccd6c5e0a1c64d6b840aa839052b3",
+      "blockNumber": "66878633",
+      "digest": "0xfdce76f85c897ac1a46a87608e74b88fc0a4992c6482faba48b18905f734d95d"
+    },
+    {
+      "kind": "lineopened",
+      "id": "0xadcbb046d61a04e5eea8de0fa01f6f23baab1cb678fac2c27952615ead3e101f:1",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "amountUnits": "400000000",
+      "amountAusd": "400.00",
+      "txHash": "0xadcbb046d61a04e5eea8de0fa01f6f23baab1cb678fac2c27952615ead3e101f",
+      "blockNumber": "66878634",
+      "digest": "0xe8146b351fe42ed50a62f90899654d8a9cdda0fd7588f93ee00b0a1ec31e3abd"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0x94622d21749d524b8908882a7b6eef4ebc556c7474a877fb71dd6151b4917a19",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x05e3a7a85c677a9196ef6eb3ebc0f65796f5f9395427265f077af401620b729f",
+      "blockNumber": "66878637",
+      "digest": "0x9f113e3c336045a78856b4a0b44720da79a7d2f5c314ded3234ab03a5363d3bb"
+    },
+    {
+      "kind": "channelreconciled",
+      "id": "0x94622d21749d524b8908882a7b6eef4ebc556c7474a877fb71dd6151b4917a19",
+      "from": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+      "to": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+      "amountUnits": "15000000",
+      "amountAusd": "15.00",
+      "txHash": "0x6e317dd17b8a1ebd6a2cbb254437f7bc11fa8db5983890daa6fd02e9ef8f8f09",
+      "blockNumber": "66878643",
+      "digest": "0xf07d6d76657dd262403509591119469e1fb99ba228f511002d1e830f7065958a"
+    },
+    {
+      "kind": "repaid",
+      "id": "0xb16519550c42f90ce428a581253cdf435d614c851865b79dffda19853be30902:1",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "amountUnits": "25000000",
+      "amountAusd": "25.00",
+      "txHash": "0xb16519550c42f90ce428a581253cdf435d614c851865b79dffda19853be30902",
+      "blockNumber": "66878644",
+      "digest": "0xb0350a82a99992265e4301b63af71a6ad17fcb33b78b48fcd427d486e74e24ae"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0x957ed74bd7683bc8be15b7e77fda22843595317643828a64a737cb882374a42e",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x1361c8a3790b2815a885271885545c14de26e7c11b5850bca64eccee725107ac",
+      "blockNumber": "66878645",
+      "digest": "0x621b6c788cb4bbfed9bfde2c28c23c9f7ac7761b7e1910147f26115edc2a9f1f"
+    },
+    {
+      "kind": "repaid",
+      "id": "0x4aeef6e7dcf8a1bb77a3cfbdd863c2fa86cb8ef71f63da8e894f451b89ade77a:1",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x4aeef6e7dcf8a1bb77a3cfbdd863c2fa86cb8ef71f63da8e894f451b89ade77a",
+      "blockNumber": "66878648",
+      "digest": "0x1ba962e3f6e1da117cf75c1b395aea6fcfe76420f68523194ec8ab53b03f0af1"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0x9c259231e40c8113d10a415f0262ba19d644c93c06c222d868fec3c0f29c0252",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x90f497463a98302199eacb2f4880026585a16935d064c39c2706f7c3b6700554",
+      "blockNumber": "66878649",
+      "digest": "0x61807ef551d1fcc0d7c1768b18ec65ef8c0dc253ce5ddf3fb6590ebcc29d7ff4"
+    },
+    {
+      "kind": "repaid",
+      "id": "0x706ad29a495dcf656bea2a4f08c4484f356cc4a0d3d37d975762485b95e778ac:1",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x706ad29a495dcf656bea2a4f08c4484f356cc4a0d3d37d975762485b95e778ac",
+      "blockNumber": "66878652",
+      "digest": "0x489ef30a6bbf62eeea33eab8f63510d3bb2462d594d97facd6838c068d992f23"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0x891439d3efcadb77061fbc16113a1972ce0f23007a98fc2f2d2d3f4f7b932196",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x1b26491b1ad232b6ae46c39acce90e60f964f71f8698e48f1794f90ad55b4dfc",
+      "blockNumber": "66878653",
+      "digest": "0x53b3a9c56d43e8d8d409f6755093a36017b5cf40086909fc14a6d7c14dc817b2"
+    },
+    {
+      "kind": "repaid",
+      "id": "0xa08746f53d474c162aa2110ab527a542017895d22c0cbc3a85c9f810f4802e37:1",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0xa08746f53d474c162aa2110ab527a542017895d22c0cbc3a85c9f810f4802e37",
+      "blockNumber": "66878656",
+      "digest": "0xa4f801d831757ca8c62d03eb840b23e56c092cc01df35255d275c10f88f04f67"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0xfbd3dce7d15c120000b1699bafefd96e8048c4cfffbedd678e5d33698db80fd9",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x08d04d94f12d9da4ef4f66d9add838e29e11aa3966bd66535342da87325f3701",
+      "blockNumber": "66878657",
+      "digest": "0xa96463e6a10b2b38f8d017b314885e841d97e4b208f65f35620664811469731d"
+    },
+    {
+      "kind": "revenuerouted",
+      "id": "0xc4b172af32bec9d7b37d81b680ed7b46a84874be121b9ed18fd6fbaacf51fe07:2",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "amountUnits": "100000000",
+      "amountAusd": "100.00",
+      "txHash": "0xc4b172af32bec9d7b37d81b680ed7b46a84874be121b9ed18fd6fbaacf51fe07",
+      "blockNumber": "66878658",
+      "digest": "0x3c03101c61d2336b502821b475603af9f110e02f212cc98f122dc35befc54607"
+    },
+    {
+      "kind": "repaid",
+      "id": "0xc4b172af32bec9d7b37d81b680ed7b46a84874be121b9ed18fd6fbaacf51fe07:3",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0xc4b172af32bec9d7b37d81b680ed7b46a84874be121b9ed18fd6fbaacf51fe07",
+      "blockNumber": "66878658",
+      "digest": "0x71a7230050c4f8f7d8a05e336a54c6a20d0da1ba949a62fe171b22e92baa445e"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0xdd321b214f7004d45bc7c1fe5612c0ad8c2bda21fe53e4b6f752a601393eec86",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x41093b991f1db72c12a9234891720743c339a358664e11f61d874222ff76a61e",
+      "blockNumber": "66878659",
+      "digest": "0x8c653a0909b6abd044e3970a8527bd6ddb4207868bb919209346b7815ea4f3a2"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0xdeb230a161bf9df2994c724c79b74a4dcf149ad287522ab6c60f794723cb98f7",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0xe0574c810e034f97252cc34e97beea90dcb8fbeef8752d26c1666875d9df8135",
+      "blockNumber": "66878660",
+      "digest": "0x2901506046a05e8926c2bf2adae6fb7aa8fcb33ee1d568cecfb680178a2060a0"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0x41bfcab192f74fc63ca260907ef004bbf56bc6558131d01061064f2d42582079",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x072db31b601e1eca991a47e2581986f8d0f94c3fdeb75355098f315f7036075f",
+      "blockNumber": "66878661",
+      "digest": "0xc96670b5a59cdd71e323899bde8b1fc8192d437a7f1bcca81a2b24db21b8e6d1"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0xfd977d31fa83a982693a7a162c750d1f98660f97acaec002549f7af82323c315",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x96d8c4a8515656d6db18ce9b0dd670385da492f576774b07f322c2d66d45eb22",
+      "blockNumber": "66878662",
+      "digest": "0x04346180797de396e5b8d4481a90d442030de5c8bc01235ac8db8ab78c05320a"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0x0d7f17e1d8771b5b14be38d5fb6d9d9385451dbfe55ab17418e08fdba17b4146",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0xc4ee81b4910bf1c2ba9a9f08bd99110547239788f7bd5b8501e305f63f0058d6",
+      "blockNumber": "66878663",
+      "digest": "0xa55a02bdf3c476fb7d2a62c139c0948a2422dfb9ceb152372e1af9dd1adff5d8"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0x12031e0706ba7a1e1ca95a5822bd523a688a95ea3a790471d0247e914ca8ed40",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x4ae52d988ca61f12fbb83668039fdb267db0afb48fef8a7c74fb14e8fb862a49",
+      "blockNumber": "66878664",
+      "digest": "0x3ff1130acf90ce63af4420b210b1ba8b0bf3b73b12fa03cf32170a0cc6860dd5"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0x929917612976819db3b90e0addec8c178e66a592d943c5bf2d0e632d64b433d9",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0x5c1a884de9779bb38e2c1ffddc90dd18f53caf6f8a0047637dc5e9af2567fa99",
+      "blockNumber": "66878665",
+      "digest": "0x927ba5acdef24f584a5f74fc4fa8506038590bf3c2413f53414609392b4c1435"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0x9749ea4ddc0d94e4538035fc911e8389e92004b983a36e0e3433f021a3e0fa50",
+      "from": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "5000000",
+      "amountAusd": "5.00",
+      "txHash": "0xeccf2867fa9d362ee69b977865e443b3055196848e6f4f9fa68890b040842cf8",
+      "blockNumber": "66878666",
+      "digest": "0x3e7b710b95036d49e203209a3410da11e196c279bf91c0c307bcda5992d3c53e"
+    },
+    {
+      "kind": "lineopened",
+      "id": "0x4b74811293d65b8b86442572a2bd06583fc203e71a1822b3b223a8ba48e55373:1",
+      "from": "0x2E73c124F2bC36593526D2f53415bb7D422dcA60",
+      "to": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "amountUnits": "100000000",
+      "amountAusd": "100.00",
+      "txHash": "0x4b74811293d65b8b86442572a2bd06583fc203e71a1822b3b223a8ba48e55373",
+      "blockNumber": "66878669",
+      "digest": "0xa2af0ea94da3348907b676a1be428500dc11ec345838f4be50d047f84886e951"
+    },
+    {
+      "kind": "channelfunded",
+      "id": "0xeda643e7a30d54299ca2b2bb703cfc4b3fb161a5d8c6a82fc3bb4a8c7faadb65",
+      "from": "0x2E73c124F2bC36593526D2f53415bb7D422dcA60",
+      "to": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "amountUnits": "40000000",
+      "amountAusd": "40.00",
+      "txHash": "0xb6ecab4935220aa8f1f8f82c7810de2f76260fa329a270ebbf1fde56a20329b0",
+      "blockNumber": "66878670",
+      "digest": "0x22f675bb00830674b5e1b15eb014460406469a8406eb17956eca069c21f10fb5"
+    },
+    {
+      "kind": "liquidated",
+      "id": "0xb544013231e07680cf2a00ac5d73ebaa3fc8a4323a342f1a45256ef7bb46849c:1",
+      "from": "0x2E73c124F2bC36593526D2f53415bb7D422dcA60",
+      "to": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "amountUnits": "40339726",
+      "amountAusd": "40.33",
+      "txHash": "0xb544013231e07680cf2a00ac5d73ebaa3fc8a4323a342f1a45256ef7bb46849c",
+      "blockNumber": "66878672",
+      "digest": "0x5e69e6e12ae6cbbd68995f3a4ebdcc2af608e7abf134287f0cd301e543cc36eb"
+    }
+  ]
+}
