@@ -1,0 +1,469 @@
+[
+  {
+    "blockNumber": "66878633",
+    "txHash": "0xd49274098a594536a858b11c091cb93b6a1ccd6c5e0a1c64d6b840aa839052b3",
+    "logIndex": 1,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "Supplied",
+    "args": {
+      "lender": "0x134A30A799d4846cD521a7641F1A12cAec0fD566",
+      "amount": "5000000000",
+      "shares": "5000000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:01.000Z"
+  },
+  {
+    "blockNumber": "66878634",
+    "txHash": "0xadcbb046d61a04e5eea8de0fa01f6f23baab1cb678fac2c27952615ead3e101f",
+    "logIndex": 1,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "LineOpened",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "collateral": "400000000",
+      "baseLimit": "100000000",
+      "perBorrowCap": "40000000",
+      "aprBps": "1000",
+      "repayShareBps": "5000",
+      "dueAt": "1793335261"
+    },
+    "blockTimestamp": "2026-09-30T04:41:01.000Z"
+  },
+  {
+    "blockNumber": "66878635",
+    "txHash": "0x8c40fc8f5af0bf3d4c5adf1341fdf9cc31069c77289bc6230c53b965fa8ab46b",
+    "logIndex": 0,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "VendorSet",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "receiverAuthorizer": "0xd90057BABCbBB9ff0ed5DB28FD5361398b2219eA"
+    },
+    "blockTimestamp": "2026-09-30T04:41:02.000Z"
+  },
+  {
+    "blockNumber": "66878636",
+    "txHash": "0xec0bc359185fc950f3805bee4a06da5a8b6e25641560e5f584f1475b854d0ffb",
+    "logIndex": 0,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "RevenuePayerSet",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "payer": "0xD9E899573787F9B9Ab693A5E9861Ad2587EE2e08",
+      "allowed": true
+    },
+    "blockTimestamp": "2026-09-30T04:41:02.000Z"
+  },
+  {
+    "blockNumber": "66878637",
+    "txHash": "0x05e3a7a85c677a9196ef6eb3ebc0f65796f5f9395427265f077af401620b729f",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0x94622d21749d524b8908882a7b6eef4ebc556c7474a877fb71dd6151b4917a19",
+      "amount": "40000000",
+      "debtAfter": "40000000",
+      "limit": "100000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:02.000Z"
+  },
+  {
+    "blockNumber": "66878643",
+    "txHash": "0x6e317dd17b8a1ebd6a2cbb254437f7bc11fa8db5983890daa6fd02e9ef8f8f09",
+    "logIndex": 0,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelReconciled",
+    "args": {
+      "channelId": "0x94622d21749d524b8908882a7b6eef4ebc556c7474a877fb71dd6151b4917a19",
+      "returnedNow": "15000000",
+      "debtAfter": "25000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:05.000Z"
+  },
+  {
+    "blockNumber": "66878644",
+    "txHash": "0xb16519550c42f90ce428a581253cdf435d614c851865b79dffda19853be30902",
+    "logIndex": 1,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "Repaid",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "payer": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "interestPaid": "0",
+      "principalPaid": "25000000",
+      "debtAfter": "0"
+    },
+    "blockTimestamp": "2026-09-30T04:41:05.000Z"
+  },
+  {
+    "blockNumber": "66878645",
+    "txHash": "0x1361c8a3790b2815a885271885545c14de26e7c11b5850bca64eccee725107ac",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0x957ed74bd7683bc8be15b7e77fda22843595317643828a64a737cb882374a42e",
+      "amount": "40000000",
+      "debtAfter": "40000000",
+      "limit": "125000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:06.000Z"
+  },
+  {
+    "blockNumber": "66878648",
+    "txHash": "0x4aeef6e7dcf8a1bb77a3cfbdd863c2fa86cb8ef71f63da8e894f451b89ade77a",
+    "logIndex": 1,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "Repaid",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "payer": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "interestPaid": "0",
+      "principalPaid": "40000000",
+      "debtAfter": "0"
+    },
+    "blockTimestamp": "2026-09-30T04:41:07.000Z"
+  },
+  {
+    "blockNumber": "66878649",
+    "txHash": "0x90f497463a98302199eacb2f4880026585a16935d064c39c2706f7c3b6700554",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0x9c259231e40c8113d10a415f0262ba19d644c93c06c222d868fec3c0f29c0252",
+      "amount": "40000000",
+      "debtAfter": "40000000",
+      "limit": "165000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:07.000Z"
+  },
+  {
+    "blockNumber": "66878652",
+    "txHash": "0x706ad29a495dcf656bea2a4f08c4484f356cc4a0d3d37d975762485b95e778ac",
+    "logIndex": 1,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "Repaid",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "payer": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "interestPaid": "0",
+      "principalPaid": "40000000",
+      "debtAfter": "0"
+    },
+    "blockTimestamp": "2026-09-30T04:41:08.000Z"
+  },
+  {
+    "blockNumber": "66878653",
+    "txHash": "0x1b26491b1ad232b6ae46c39acce90e60f964f71f8698e48f1794f90ad55b4dfc",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0x891439d3efcadb77061fbc16113a1972ce0f23007a98fc2f2d2d3f4f7b932196",
+      "amount": "40000000",
+      "debtAfter": "40000000",
+      "limit": "205000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:08.000Z"
+  },
+  {
+    "blockNumber": "66878656",
+    "txHash": "0xa08746f53d474c162aa2110ab527a542017895d22c0cbc3a85c9f810f4802e37",
+    "logIndex": 1,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "Repaid",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "payer": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "interestPaid": "0",
+      "principalPaid": "40000000",
+      "debtAfter": "0"
+    },
+    "blockTimestamp": "2026-09-30T04:41:10.000Z"
+  },
+  {
+    "blockNumber": "66878657",
+    "txHash": "0x08d04d94f12d9da4ef4f66d9add838e29e11aa3966bd66535342da87325f3701",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0xfbd3dce7d15c120000b1699bafefd96e8048c4cfffbedd678e5d33698db80fd9",
+      "amount": "40000000",
+      "debtAfter": "40000000",
+      "limit": "245000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:10.000Z"
+  },
+  {
+    "blockNumber": "66878658",
+    "txHash": "0xc4b172af32bec9d7b37d81b680ed7b46a84874be121b9ed18fd6fbaacf51fe07",
+    "logIndex": 2,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "RevenueRouted",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "payer": "0xD9E899573787F9B9Ab693A5E9861Ad2587EE2e08",
+      "amount": "100000000",
+      "toDebt": "40000000",
+      "toAgent": "60000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:11.000Z"
+  },
+  {
+    "blockNumber": "66878658",
+    "txHash": "0xc4b172af32bec9d7b37d81b680ed7b46a84874be121b9ed18fd6fbaacf51fe07",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "Repaid",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "payer": "0xD9E899573787F9B9Ab693A5E9861Ad2587EE2e08",
+      "interestPaid": "0",
+      "principalPaid": "40000000",
+      "debtAfter": "0"
+    },
+    "blockTimestamp": "2026-09-30T04:41:11.000Z"
+  },
+  {
+    "blockNumber": "66878659",
+    "txHash": "0x41093b991f1db72c12a9234891720743c339a358664e11f61d874222ff76a61e",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0xdd321b214f7004d45bc7c1fe5612c0ad8c2bda21fe53e4b6f752a601393eec86",
+      "amount": "40000000",
+      "debtAfter": "40000000",
+      "limit": "285000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:11.000Z"
+  },
+  {
+    "blockNumber": "66878660",
+    "txHash": "0xe0574c810e034f97252cc34e97beea90dcb8fbeef8752d26c1666875d9df8135",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0xdeb230a161bf9df2994c724c79b74a4dcf149ad287522ab6c60f794723cb98f7",
+      "amount": "40000000",
+      "debtAfter": "80000000",
+      "limit": "285000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:12.000Z"
+  },
+  {
+    "blockNumber": "66878661",
+    "txHash": "0x072db31b601e1eca991a47e2581986f8d0f94c3fdeb75355098f315f7036075f",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0x41bfcab192f74fc63ca260907ef004bbf56bc6558131d01061064f2d42582079",
+      "amount": "40000000",
+      "debtAfter": "120000000",
+      "limit": "285000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:12.000Z"
+  },
+  {
+    "blockNumber": "66878662",
+    "txHash": "0x96d8c4a8515656d6db18ce9b0dd670385da492f576774b07f322c2d66d45eb22",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0xfd977d31fa83a982693a7a162c750d1f98660f97acaec002549f7af82323c315",
+      "amount": "40000000",
+      "debtAfter": "160000000",
+      "limit": "285000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:13.000Z"
+  },
+  {
+    "blockNumber": "66878663",
+    "txHash": "0xc4ee81b4910bf1c2ba9a9f08bd99110547239788f7bd5b8501e305f63f0058d6",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0x0d7f17e1d8771b5b14be38d5fb6d9d9385451dbfe55ab17418e08fdba17b4146",
+      "amount": "40000000",
+      "debtAfter": "200000000",
+      "limit": "285000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:14.000Z"
+  },
+  {
+    "blockNumber": "66878664",
+    "txHash": "0x4ae52d988ca61f12fbb83668039fdb267db0afb48fef8a7c74fb14e8fb862a49",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0x12031e0706ba7a1e1ca95a5822bd523a688a95ea3a790471d0247e914ca8ed40",
+      "amount": "40000000",
+      "debtAfter": "240000000",
+      "limit": "285000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:15.000Z"
+  },
+  {
+    "blockNumber": "66878665",
+    "txHash": "0x5c1a884de9779bb38e2c1ffddc90dd18f53caf6f8a0047637dc5e9af2567fa99",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0x929917612976819db3b90e0addec8c178e66a592d943c5bf2d0e632d64b433d9",
+      "amount": "40000000",
+      "debtAfter": "280000000",
+      "limit": "285000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:16.000Z"
+  },
+  {
+    "blockNumber": "66878666",
+    "txHash": "0xeccf2867fa9d362ee69b977865e443b3055196848e6f4f9fa68890b040842cf8",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0x9749ea4ddc0d94e4538035fc911e8389e92004b983a36e0e3433f021a3e0fa50",
+      "amount": "5000000",
+      "debtAfter": "285000000",
+      "limit": "285000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:16.000Z"
+  },
+  {
+    "blockNumber": "66878667",
+    "txHash": "0xaf9519f88b74e0cbed678a0a5c517fa1a7a1730951cb250314dc9e7b6f5981b2",
+    "logIndex": 0,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "LineRevoked",
+    "args": {
+      "sponsor": "0xfD5DF95A2A4e2BC63969ECfaA9391Ea8F05C5049",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA"
+    },
+    "blockTimestamp": "2026-09-30T04:41:17.000Z"
+  },
+  {
+    "blockNumber": "66878668",
+    "txHash": "0xa4865a66dde0b51a3ebcfb9bd0990a237f83fa8125073b6ae47ac5c8eab9929c",
+    "logIndex": 0,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "VendorSet",
+    "args": {
+      "sponsor": "0x2E73c124F2bC36593526D2f53415bb7D422dcA60",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "receiverAuthorizer": "0xd90057BABCbBB9ff0ed5DB28FD5361398b2219eA"
+    },
+    "blockTimestamp": "2026-09-30T04:41:17.000Z"
+  },
+  {
+    "blockNumber": "66878669",
+    "txHash": "0x4b74811293d65b8b86442572a2bd06583fc203e71a1822b3b223a8ba48e55373",
+    "logIndex": 1,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "LineOpened",
+    "args": {
+      "sponsor": "0x2E73c124F2bC36593526D2f53415bb7D422dcA60",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "collateral": "100000000",
+      "baseLimit": "90000000",
+      "perBorrowCap": "40000000",
+      "aprBps": "1000",
+      "repayShareBps": "5000",
+      "dueAt": "1793335278"
+    },
+    "blockTimestamp": "2026-09-30T04:41:18.000Z"
+  },
+  {
+    "blockNumber": "66878670",
+    "txHash": "0xb6ecab4935220aa8f1f8f82c7810de2f76260fa329a270ebbf1fde56a20329b0",
+    "logIndex": 3,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "ChannelFunded",
+    "args": {
+      "sponsor": "0x2E73c124F2bC36593526D2f53415bb7D422dcA60",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "receiver": "0x0D862ea0B3F91220860D4408CB1C18597A5AD6e9",
+      "channelId": "0xeda643e7a30d54299ca2b2bb703cfc4b3fb161a5d8c6a82fc3bb4a8c7faadb65",
+      "amount": "40000000",
+      "debtAfter": "40000000",
+      "limit": "100000000"
+    },
+    "blockTimestamp": "2026-09-30T04:41:18.000Z"
+  },
+  {
+    "blockNumber": "66878672",
+    "txHash": "0xb544013231e07680cf2a00ac5d73ebaa3fc8a4323a342f1a45256ef7bb46849c",
+    "logIndex": 1,
+    "contractAddress": "0x3e982dec52fc7b579cda9b3a06af0fc17309f7f6",
+    "eventName": "Liquidated",
+    "args": {
+      "sponsor": "0x2E73c124F2bC36593526D2f53415bb7D422dcA60",
+      "agent": "0x4a37C93A326e9c75A9C4F32E017d2FE1ECaF28cA",
+      "liquidator": "0x298D9F30F0fE143bBcD079A51d235bE879a49Df5",
+      "debt": "40339726",
+      "seized": "40339726",
+      "returnedToSponsor": "59660274",
+      "shortfall": "0"
+    },
+    "blockTimestamp": "2026-10-31T04:41:19.000Z"
+  }
+]

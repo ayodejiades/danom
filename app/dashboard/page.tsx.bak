@@ -1,0 +1,140 @@
+import Link from "next/link";
+import { listEvents } from "@/db";
+import { ConnectWallet } from "@/components/connect-wallet";
+import { DashboardShell } from "@/components/dashboard-shell";
+import { DEMO_INTENTS, runBatchSolver } from "@/lib/solver";
+
+// Reads indexed events from the database, so it must render per request rather than be
+// prerendered at build time, when no DATABASE_URL exists. See templates/web2.
+export const dynamic = "force-dynamic";
+
+export default async function Web3DashboardPage() {
+  const rows = await listEvents(50);
+  const batchPlan = runBatchSolver(DEMO_INTENTS);
+
+  return (
+    <DashboardShell project="PulseOps">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4 border-b border-[var(--border,#e5e5e5)] pb-5 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--fg-muted,#737373)]">
+              Operations · Non-Custodial Cycle &amp; Policy Console
+            </span>
+            <h1 className="mt-1 text-2xl font-medium tracking-[-0.02em] text-[var(--fg,#171717)]">
+              On-Chain Event &amp; Cycle Console
+            </h1>
+            <p className="mt-1 text-sm text-[var(--fg-muted,#737373)]">
+              Unified settlement surface powered by <code className="font-mono text-xs text-[var(--fg,#171717)]">lib/solver.ts</code> and <code className="font-mono text-xs text-[var(--fg,#171717)]">db/index.ts</code>.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <ConnectWallet />
+            <Link
+              href="/proof"
+              className="rounded border border-[var(--border,#e5e5e5)] bg-[var(--surface,#ffffff)] px-3 py-1.5 font-mono text-xs text-[var(--fg,#171717)] hover:border-[#171717]"
+            >
+              /proof
+            </Link>
+          </div>
+        </div>
+
+        {/* KPI Strip Powered by lib/solver.ts */}
+        <section className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-[var(--border,#e5e5e5)] bg-[var(--border,#e5e5e5)] sm:grid-cols-4">
+          <div className="bg-[var(--surface,#ffffff)] p-4">
+            <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--fg-muted,#737373)]">
+              Gross Batch Volume
+            </div>
+            <div className="mt-1 font-mono text-xl font-semibold text-[var(--fg,#171717)] num">
+              ${batchPlan.grossVolumeUSDC.toLocaleString()}
+            </div>
+          </div>
+          <div className="bg-[var(--surface,#ffffff)] p-4">
+            <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--fg-muted,#737373)]">
+              Peer Cycle Crossed (CoW)
+            </div>
+            <div className="mt-1 font-mono text-xl font-semibold text-[#16a34a] num">
+              {batchPlan.cowRatioPct}% (${batchPlan.crossedUSDC.toLocaleString()})
+            </div>
+          </div>
+          <div className="bg-[var(--surface,#ffffff)] p-4">
+            <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--fg-muted,#737373)]">
+              15-Rule Policy Gate
+            </div>
+            <div className="mt-1 font-mono text-xl font-semibold text-[#2563eb] num">
+              {batchPlan.policyResults.filter((r) => r.passed).length}/{batchPlan.policyResults.length} PASS
+            </div>
+          </div>
+          <div className="bg-[var(--surface,#ffffff)] p-4">
+            <div className="font-mono text-[10px] uppercase tracking-[0.12em] text-[var(--fg-muted,#737373)]">
+              Indexed Receipts
+            </div>
+            <div className="mt-1 font-mono text-xl font-semibold text-[var(--fg,#171717)] num">
+              {rows.length}
+            </div>
+          </div>
+        </section>
+
+        {/* Active Cycle Venue Split */}
+        <section className="overflow-hidden rounded-lg border border-[var(--border,#e5e5e5)] bg-[var(--surface,#ffffff)]">
+          <div className="flex items-center justify-between border-b border-[var(--border,#e5e5e5)] bg-[var(--bg,#f5f5f5)] px-5 py-3">
+            <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-[var(--fg,#171717)]">
+              Deterministic Cycle &amp; Residual Routing Plan (lib/solver.ts)
+            </h2>
+            <Link href="/dashboard/create" className="font-mono text-xs text-[#2563eb] hover:underline">
+              Submit Intent &rarr;
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 divide-y divide-[var(--border,#e5e5e5)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+            {batchPlan.allocations.map((alloc) => (
+              <div key={alloc.venueId} className="p-4">
+                <div className="flex items-center justify-between font-mono text-xs">
+                  <span className="font-medium text-[var(--fg,#171717)]">{alloc.venueName}</span>
+                  <span className="font-semibold text-[#2563eb] num">{alloc.sharePct}%</span>
+                </div>
+                <div className="mt-2 flex items-center justify-between font-mono text-xs text-[var(--fg-muted,#737373)] num">
+                  <span>Notional: ${alloc.inputUSDC.toLocaleString()}</span>
+                  <span>Impact: {alloc.priceImpactBps.toFixed(1)} bps</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Indexed Event Stream */}
+        <section className="flex flex-col gap-4 rounded-lg border border-[var(--border,#e5e5e5)] bg-[var(--surface,#ffffff)] p-5">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-medium text-[var(--fg,#171717)]">Indexed Event Stream</h2>
+            <span className="font-mono text-xs text-[var(--fg-muted,#737373)] num">{rows.length} captured</span>
+          </div>
+
+          {rows.length === 0 ? (
+            <p data-demo="empty-state" className="text-sm text-[var(--fg-muted,#737373)]">
+              No events indexed yet — trigger an on-chain action or load evaluation fixtures.
+            </p>
+          ) : (
+            <ul className="flex flex-col gap-2" data-demo="list">
+              {rows.map((row) => (
+                <li
+                  key={row.id}
+                  data-demo="row"
+                  className="flex items-center justify-between gap-4 rounded border border-[var(--border,#e5e5e5)] bg-[var(--bg,#f5f5f5)] px-4 py-2.5 text-sm text-[var(--fg,#171717)]"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="h-2 w-2 shrink-0 rounded-full bg-[#16a34a]" />
+                    <span className="truncate font-mono text-xs text-[var(--fg-muted,#737373)]">
+                      {row.txHash.slice(0, 10)}…{row.txHash.slice(-6)}
+                    </span>
+                  </div>
+                  <span className="shrink-0 text-sm font-medium">{row.eventName}</span>
+                  <time className="shrink-0 font-mono text-xs text-[var(--fg-muted,#737373)] num" dateTime={row.blockTimestamp.toISOString()}>
+                    {row.blockTimestamp.toLocaleDateString()}
+                  </time>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      </div>
+    </DashboardShell>
+  );
+}

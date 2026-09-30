@@ -1,0 +1,182 @@
+{
+  "project": "monad-metropolis",
+  "idea": "Credit layer for x402 agents on Monad: a lender vault is the payer of x402 batch settlement channels, so an AI agent holds only a voucher signing key and never unconstrained USDC. The agent gets a policy bound credit line (per channel cap, credit line, expiry, vendor allowlist, instant stop on new funding). The agent's revenue is routed to repay the loan first, its repayment record is a portable onchain credit record, and the collateral a sponsor must lock falls as that record grows.",
+  "track": "web3",
+  "team": 1,
+  "event": {
+    "name": "Monad Metropolis",
+    "start": null,
+    "end": "2026-10-13",
+    "tz": "UTC",
+    "submissionUrl": null
+  },
+  "limits": {
+    "videoMaxSeconds": 180,
+    "videoMinSeconds": 0,
+    "repoMustBePublic": true,
+    "requiresOssLicense": false,
+    "aiDisclosureRequired": false,
+    "maxTeam": 4,
+    "minTeam": 1,
+    "requiredLicense": null,
+    "source": "rules",
+    "videoTargetSeconds": 153
+  },
+  "sponsors": [
+    {
+      "name": "Dynamic",
+      "prizeFirst": 5000,
+      "criteria": "Integrate the Dynamic SDK for authentication, embedded/agent wallets, and/or signing",
+      "tech": "Dynamic SDK",
+      "chosen": false,
+      "wishlist": "Agent wallets that borrow only through the policy contract (targeted, but not integrated yet, so not claimed)"
+    },
+    {
+      "name": "Privy",
+      "prizeFirst": 5000,
+      "criteria": "Integrate Privy beyond authentication; login only integrations do not qualify",
+      "tech": "Privy SDK",
+      "chosen": false,
+      "wishlist": "Sponsor wallet and agent signer provisioning (targeted, but not integrated yet, so not claimed)"
+    },
+    {
+      "name": "Envio",
+      "prizeFirst": 1000,
+      "criteria": "Use HyperIndex, HyperSync or HyperRPC to power real onchain data",
+      "tech": "Envio HyperIndex / HyperSync",
+      "chosen": false,
+      "wishlist": "Indexed borrow and repayment receipts feeding the credit record (targeted, but not integrated yet, so not claimed)"
+    },
+    {
+      "name": "Chainlink",
+      "prizeFirst": 3000,
+      "criteria": "Build, simulate or deploy a Chainlink CRE workflow",
+      "tech": "Chainlink CRE",
+      "chosen": false,
+      "wishlist": "Not planned for v1"
+    },
+    {
+      "name": "Nansen",
+      "prizeFirst": 5000,
+      "criteria": "Product experience powered by Nansen data that goes beyond raw data",
+      "tech": "Nansen API",
+      "chosen": false,
+      "wishlist": "Not planned for v1"
+    },
+    {
+      "name": "MetaMask",
+      "prizeFirst": 2500,
+      "criteria": "Agent Wallet plugin (Onchain Finance & Trading track only)",
+      "tech": "MetaMask Agent Wallet",
+      "chosen": false,
+      "wishlist": "Track mismatch: primary track is Trust, Identity & AI Infrastructure"
+    }
+  ],
+  "theme": "ledger",
+  "accent": "#059669",
+  "illustrations": "none",
+  "source": "heuristic",
+  "unknown": [
+    "limits.videoMaxSeconds",
+    "limits.maxTeam",
+    "limits.minTeam",
+    "limits.requiredLicense",
+    "limits.repoMustBePublic",
+    "limits.requiresOssLicense",
+    "limits.aiDisclosureRequired",
+    "event.start",
+    "event.submissionUrl",
+    "sponsors",
+    "event.name"
+  ],
+  "nearMisses": [
+    {
+      "id": "024454b5",
+      "title": "Autonomous AI Agent Streaming Payment Protocol",
+      "pitch": "Ultra-low-latency micro-payment rail allowing autonomous AI agents to negotiate API pricing, pay per inference step in USDC, and generate machine-readable accounting ledgers",
+      "shared": [
+        "agent",
+        "autonomou",
+        "pay",
+        "payment",
+        "per"
+      ],
+      "winners_nearby": 0,
+      "link": "https://earn.superteam.fun/listings/bounties/ai-agent-payments"
+    },
+    {
+      "id": "b348a43d",
+      "title": "Cryptographic Human Verification & Deepfake-Resistant Trust Layer",
+      "pitch": "Privacy-preserving biometric and cryptographic proof-of-humanity protocol authenticating live calls, audio, and documents against real-time generative spoofing",
+      "shared": [
+        "call",
+        "live",
+        "protocol",
+        "trust"
+      ],
+      "winners_nearby": 0,
+      "link": "https://www.ycombinator.com/rfs#proving-youre-human"
+    }
+  ],
+  "wedge": {
+    "title": "monad-metropolis",
+    "sector": "WEB3 \u00b7 Trust, Identity & AI Infrastructure \u00b7 credit layer for x402 agents",
+    "target_user": "an operator running a paid AI agent that buys API calls and sells results, who will not hand it an unconstrained wallet",
+    "painful_moment": "Today an operator either pre-funds the agent's own wallet (an unbounded loss if the key leaks) or pays every bill by hand; a vendor cannot tell a well behaved agent from a new one.",
+    "unusual_constraint": "The agent never holds tokens. It holds only a voucher signing key; a lender vault is the payer of x402 batch settlement channels.",
+    "proof_metric": "Fork tests against the real x402 batch settlement contract on Monad testnet: every policy refusal and every real-contract refusal must match its expected error (count reported by pnpm claim:verify).",
+    "essential_sponsor": "Dynamic",
+    "essential_sponsor_role": "Not integrated yet. Planned: Dynamic embedded wallet for the sponsor and agent signer.",
+    "adversarial_critique": {
+      "why_generic_risk": "Agent spend limits already exist on Monad (AgentPay, AgentMarket). Ours differs only if the credit record and graduating collateral are shown working.",
+      "obvious_competitor": "AgentPay and other x402 payment tools with spend limits; over collateralized lending pools",
+      "unprovable_claim_risk": "Revenue can be faked by an agent paying itself; only count revenue from allowlisted payers. Everything so far ran on a fork or local chain, not live Monad.",
+      "superficial_sponsor_risk": "Dynamic, Privy and Envio are targeted but not yet integrated; do not claim them until they are.",
+      "hour_8_kill_criterion": "If the vault plus real x402 channel cannot complete fund, voucher, claim, settle on a Monad fork, cut the graduating collateral and ship the channel funding alone."
+    },
+    "demand_signals": [],
+    "archetype": "developer-console"
+  },
+  "moat": {
+    "score": 8,
+    "reasons": [
+      "proof 0 (no similar launched product in our startup data)",
+      "west-africa +2 (local players exist: Flutterwave; needs a sharper wedge)",
+      "global +2 (no direct competitor in our data)",
+      "why-now +4 (recently practical capability)"
+    ],
+    "angles": [
+      "Pay and get paid in naira: Paystack or Flutterwave, bank transfer and USSD",
+      "Works offline on a low-cost Android phone and syncs when the network returns",
+      "An agent that finishes the task end to end, not a chat box that suggests"
+    ],
+    "proxies": [],
+    "local": [
+      "Flutterwave"
+    ],
+    "sector": "Fintech & Payments"
+  },
+  "upgrades": {
+    "source": "manual",
+    "features": [
+      {
+        "feature": "Repayment record that raises the credit ceiling and lowers required collateral",
+        "why": "the part no spend limit tool has",
+        "build_hours": 6,
+        "demo_visible": true
+      },
+      {
+        "feature": "Revenue router that repays the loan before the agent is paid",
+        "why": "makes the credit income backed, not only collateral backed",
+        "build_hours": 6,
+        "demo_visible": true
+      },
+      {
+        "feature": "Portable credit record readable by any vendor from settled channels",
+        "why": "fits the Trust, Identity and AI Infrastructure track",
+        "build_hours": 4,
+        "demo_visible": true
+      }
+    ]
+  }
+}

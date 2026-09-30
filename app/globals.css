@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+/* ledger — fintech: dense tables, emerald accent, numeric tabular font. */
+:root {
+  --bg: #0a0d0c;
+  --fg: #e7f3ef;
+  --fg-muted: #8aa39a;
+  --surface: #121615;
+  --surface-raised: #171c1b;
+  --border: #232b29;
+  --accent: #059669;
+  --accent-contrast: #021610;
+  --radius: 0.5rem;
+  --radius-sm: 0.25rem;
+  --shadow: 0 10px 24px -12px rgba(0, 0, 0, 0.7);
+}
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --font-sans: var(--font-sans);
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}

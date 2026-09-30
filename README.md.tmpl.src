@@ -1,0 +1,57 @@
+# <PROJECT>
+
+__ONE_SENTENCE__
+
+> **Engineered by Ayodeji Adesegun** ([@ayodejiades](https://github.com/ayodejiades))
+
+[![Builder](https://img.shields.io/badge/Builder-@ayodejiades-black?style=flat-square&logo=github)](https://github.com/ayodejiades)
+
+![demo](docs/demo.gif)
+
+## Try it
+
+- **The app:** `/dashboard`, no signup. `DEMO_MODE=1` runs it offline on committed fixtures.
+- **How it was checked:** `/proof` and [`CLAIM_LEDGER.md`](CLAIM_LEDGER.md). `pnpm claim:verify` re-derives every number from the committed runs.
+- **The demo, step by step:** [`docs/DEMO_PATH.md`](docs/DEMO_PATH.md).
+
+## What it does
+
+__WHAT_IT_DOES__
+
+## How it works
+
+The demo path, step by step:
+
+```mermaid
+__FLOW__
+```
+
+Architecture:
+
+```mermaid
+__ARCH__
+```
+
+__HOW_IT_WORKS__
+
+## Bounties targeted
+
+__BOUNTIES__
+
+## Run it
+
+```bash
+pnpm install
+pnpm claim:verify   # re-derives all claims in CLAIM_LEDGER.md and WHAT_IS_REAL.md
+make test           # runs the test suite
+make dev            # starts the app locally
+make deploy         # deploys to Cloudflare Pages / Vercel
+```
+
+## What is real
+
+What is built, partial or not wired yet, measured rather than claimed: [`WHAT_IS_REAL.md`](WHAT_IS_REAL.md).
+
+## Credits
+
+Assets and open-source attributions are listed in [`CREDITS.md`](CREDITS.md).

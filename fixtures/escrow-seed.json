@@ -1,0 +1,24 @@
+[
+  {
+    "id": "escrow-001",
+    "payer": "0x71C...3a9",
+    "provider": "0x4b2...e1f",
+    "amount": "25.00 USDC",
+    "slaDeadlineMs": 850,
+    "actualLatencyMs": 412,
+    "schemaValid": true,
+    "status": "released",
+    "timestamp": "2026-09-20T17:00:00Z"
+  },
+  {
+    "id": "escrow-002",
+    "payer": "0x71C...3a9",
+    "provider": "0x98a...54c",
+    "amount": "10.00 USDC",
+    "slaDeadlineMs": 500,
+    "actualLatencyMs": 620,
+    "schemaValid": true,
+    "status": "refunded",
+    "timestamp": "2026-09-20T17:05:00Z"
+  }
+]

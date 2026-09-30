@@ -1,0 +1,34 @@
+# Node
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# macOS
+.DS_Store
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+
+# Media the demo kit produces into this repo
+public/audio/
+docs/demo.mp4
+docs/fallback.mp4
+docs/*.gif
+
+# Editors
+.vscode/
+.idea/
