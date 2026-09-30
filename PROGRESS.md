@@ -1,12 +1,12 @@
 # PROGRESS — monad-metropolis
 
-Written by kit-autopilot after every step; last updated 2026-09-30T08:08:29.180Z. Do not edit by hand:
+Written by kit-autopilot after every step; last updated 2026-09-30T08:08:31.358Z. Do not edit by hand:
 it is rewritten on the next run. Regenerate it any time with `kit-autopilot --progress --dir /Users/mac/Hackathons/monad-metropolis`.
 
 - **Idea:** Credit layer for x402 agents on Monad: a lender vault is the payer of x402 batch settlement channels, so an AI agent holds only a voucher signing key and never unconstrained USDC. The agent gets a policy bound credit line (per channel cap,…
 - **Track:** web3 · **Readiness:** scaffolded
 - **Deadline:** 2026-10-13 (UTC)
-- **Status:** 8 of 12 steps green, 0 need work, 2 not run yet
+- **Status:** 8 of 12 steps green, 1 need work, 1 not run yet
 
 ## Rules for any agent helping here
 
@@ -20,7 +20,11 @@ it is rewritten on the next run. Regenerate it any time with `kit-autopilot --pr
 
 ## Do next
 
-1. **preflight** — not run yet. Run `kit-autopilot --resume --dir /Users/mac/Hackathons/monad-metropolis` (it starts at the first step that is not green).
+1. **preflight check 3: demo-path.json / DEMO_PATH.md exist** — found: missing. Fix in: demo-path. Then run `kit-autopilot --step preflight --dir /Users/mac/Hackathons/monad-metropolis`.
+2. **preflight check 4: demo video in [60, 180]s** — found: 57.333333s. Fix in: video. Then run `kit-autopilot --step preflight --dir /Users/mac/Hackathons/monad-metropolis`.
+3. **preflight check 12: docs/EVIDENCE.md and docs/HARD_THING.md generated** — found: missing evidence matrix or technical moat doc. Fix in: implement. Then run `kit-autopilot --step preflight --dir /Users/mac/Hackathons/monad-metropolis`.
+4. **preflight check 14: live testnet contract & transaction verified** — found: no live testnet contract or transaction found in .kit/deployment.json or README.md. Fix in: deploy (run ./scripts/deploy_testnet.sh or populate .kit/deployment.json). Then run `kit-autopilot --step preflight --dir /Users/mac/Hackathons/monad-metropolis`.
+5. **package** — not run yet. Run `kit-autopilot --resume --dir /Users/mac/Hackathons/monad-metropolis` (it starts at the first step that is not green).
 
 ## Done — do not redo
 
