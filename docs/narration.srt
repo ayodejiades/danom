@@ -1,0 +1,32 @@
+1
+00:00:00,000 --> 00:00:14,150
+Credit layer for x402 agents on Monad: a lender vault is the payer of x402 batch settlement channels, so an AI agent holds only a voucher signing key and never unconstrained USDC.
+
+2
+00:00:14,150 --> 00:00:22,569
+Manual workflows waste hours on repetitive operational overhead that monad-metropolis automates deterministically.
+
+3
+00:00:22,569 --> 00:00:28,451
+An agent that can only spend where its sponsor allows.
+
+4
+00:00:28,451 --> 00:00:32,902
+Try the credit flow.
+
+5
+00:00:32,902 --> 00:00:39,944
+The agent tries to pay its own wallet and the vault refuses.
+
+6
+00:00:39,944 --> 00:00:45,290
+Ask the vault to fund the vendor channel.
+
+7
+00:00:45,290 --> 00:00:52,758
+The solver verified 6 runs at 10000 basis points with canonical EIP-712 digests.
+
+8
+00:00:52,758 --> 00:00:57,333
+monad-metropolis is live, and the whole path just ran end to end.
+

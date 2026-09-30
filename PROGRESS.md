@@ -1,12 +1,12 @@
 # PROGRESS — monad-metropolis
 
-Written by kit-autopilot after every step; last updated 2026-09-30T08:04:14.337Z. Do not edit by hand:
+Written by kit-autopilot after every step; last updated 2026-09-30T08:08:29.180Z. Do not edit by hand:
 it is rewritten on the next run. Regenerate it any time with `kit-autopilot --progress --dir /Users/mac/Hackathons/monad-metropolis`.
 
 - **Idea:** Credit layer for x402 agents on Monad: a lender vault is the payer of x402 batch settlement channels, so an AI agent holds only a voucher signing key and never unconstrained USDC. The agent gets a policy bound credit line (per channel cap,…
 - **Track:** web3 · **Readiness:** scaffolded
 - **Deadline:** 2026-10-13 (UTC)
-- **Status:** 7 of 12 steps green, 0 need work, 3 not run yet
+- **Status:** 8 of 12 steps green, 0 need work, 2 not run yet
 
 ## Rules for any agent helping here
 
@@ -20,7 +20,7 @@ it is rewritten on the next run. Regenerate it any time with `kit-autopilot --pr
 
 ## Do next
 
-1. **video** — not run yet. Run `kit-autopilot --resume --dir /Users/mac/Hackathons/monad-metropolis` (it starts at the first step that is not green).
+1. **preflight** — not run yet. Run `kit-autopilot --resume --dir /Users/mac/Hackathons/monad-metropolis` (it starts at the first step that is not green).
 
 ## Done — do not redo
 
@@ -31,6 +31,7 @@ it is rewritten on the next run. Regenerate it any time with `kit-autopilot --pr
 - **verify** — live: skipped (not deployed); DEMO_MODE: OK; system verification: 12/12 invariant & adversarial checks PASSED. Owns: CLAIM_LEDGER.md, WHAT_IS_REAL.md.
 - **record** — recorded /Users/mac/Hackathons/monad-metropolis/docs/fallback.mp4. Owns: docs/fallback.mp4, docs/actions.json.
 - **story** — wrote /Users/mac/Hackathons/monad-metropolis-demo/story/story.json (grounded in 6 runs verified; efficiency: N/A bps). Owns: the sibling <slug>-demo/story/story.json.
+- **video** — rendered demo video for /Users/mac/Hackathons/monad-metropolis-demo. Owns: docs/demo.mp4, docs/demo.gif, docs/cover.png.
 
 ## Skipped on purpose
 
