@@ -1,0 +1,61 @@
+{
+  "recordedAt": "2026-09-30T08:04:10.046+00:00",
+  "baseUrl": "http://localhost:3000",
+  "demoMode": true,
+  "durationSeconds": 5.766667,
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
+  "steps": [
+    {
+      "index": 0,
+      "atSeconds": 0,
+      "say": "An agent that can only spend where its sponsor allows"
+    },
+    {
+      "index": 1,
+      "atSeconds": 0.819,
+      "say": "Try the credit flow"
+    },
+    {
+      "index": 2,
+      "atSeconds": 2.314,
+      "say": "The agent tries to pay its own wallet and the vault refuses"
+    },
+    {
+      "index": 3,
+      "atSeconds": 2.954,
+      "say": "Ask the vault to fund the vendor channel"
+    }
+  ],
+  "clicks": [
+    {
+      "atSeconds": 0.848,
+      "to": [
+        0.25707600911458334,
+        0.3888888888888889
+      ],
+      "selector": "[data-demo='launch-demo']",
+      "say": "Try the credit flow"
+    },
+    {
+      "atSeconds": 2.321,
+      "to": [
+        0.3403401692708333,
+        0.5222222222222223
+      ],
+      "selector": "#receiver",
+      "say": "The agent tries to pay its own wallet and the vault refuses"
+    },
+    {
+      "atSeconds": 2.961,
+      "to": [
+        0.2959676106770833,
+        0.6333333333333333
+      ],
+      "selector": "[data-demo='trigger-escrow']",
+      "say": "Ask the vault to fund the vendor channel"
+    }
+  ]
+}

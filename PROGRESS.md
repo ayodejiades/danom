@@ -1,12 +1,12 @@
 # PROGRESS — monad-metropolis
 
-Written by kit-autopilot after every step; last updated 2026-09-30T08:03:57.438Z. Do not edit by hand:
+Written by kit-autopilot after every step; last updated 2026-09-30T08:04:10.056Z. Do not edit by hand:
 it is rewritten on the next run. Regenerate it any time with `kit-autopilot --progress --dir /Users/mac/Hackathons/monad-metropolis`.
 
 - **Idea:** Credit layer for x402 agents on Monad: a lender vault is the payer of x402 batch settlement channels, so an AI agent holds only a voucher signing key and never unconstrained USDC. The agent gets a policy bound credit line (per channel cap,…
 - **Track:** web3 · **Readiness:** scaffolded
 - **Deadline:** 2026-10-13 (UTC)
-- **Status:** 5 of 12 steps green, 0 need work, 5 not run yet
+- **Status:** 6 of 12 steps green, 0 need work, 4 not run yet
 
 ## Rules for any agent helping here
 
@@ -20,7 +20,7 @@ it is rewritten on the next run. Regenerate it any time with `kit-autopilot --pr
 
 ## Do next
 
-1. **record** — not run yet. Run `kit-autopilot --resume --dir /Users/mac/Hackathons/monad-metropolis` (it starts at the first step that is not green).
+1. **story** — not run yet. Run `kit-autopilot --resume --dir /Users/mac/Hackathons/monad-metropolis` (it starts at the first step that is not green).
 
 ## Done — do not redo
 
@@ -29,6 +29,7 @@ it is rewritten on the next run. Regenerate it any time with `kit-autopilot --pr
 - **designAudit** — 3 skills, 0 blocking, 1 advisory -> .kit/design-audit.json. Owns: .kit/design-audit.json.
 - **campaign** — executed solver against 6 runs; computed canonical EIP-712 digests; adversarial negative invariant verified (rejected probe with BLOCK). Owns: evidence/campaign-report.json.
 - **verify** — live: skipped (not deployed); DEMO_MODE: OK; system verification: 12/12 invariant & adversarial checks PASSED. Owns: CLAIM_LEDGER.md, WHAT_IS_REAL.md.
+- **record** — recorded /Users/mac/Hackathons/monad-metropolis/docs/fallback.mp4. Owns: docs/fallback.mp4, docs/actions.json.
 
 ## Skipped on purpose
 
