@@ -120,7 +120,7 @@
   ],
   "wedge": {
     "title": "monad-metropolis",
-    "sector": "WEB3 \u00b7 Trust, Identity & AI Infrastructure \u00b7 credit layer for x402 agents",
+    "sector": "WEB3 · Trust, Identity & AI Infrastructure · credit layer for x402 agents",
     "target_user": "an operator running a paid AI agent that buys API calls and sells results, who will not hand it an unconstrained wallet",
     "painful_moment": "Today an operator either pre-funds the agent's own wallet (an unbounded loss if the key leaks) or pays every bill by hand; a vendor cannot tell a well behaved agent from a new one.",
     "unusual_constraint": "The agent never holds tokens. It holds only a voucher signing key; a lender vault is the payer of x402 batch settlement channels.",
@@ -178,5 +178,12 @@
         "demo_visible": true
       }
     ]
+  },
+  "proofSummary": {
+    "casesVerified": 6,
+    "driftCaught": 0,
+    "digests": [],
+    "track": "web3",
+    "details": "6 runs verified; efficiency: N/A bps"
   }
 }
