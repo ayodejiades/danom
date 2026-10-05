@@ -12,7 +12,7 @@ export function Toast({ message, durationMs = 3000 }: { message: string; duratio
   return (
     <div
       role="status"
-      className="fixed bottom-6 right-6 rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--surface-raised)] px-4 py-2 text-sm text-[var(--fg)] shadow-[var(--shadow)]"
+      className="fixed bottom-6 right-6 rounded-[var(--radius-pill)] bg-[var(--navy)] px-5 py-3 text-sm font-medium text-white shadow-[var(--shadow)]"
     >
       {message}
     </div>

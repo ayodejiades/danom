@@ -12,7 +12,7 @@ export function Table({ className = "", ...props }: HTMLAttributes<HTMLTableElem
 export function TableHead({ className = "", ...props }: ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
-      className={`border-b border-[var(--border)] px-3 py-2 font-medium text-[var(--fg-muted)] ${className}`}
+      className={`border-b border-[var(--border)] bg-[var(--surface-raised)] px-4 py-3 font-semibold text-[var(--navy-soft)] ${className}`}
       {...props}
     />
   );
@@ -20,6 +20,6 @@ export function TableHead({ className = "", ...props }: ThHTMLAttributes<HTMLTab
 
 export function TableCell({ className = "", ...props }: TdHTMLAttributes<HTMLTableCellElement>) {
   return (
-    <td className={`border-b border-[var(--border)] px-3 py-2 ${className}`} {...props} />
+    <td className={`border-b border-[var(--border)] px-4 py-3 ${className}`} {...props} />
   );
 }

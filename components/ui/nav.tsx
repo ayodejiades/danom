@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Nav({ project }: { project: string }) {
   return (
-    <nav className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4">
+    <nav className="mx-4 mt-4 flex items-center justify-between rounded-[var(--radius-pill)] border border-[var(--border)] bg-white/85 px-5 py-3 shadow-[var(--shadow)] backdrop-blur">
       <Link href="/" className="font-semibold text-[var(--fg)]">
         {project}
       </Link>

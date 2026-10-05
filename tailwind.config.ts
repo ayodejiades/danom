@@ -1,38 +1,38 @@
-// Extends the "ledger" preset (templates/_ui/ledger/tailwind.preset.ts
-// in the hackathon-starter skill). Tailwind v4 itself reads its design tokens from
+// Mirrors the "sui" theme in .kit/theme.json and DESIGN.md. Tailwind v4 itself reads its design tokens from
 // app/globals.css's `@theme inline` block — this is a documentation/tooling artifact.
 const theme = {
-  "name": "ledger",
-  "mode": "dark",
-  "accent": "#059669",
-  "accentContrast": "#021610",
+  "name": "sui",
+  "mode": "light",
+  "accent": "#4DA2FF",
+  "accentContrast": "#011829",
   "surfaces": {
-    "bg": "#0A0D0C",
-    "surface": "#121615",
-    "surfaceRaised": "#171C1B",
-    "border": "#232B29"
+    "bg": "#FFFFFF",
+    "surface": "#F3F8FF",
+    "surfaceRaised": "#E4F0FF",
+    "border": "#D3E4F8"
   },
   "text": {
-    "fg": "#E7F3EF",
-    "fgMuted": "#8AA39A"
+    "fg": "#011829",
+    "fgMuted": "#3D5870"
+  },
+  "pops": {
+    "navy": "#011829",
+    "sky": "#C0E6FF",
+    "mint": "#5BE3B0",
+    "sun": "#FFD84D",
+    "coral": "#FF8A78"
   },
   "radii": {
-    "radius": "0.5rem",
-    "radiusSm": "0.25rem"
+    "radius": "1.5rem",
+    "radiusSm": "0.75rem",
+    "radiusPill": "9999px"
   },
   "shadows": {
-    "shadow": "0 10px 24px -12px rgba(0,0,0,0.7)"
+    "shadow": "0 18px 40px -22px rgba(1,24,41,0.28)"
   },
   "font": {
     "sans": "Geist",
     "tabular": "Geist Mono"
-  },
-  "typeScale": {
-    "sm": "0.8125rem",
-    "base": "0.9375rem",
-    "lg": "1.0625rem",
-    "xl": "1.375rem",
-    "2xl": "1.75rem"
   }
 } as const;
 

@@ -29,8 +29,8 @@ export function TelemetryTile({
     .join(" ");
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg border border-[var(--border,#262626)] bg-[var(--surface,#121212)] p-4 shadow-sm">
-      <div className="flex items-center justify-between text-xs font-mono text-[var(--fg-muted,#888)]">
+    <div className="flex flex-col gap-2 rounded-[var(--radius)] border border-[var(--border,#d3e4f8)] bg-[var(--surface,#f3f8ff)] p-4 shadow-sm">
+      <div className="flex items-center justify-between text-xs font-mono text-[var(--fg-muted,#3d5870)]">
         <span className="uppercase tracking-wider">{label}</span>
         <div className="flex items-center gap-1.5">
           <span
@@ -48,11 +48,11 @@ export function TelemetryTile({
 
       <div className="flex items-baseline justify-between gap-4">
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-semibold tracking-tight font-mono text-[var(--fg,#ededed)]">
+          <span className="text-2xl font-semibold tracking-tight font-mono text-[var(--fg,#011829)]">
             {value}
           </span>
           {unit && (
-            <span className="text-xs font-mono text-[var(--fg-muted,#888)]">{unit}</span>
+            <span className="text-xs font-mono text-[var(--fg-muted,#3d5870)]">{unit}</span>
           )}
         </div>
 
@@ -61,7 +61,7 @@ export function TelemetryTile({
           <svg width={width} height={height} className="overflow-visible">
             <polyline
               fill="none"
-              stroke="var(--accent,#F59E0B)"
+              stroke="var(--accent,#4da2ff)"
               strokeWidth="1.75"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -71,7 +71,7 @@ export function TelemetryTile({
         </div>
       </div>
 
-      <div className="flex items-center justify-between text-[11px] font-mono text-[var(--fg-muted,#888)] pt-1 border-t border-[var(--border,#262626)]">
+      <div className="flex items-center justify-between text-[11px] font-mono text-[var(--fg-muted,#3d5870)] pt-1 border-t border-[var(--border,#d3e4f8)]">
         <span className="text-emerald-400">{delta}</span>
         <span>rolling window</span>
       </div>

@@ -13,10 +13,10 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center gap-4 rounded-[var(--radius)] border border-dashed border-[var(--border)] p-10 text-center">
+    <div className="flex flex-col items-center gap-4 rounded-[var(--radius)] border border-dashed border-[var(--accent)] bg-[var(--surface)] p-10 text-center">
       <Illustration id={illustration} className="h-28 w-28" />
       <div className="flex flex-col gap-1">
-        <p className="text-sm font-medium text-[var(--fg)]">{title}</p>
+        <p className="text-base font-semibold text-[var(--fg)]">{title}</p>
         {description ? <p className="text-sm text-[var(--fg-muted)]">{description}</p> : null}
       </div>
       {action}
