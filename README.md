@@ -1,4 +1,4 @@
-# Agent Credit on Monad
+# Danom: agent credit on Monad
 
 Credit for AI agents that can only spend where their sponsor allows.
 
