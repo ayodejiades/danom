@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Agent Credit on Monad",
+  title: "Danom: agent credit on Monad",
   description: "A lender vault pays x402 channels for AI agents. The agent holds a signing key, never the money.",
 };
 
