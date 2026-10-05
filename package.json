@@ -18,7 +18,8 @@
     "indexer:catchup": "tsx indexer/cli.ts catchup",
     "indexer:daemon": "tsx indexer/cli.ts daemon",
     "proof:local": "tsx tools/local-proof.ts",
-    "contracts:test:fork": "forge test --match-contract CreditVaultTest --fork-url ${MONAD_RPC:-https://testnet-rpc.monad.xyz}"
+    "contracts:test:fork": "forge test --match-contract CreditVaultTest --fork-url ${MONAD_RPC:-https://testnet-rpc.monad.xyz}",
+    "deploy:verify": "tsx tools/verify-deployment.ts"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

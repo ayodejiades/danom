@@ -2,7 +2,7 @@
 
 | Layer | Status |
 | --- | --- |
-| `CreditVault` (pool, lines, tiers, record, revenue router, liquidation) | Written, tested offline and on a Monad fork. Not deployed. |
+| `CreditVault` (pool, lines, tiers, record, revenue router, liquidation) | Written and tested offline and on a Monad fork. Deployed to Monad testnet (deployment only, no lending activity yet). |
 | x402 batch settlement contract | The real canonical contract, at the same address on Monad testnet and mainnet. Used on a fork. |
 | Vouchers | Real EIP-712 signatures checked by the real contract. |
 | Token | MockAUSD. |

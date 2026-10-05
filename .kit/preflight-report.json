@@ -1,0 +1,112 @@
+{
+  "checks": [
+    {
+      "id": 1,
+      "name": "README has no leftover placeholder",
+      "status": "PASS",
+      "detail": "-",
+      "fixStep": "-"
+    },
+    {
+      "id": 2,
+      "name": "docs/BOUNTIES.md chosen bounties filled",
+      "status": "PASS",
+      "detail": "-",
+      "fixStep": "-"
+    },
+    {
+      "id": 3,
+      "name": "demo-path.json / DEMO_PATH.md exist",
+      "status": "FAIL",
+      "detail": "missing",
+      "fixStep": "demo-path"
+    },
+    {
+      "id": 4,
+      "name": "demo video in [60, 180]s",
+      "status": "FAIL",
+      "detail": "57.333333s",
+      "fixStep": "video"
+    },
+    {
+      "id": 5,
+      "name": "demo.gif, cover.png, fallback.mp4 exist",
+      "status": "PASS",
+      "detail": "-",
+      "fixStep": "-"
+    },
+    {
+      "id": 6,
+      "name": "health endpoint answers ok:true (deployed + demo mode)",
+      "status": "SKIP",
+      "detail": "no DEPLOY_URL in .env and no local server reachable",
+      "fixStep": "deploy"
+    },
+    {
+      "id": 7,
+      "name": "git: clean, no .env, gitleaks clean",
+      "status": "PASS",
+      "detail": "6 commits",
+      "fixStep": "-"
+    },
+    {
+      "id": 8,
+      "name": "repo public if required; LICENSE if required",
+      "status": "PASS",
+      "detail": "-",
+      "fixStep": "-"
+    },
+    {
+      "id": 9,
+      "name": "chosen sponsors satisfy integration contract",
+      "status": "PASS",
+      "detail": "-",
+      "fixStep": "-"
+    },
+    {
+      "id": 10,
+      "name": "CREDITS.md lists every attributed asset",
+      "status": "PASS",
+      "detail": "-",
+      "fixStep": "-"
+    },
+    {
+      "id": 11,
+      "name": "AI disclosure line",
+      "status": "SKIP",
+      "detail": "no .kit/limits.json",
+      "fixStep": "-"
+    },
+    {
+      "id": 12,
+      "name": "docs/EVIDENCE.md and docs/HARD_THING.md generated",
+      "status": "FAIL",
+      "detail": "missing evidence matrix or technical moat doc",
+      "fixStep": "implement"
+    },
+    {
+      "id": 13,
+      "name": "no leaked builder phrases or anti-slop copy",
+      "status": "PASS",
+      "detail": "-",
+      "fixStep": "-"
+    },
+    {
+      "id": 14,
+      "name": "live testnet contract & transaction verified",
+      "status": "FAIL",
+      "detail": "no live testnet contract or transaction found in .kit/deployment.json or README.md",
+      "fixStep": "deploy (run ./scripts/deploy_testnet.sh or populate .kit/deployment.json)"
+    },
+    {
+      "id": 15,
+      "name": "landing copy written for this product",
+      "status": "PASS",
+      "detail": "-",
+      "fixStep": "-"
+    }
+  ],
+  "pass": 9,
+  "fail": 4,
+  "skip": 2
+}

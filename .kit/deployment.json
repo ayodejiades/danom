@@ -1,0 +1,19 @@
+{
+  "network": "Monad Testnet",
+  "chainId": 10143,
+  "deployedAt": "2026-09-30",
+  "deployer": "0x5950Cf8500c45cFaE8fA1eCD242a4469Bd5951Ff",
+  "contractAddress": "0x959c59B1a46545e6AE2Fcba48A37bD93D93787dD",
+  "contractName": "CreditVault",
+  "txHash": "0x9eb84d7e02fd00d7f598b307c51bfacee4cbcae62447fac759a581e8b808b001",
+  "explorerContract": "https://testnet.monadscan.com/address/0x959c59B1a46545e6AE2Fcba48A37bD93D93787dD",
+  "explorerTx": "https://testnet.monadscan.com/tx/0x9eb84d7e02fd00d7f598b307c51bfacee4cbcae62447fac759a581e8b808b001",
+  "token": {
+    "name": "MockAUSD",
+    "address": "0xffAA4a80Ce47071CC880632be756EBA0cF363F27",
+    "txHash": "0x677e9c8769440227f8549573f71d324ed14e3defb0fd4f62d2985dad9a0b4715",
+    "note": "Test token with open minting. Not real AUSD or USDC."
+  },
+  "x402BatchSettlement": "0x4020074e9dF2ce1deE5A9C1b5c3f541D02a10003",
+  "note": "Deployed contracts only. No lending, channel or repayment transaction has been sent to this deployment yet."
+}

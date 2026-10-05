@@ -32,3 +32,7 @@ docs/*.gif
 # Editors
 .vscode/
 .idea/
+
+# Foundry output. forge marks cache/ files as containing sensitive values.
+broadcast/
+cache/

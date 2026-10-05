@@ -9,7 +9,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { receiptDigest } from "../lib/stream";
 import { SEAMS } from "../lib/seams";
+import { verifyDeployment } from "./verify-deployment";
 
+async function main() {
 const root = process.cwd();
 const proofPath = path.join(root, "PROOF_RUNS.json");
 if (!fs.existsSync(proofPath)) {
@@ -73,6 +75,22 @@ const rows: Row[] = [
     passed: forgePassed >= 22 && forgeFailed === 0 },
 ];
 
+// Live deployment on Monad testnet: read only, and never fails the run if the RPC is unreachable.
+let liveNote = "not re-checked (RPC unreachable or no .kit/deployment.json)";
+try {
+  if (fs.existsSync(path.join(root, ".kit", "deployment.json"))) {
+    const live = await verifyDeployment();
+    const ok = live.chainId === 10143 && live.checks.every((c) => c.ok);
+    const d = JSON.parse(fs.readFileSync(path.join(root, ".kit", "deployment.json"), "utf8"));
+    liveNote = `${live.checks.filter((c) => c.ok).length} of ${live.checks.length} on chain checks passed on chain id ${live.chainId}`;
+    rows.push({ claim: "CreditVault and MockAUSD are deployed on Monad testnet and wired to the canonical x402 contract", level: "On chain (testnet)",
+      evidence: `${liveNote}. Vault ${d.contractAddress}, deployment tx ${d.txHash}`,
+      limitation: "Deployed only. No lending, channel or repayment transaction has been sent to this deployment yet, and the token is MockAUSD", passed: ok });
+  }
+} catch (e) {
+  liveNote = `not re-checked (${(e as Error).message.split("\n")[0]})`;
+}
+
 const failed = rows.filter((r) => !r.passed);
 if (failed.length > 0) {
   console.error(`claim:verify FAILED on ${failed.length} claim(s):`, failed.map((r) => r.claim));
@@ -86,7 +104,8 @@ const table = [
 ].join("\n");
 
 const notClaimed = [
-  "- Any deployment or transaction on Monad testnet or mainnet. Everything ran on a local Anvil fork.",
+  "- Any lending, channel, claim or repayment transaction on Monad. Only the two deployment transactions exist on testnet; every run in PROOF_RUNS.json happened on a local Anvil fork.",
+  "- Anything on Monad mainnet.",
   "- Real AUSD or USDC. The token in every run is MockAUSD.",
   "- Any use of the Monad x402 facilitator. The vendor claims directly as receiver authorizer.",
   "- Dynamic, Privy, Envio (HyperIndex or HyperSync) or Chainlink integrations. See docs/SPONSOR_INTEGRATIONS.md.",
@@ -113,7 +132,7 @@ fs.writeFileSync(path.join(root, "WHAT_IS_REAL.md"), [
   "",
   "| Layer | Status |",
   "| --- | --- |",
-  "| `CreditVault` (pool, lines, tiers, record, revenue router, liquidation) | Written, tested offline and on a Monad fork. Not deployed. |",
+  "| `CreditVault` (pool, lines, tiers, record, revenue router, liquidation) | Written and tested offline and on a Monad fork. Deployed to Monad testnet (deployment only, no lending activity yet). |",
   "| x402 batch settlement contract | The real canonical contract, at the same address on Monad testnet and mainnet. Used on a fork. |",
   "| Vouchers | Real EIP-712 signatures checked by the real contract. |",
   "| Token | MockAUSD. |",
@@ -136,3 +155,9 @@ fs.writeFileSync(path.join(root, "docs", "SPONSOR_INTEGRATIONS.md"), [
 ].join("\n"));
 
 console.log(`claim:verify: ${rows.length}/${rows.length} verified (mode=${proof.verificationMode}) -> wrote CLAIM_LEDGER.md, WHAT_IS_REAL.md, docs/SPONSOR_INTEGRATIONS.md`);
+}
+
+main().catch((e) => {
+  console.error("claim:verify crashed:", e);
+  process.exit(1);
+});

@@ -2,9 +2,14 @@
   "baseUrl": "${DEPLOY_URL}",
   "viewport": { "width": 1920, "height": 1080 },
   "steps": [
-    { "say": "An agent that can only spend where its sponsor allows", "goto": "/" },
-    { "say": "Try the credit flow", "click": "[data-demo='launch-demo']", "waitFor": "[data-demo='list']" },
-    { "say": "The agent tries to pay its own wallet and the vault refuses", "click": "#receiver", "select": { "#receiver": "0xA6E4700000000000000000000000000000000002" } },
-    { "say": "Ask the vault to fund the vendor channel", "click": "[data-demo='trigger-escrow']", "waitFor": "[data-demo='row']" }
+    { "say": "An agent that can only spend where its sponsor allows", "goto": "/", "waitMs": 2500 },
+    { "say": "Open the credit flow", "click": "[data-demo='launch-demo']", "waitFor": "[data-demo='list']", "waitMs": 2500 },
+    { "say": "The agent asks the vault to pay its own wallet", "click": "[data-demo='receiver-self']", "waitMs": 800 },
+    { "say": "The vault refuses", "click": "[data-demo='trigger-escrow']", "waitFor": "[data-demo='row']", "waitMs": 3500 },
+    { "say": "Now an approved vendor, above the cap", "click": "[data-demo='receiver-vendor']", "fill": { "[data-demo='provider-input']": "41" }, "waitMs": 800 },
+    { "say": "Refused again", "click": "[data-demo='trigger-escrow']", "waitMs": 3500 },
+    { "say": "Thirty is inside the cap", "fill": { "[data-demo='provider-input']": "30" }, "waitMs": 600 },
+    { "say": "The vault funds the channel", "click": "[data-demo='trigger-escrow']", "waitMs": 3500 },
+    { "say": "A customer pays the agent", "click": "[data-demo='route-revenue']", "waitMs": 4500 }
   ]
 }
