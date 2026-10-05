@@ -36,3 +36,4 @@ docs/*.gif
 # Foundry output. forge marks cache/ files as containing sensitive values.
 broadcast/
 cache/
+.vercel
