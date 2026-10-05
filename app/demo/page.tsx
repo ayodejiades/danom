@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SiteNav } from "@/components/site-nav";
+import { PageShell } from "@/components/page-shell";
 import {
   creditLimit, checkFunding, debtAt, ltvBpsOf, pendingInterest, routeRevenue, splitRepayment, tierOf,
   type AgentRecord, type CreditLine, type FundRefusal,
@@ -14,9 +14,9 @@ const AGENT = "0xA6E4700000000000000000000000000000000002";
 const UNKNOWN = "0x5717000000000000000000000000000000000003";
 
 const RECEIVERS = [
-  { id: VENDOR, label: "Acme API (approved vendor)" },
-  { id: AGENT, label: "The agent's own wallet" },
-  { id: UNKNOWN, label: "An unknown wallet" },
+  { id: VENDOR, key: "receiver-vendor", label: "Acme API (approved vendor)" },
+  { id: AGENT, key: "receiver-self", label: "The agent's own wallet" },
+  { id: UNKNOWN, key: "receiver-unknown", label: "An unknown wallet" },
 ];
 
 const PLAIN: Record<FundRefusal, string> = {
@@ -36,6 +36,8 @@ const INITIAL_LINE: CreditLine = {
 };
 const INITIAL_RECORD: AgentRecord = { repaidPrincipal: BigInt(0), revenueRouted: BigInt(0), defaults: 0 };
 const POOL = toUnits(5000);
+
+const TILES = ["bg-[var(--sky)]", "bg-[#d6f8ea]", "bg-[#fff0a8]", "bg-[#ffdcd5]", "bg-[var(--surface-raised)]", "bg-[#d6f8ea]"];
 
 interface Row { id: number; day: number; action: string; ok: boolean; note: string }
 
@@ -125,60 +127,71 @@ export default function Demo() {
     { label: "Pool idle cash", value: fromUnits(cash), hint: "collateral is never lent" },
   ], [debt, limit, tier, ltv, nextTierAt, record, agentBalance, cash, line]);
 
-  const input = "w-full rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg)] px-3 py-2 font-mono text-sm outline-none focus:border-[var(--accent)]";
-  const btn = "rounded-[var(--radius-sm)] px-3 py-2 text-base font-semibold transition-opacity";
-  const primary = `${btn} bg-[var(--accent)] text-[var(--accent-contrast)] hover:opacity-90`;
-  const secondary = `${btn} border border-[var(--border)] bg-[var(--surface-raised)] hover:bg-[var(--surface)]`;
+  const input = "w-full rounded-[var(--radius-sm)] border border-[var(--border)] bg-white px-3 py-2 font-mono text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--sky)]";
+  const btn = "rounded-[var(--radius-pill)] px-4 py-2 text-base font-semibold transition-all duration-300 active:scale-[0.98]";
+  const primary = `${btn} bg-[var(--accent)] text-[var(--accent-contrast)] hover:bg-[var(--navy)] hover:text-white`;
+  const secondary = `${btn} border border-[var(--border)] bg-white hover:border-[var(--accent)] hover:bg-[var(--surface)]`;
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteNav active="/demo" />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">
-        <div className="mb-6 flex flex-col gap-2">
-          <h1 className="text-3xl font-semibold tracking-tight [text-wrap:balance]">Try the credit flow</h1>
-          <p className="max-w-3xl text-[var(--fg-muted)] [text-wrap:pretty]">
-            This runs the vault&apos;s rules in your browser using the same functions the tests check against the contract. It is a simulation. The recorded run on the real x402 contract is on the <a className="text-[var(--accent)] underline" href="/proof">recorded run</a> page.
-          </p>
-        </div>
-
-        <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-demo="list">
-          {stats.map((s) => (
-            <div key={s.label} className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-4">
-              <p className="text-xs uppercase tracking-[0.1em] text-[var(--fg-muted)]">{s.label}</p>
-              <p className="mt-1 font-mono text-2xl font-semibold">{s.value}</p>
-              <p className="mt-1 text-xs text-[var(--fg-muted)] [text-wrap:pretty]">{s.hint}</p>
+    <PageShell
+      active="/demo"
+      title="Try the credit flow"
+      intro={
+        <p>
+          This runs the vault&apos;s rules in your browser using the same functions the tests check against the contract. It is a simulation. The recorded run on the real x402 contract is on the <a className="font-semibold text-[var(--accent-ink)] underline" href="/proof">recorded run</a> page.
+        </p>
+      }
+    >
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-demo="list">
+          {stats.map((s, i) => (
+            <div key={s.label} className={`rounded-[var(--radius)] p-5 ${TILES[i % TILES.length]}`}>
+              <p className="text-sm font-semibold text-[var(--navy-soft)]">{s.label}</p>
+              <p className="mt-1 font-mono text-3xl font-semibold">{s.value}</p>
+              <p className="mt-1 text-xs text-[var(--navy-soft)] [text-wrap:pretty]">{s.hint}</p>
             </div>
           ))}
         </div>
 
-        {overdue && <p className="mb-6 rounded-[var(--radius-sm)] border border-[#a16207] bg-[#a1620722] px-4 py-3 text-sm">The line is overdue with debt outstanding. Anyone can now liquidate it, which would record a default and pin the agent to tier 0.</p>}
+        {overdue && <p className="rounded-[var(--radius-sm)] border border-[var(--sun)] bg-[var(--warn-bg)] px-4 py-3 text-sm">The line is overdue with debt outstanding. Anyone can now liquidate it, which would record a default and pin the agent to tier 0.</p>}
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
           <div className="flex flex-col gap-5">
-            <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-5">
-              <h2 className="mb-3 text-base font-semibold">The agent asks the vault to pay a vendor</h2>
-              <label className="mb-1 block text-xs text-[var(--fg-muted)]" htmlFor="receiver">Who gets paid</label>
-              <select id="receiver" className={`${input} mb-3`} value={receiver} onChange={(e) => setReceiver(e.target.value)}>
-                {RECEIVERS.map((r) => <option key={r.id} value={r.id}>{r.label}</option>)}
-              </select>
+            <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-6">
+              <h2 className="mb-4 text-xl font-semibold">The agent asks the vault to pay a vendor</h2>
+              <p className="mb-1 text-xs text-[var(--fg-muted)]" id="receiver-label">Who gets paid</p>
+              <div role="radiogroup" aria-labelledby="receiver-label" className="mb-3 grid gap-2">
+                {RECEIVERS.map((r) => (
+                  <button
+                    key={r.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={receiver === r.id}
+                    data-demo={r.key}
+                    onClick={() => setReceiver(r.id)}
+                    className={`rounded-[var(--radius-sm)] border px-3 py-2 text-left text-sm ${receiver === r.id ? "border-[var(--accent)] bg-[var(--surface-raised)]" : "border-[var(--border)] bg-white hover:bg-[var(--surface)]"}`}
+                  >
+                    {r.label}
+                  </button>
+                ))}
+              </div>
               <label className="mb-1 block text-xs text-[var(--fg-muted)]" htmlFor="amount">Channel amount (per channel cap is 40)</label>
               <input id="amount" data-demo="provider-input" className={`${input} mb-3`} value={amount} inputMode="decimal" onChange={(e) => setAmount(e.target.value)} />
               <button type="button" data-demo="trigger-escrow" className={primary} onClick={fund}>Ask the vault to fund the channel</button>
             </section>
 
-            <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-5">
-              <h2 className="mb-3 text-base font-semibold">Money coming in</h2>
+            <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-6">
+              <h2 className="mb-4 text-xl font-semibold">Money coming in</h2>
               <label className="mb-1 block text-xs text-[var(--fg-muted)]" htmlFor="revenue">A customer pays the agent</label>
               <input id="revenue" className={`${input} mb-3`} value={revenue} inputMode="decimal" onChange={(e) => setRevenue(e.target.value)} />
               <div className="flex flex-wrap gap-2">
-                <button type="button" className={secondary} onClick={pay}>Route the payment</button>
+                <button type="button" data-demo="route-revenue" className={secondary} onClick={pay}>Route the payment</button>
                 <button type="button" className={secondary} onClick={() => repay(false)}>Sponsor repays 10</button>
                 <button type="button" className={secondary} onClick={() => repay(true)}>Sponsor repays all</button>
               </div>
             </section>
 
-            <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-5">
-              <h2 className="mb-3 text-base font-semibold">Sponsor and time</h2>
+            <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-6">
+              <h2 className="mb-4 text-xl font-semibold">Sponsor and time</h2>
               <div className="flex flex-wrap gap-2">
                 <button type="button" className={secondary} onClick={revoke}>{line.active ? "Revoke the line" : "Reopen the line"}</button>
                 <button type="button" className={secondary} onClick={() => advance(7)}>Advance 7 days</button>
@@ -189,7 +202,7 @@ export default function Demo() {
           </div>
 
           <section className="flex flex-col gap-4">
-            <div aria-live="polite" className={`min-h-[3.5rem] rounded-[var(--radius)] border px-4 py-3 text-sm [text-wrap:pretty] ${message ? (message.ok ? "border-[var(--accent)] bg-[#05966915]" : "border-[#b91c1c] bg-[#b91c1c15]") : "border-[var(--border)] text-[var(--fg-muted)]"}`}>
+            <div aria-live="polite" className={`min-h-[3.5rem] rounded-[var(--radius)] border px-4 py-3 text-sm [text-wrap:pretty] ${message ? (message.ok ? "border-[var(--accent)] bg-[var(--surface-raised)]" : "border-[var(--danger)] bg-[#fdecef]") : "border-[var(--border)] text-[var(--fg-muted)]"}`}>
               {message ? message.text : "Pick a vendor and an amount, then ask the vault to fund the channel. Try the agent's own wallet or an amount above 40 to see a refusal."}
             </div>
             <div className="overflow-hidden rounded-[var(--radius)] border border-[var(--border)]">
@@ -201,7 +214,7 @@ export default function Demo() {
                     <tr key={r.id} data-demo="row" className="border-t border-[var(--border)] align-top">
                       <td className="px-3 py-2 font-mono">{r.day}</td>
                       <td className="px-3 py-2">{r.action}</td>
-                      <td className={`px-3 py-2 ${r.ok ? "text-[var(--accent)]" : "text-[#f87171]"}`}>{r.ok ? "Allowed" : "Refused"}</td>
+                      <td className={`px-3 py-2 ${r.ok ? "text-[var(--ok)]" : "text-[var(--danger)]"}`}>{r.ok ? "Allowed" : "Refused"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -209,7 +222,6 @@ export default function Demo() {
             </div>
           </section>
         </div>
-      </main>
-    </div>
+    </PageShell>
   );
 }
