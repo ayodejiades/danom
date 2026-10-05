@@ -1,32 +1,52 @@
 1
-00:00:00,000 --> 00:00:14,150
-Credit layer for x402 agents on Monad: a lender vault is the payer of x402 batch settlement channels, so an AI agent holds only a voucher signing key and never unconstrained USDC.
+00:00:00,000 --> 00:00:09,725
+An AI agent has to pay for APIs and data. Give it a wallet, and one leaked key drains the wallet. Here, the agent never holds the money.
 
 2
-00:00:14,150 --> 00:00:22,569
-Manual workflows waste hours on repetitive operational overhead that monad-metropolis automates deterministically.
+00:00:09,725 --> 00:00:20,069
+A lender vault pays instead. It pays only vendors the sponsor approved, within limits the sponsor sets. Every check runs before a token moves.
 
 3
-00:00:22,569 --> 00:00:28,451
-An agent that can only spend where its sponsor allows.
+00:00:20,069 --> 00:00:25,748
+The sponsor locked four hundred in collateral and opened one credit line for one agent.
 
 4
-00:00:28,451 --> 00:00:32,902
-Try the credit flow.
+00:00:25,748 --> 00:00:35,117
+This page simulates the vault's rules in the browser. Debt is zero. The agent can borrow up to one hundred, and forty in any one channel.
 
 5
-00:00:32,902 --> 00:00:39,944
-The agent tries to pay its own wallet and the vault refuses.
+00:00:35,117 --> 00:00:38,938
+First, the agent asks the vault to pay its own wallet.
 
 6
-00:00:39,944 --> 00:00:45,290
-Ask the vault to fund the vendor channel.
+00:00:38,938 --> 00:00:44,258
+The vault refuses. The sponsor never approved that address, so nothing moves.
 
 7
-00:00:45,290 --> 00:00:52,758
-The solver verified 6 runs at 10000 basis points with canonical EIP-712 digests.
+00:00:44,258 --> 00:00:49,030
+Next, an approved vendor, but forty one dollars. The cap is forty.
 
 8
-00:00:52,758 --> 00:00:57,333
-monad-metropolis is live, and the whole path just ran end to end.
+00:00:49,030 --> 00:00:54,222
+Refused again. The limits live in the contract, not in the agent's promise.
+
+9
+00:00:54,222 --> 00:00:56,531
+Thirty is inside the cap.
+
+10
+00:00:56,531 --> 00:01:04,883
+The vault escrows thirty in an x402 payment channel for the vendor. The agent never touches it. It only signs vouchers.
+
+11
+00:01:04,883 --> 00:01:12,880
+Now a customer pays the agent one hundred, through the vault. Thirty repays the loan first. Seventy reaches the agent.
+
+12
+00:01:12,880 --> 00:01:24,623
+Underneath, this is the real x402 batch settlement contract on Monad, run on a local fork. Eight of eight attempts outside the policy were refused with the expected error.
+
+13
+00:01:24,623 --> 00:01:37,473
+Every repayment builds a record. After three repaid rounds, the same collateral supported two hundred forty five in credit, up from one hundred. The contracts and tests are in the repository.
 
