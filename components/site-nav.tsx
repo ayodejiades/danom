@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const LINKS = [
   { href: "/", label: "Overview" },
-  { href: "/demo", label: "Try the credit flow" },
+  { href: "/demo", label: "Credit flow" },
   { href: "/proof", label: "Recorded run" },
 ];
 
@@ -26,6 +26,11 @@ export function SiteNav({ active }: { active: string }) {
               {l.label}
             </Link>
           ))}
+          {active !== "/demo" && (
+            <Link href="/demo" className="ml-1 rounded-full bg-[var(--accent)] px-4 py-2 text-[var(--accent-contrast)] transition-colors duration-300 hover:bg-[var(--navy)] hover:text-white">
+              Launch demo
+            </Link>
+          )}
         </nav>
       </div>
     </header>
