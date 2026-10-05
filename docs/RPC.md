@@ -1,44 +1,39 @@
-# RPC.md — Web3 hour-one checklist & deployment workflow
+# RPC and network setup
 
-## 1. Network configuration & RPC keys
-- **Primary default:** **Base Sepolia** (Chain ID: `84532`, RPC: `https://sepolia.base.org`).
-  Base is where top hackathon bounty pools live (Coinbase DevRel, onchain AI agents, consumer crypto).
-- **Secondary networks:** Arbitrum Sepolia (`421614`, `https://sepolia-rollup.arbitrum.io/rpc`), Ethereum Sepolia (`11155111`).
-- Copy your RPC key (Alchemy / Infura / QuickNode) into `.env`:
-  ```bash
-  BASE_SEPOLIA_RPC=https://base-sepolia.g.alchemy.com/v2/<KEY>
-  RPC_URL=https://eth-sepolia.g.alchemy.com/v2/<KEY>
-  ```
+The project targets **Monad testnet** (chain id `10143`). Values below come from docs.monad.xyz.
 
-## 2. Get testnet faucet funds
-- **Base Sepolia:** https://www.coinbase.com/faucets/base-ethereum-sepolia-faucet or https://faucets.chain.link/base-sepolia
-- **Arbitrum Sepolia:** https://faucets.chain.link/arbitrum-sepolia
-- **Sepolia:** https://sepoliafaucet.com
+| | |
+|---|---|
+| Public RPC | `https://testnet-rpc.monad.xyz` (QuickNode, 50 requests per second, 25 for `eth_call` and `eth_estimateGas`) |
+| Other RPCs | `https://rpc-testnet.monadinfra.com` (Monad Foundation, 20 rps), `https://rpc.ankr.com/monad_testnet` |
+| Explorer | https://testnet.monadscan.com (the address pages resolve; MonadVision returned 403 to a script) |
+| Faucet | https://faucet.monad.xyz |
+| Mainnet | chain id `143`, `https://rpc.monad.xyz` |
 
-## 3. 1-Click Smart Contract Deployment & Verification
-Never submit un-deployed contracts. Use Foundry to deploy directly to Base Sepolia:
+The public RPC limits `eth_getLogs` to a 100 block range. `tools/local-proof.ts` queries from the fork's first block for that reason, and the indexer reads in bounded chunks.
+
+## Environment
+
+Copy `.env.example` to `.env`. Never commit it, and never put a private key in a file inside the repo.
+
 ```bash
-# 1. Run local test suite and invariant fuzzing
-pnpm contracts:test
-pnpm contracts:gas
-
-# 2. Deploy contracts to Base Sepolia and broadcast on-chain
-pnpm contracts:deploy:base
+RPC_URL=https://testnet-rpc.monad.xyz
+CHAIN_ID=10143
+CONTRACT_ADDRESS=0x959c59B1a46545e6AE2Fcba48A37bD93D93787dD   # the deployed CreditVault
+START_BLOCK=66922076                                          # its deployment block
 ```
-Copy the printed `AgentEscrow` (or your primary contract) address into `.env`:
+
+## Deploy
+
 ```bash
-NEXT_PUBLIC_CONTRACT_ADDRESS=0x...
+export PRIVATE_KEY=0x...   # a funded throwaway key, exported for this shell only
+forge script contracts/script/Deploy.s.sol --fork-url https://testnet-rpc.monad.xyz          # dry run
+forge script contracts/script/Deploy.s.sol --rpc-url https://testnet-rpc.monad.xyz --broadcast
+unset PRIVATE_KEY
 ```
-This automatically embeds your live Basescan link into the app's footer and into `SUBMISSION.md`.
 
-## 4. Wallet Connectivity: Passkeys & Account Abstraction
-- The frontend configures **Coinbase Smart Wallet (Passkeys / ERC-4337)** by default.
-- Users connect via biometric passkeys (FaceID / TouchID) directly inside the browser DOM. No extension popups to hijack Playwright demo recording or judge evaluation.
-- `DEMO_MODE=1` activates the deterministic offline mock connector with zero network overhead.
+Set `TOKEN=0x...` to lend a real stablecoin instead of deploying `MockAUSD`. Then run `pnpm deploy:verify` to check the result on chain.
 
-## 5. Indexing & Event Verification
-- Confirm `getLogs` works against your deployed contract:
-  ```bash
-  pnpm indexer:catchup
-  ```
-- Swap `indexer/abi.ts` for your bounty's custom events and update `START_BLOCK` in `.env`.
+## Recording the fork run
+
+`pnpm proof:local` forks Monad testnet with Anvil and needs network access to the RPC above. Set `MONAD_RPC` to use a different endpoint.

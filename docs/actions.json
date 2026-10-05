@@ -1,8 +1,8 @@
 {
-  "recordedAt": "2026-09-30T08:04:10.046+00:00",
+  "recordedAt": "2026-09-30T08:11:17.750+00:00",
   "baseUrl": "http://localhost:3000",
   "demoMode": true,
-  "durationSeconds": 5.766667,
+  "durationSeconds": 32.2,
   "viewport": {
     "width": 1920,
     "height": 1080
@@ -15,47 +15,108 @@
     },
     {
       "index": 1,
-      "atSeconds": 0.819,
-      "say": "Try the credit flow"
+      "atSeconds": 3.373,
+      "say": "Open the credit flow"
     },
     {
       "index": 2,
-      "atSeconds": 2.314,
-      "say": "The agent tries to pay its own wallet and the vault refuses"
+      "atSeconds": 7.92,
+      "say": "The agent asks the vault to pay its own wallet"
     },
     {
       "index": 3,
-      "atSeconds": 2.954,
-      "say": "Ask the vault to fund the vendor channel"
+      "atSeconds": 9.43,
+      "say": "The vault refuses"
+    },
+    {
+      "index": 4,
+      "atSeconds": 13.595,
+      "say": "Now an approved vendor, above the cap"
+    },
+    {
+      "index": 5,
+      "atSeconds": 15.081,
+      "say": "Refused again"
+    },
+    {
+      "index": 6,
+      "atSeconds": 19.251,
+      "say": "Thirty is inside the cap"
+    },
+    {
+      "index": 7,
+      "atSeconds": 20.675,
+      "say": "The vault funds the channel"
+    },
+    {
+      "index": 8,
+      "atSeconds": 24.825,
+      "say": "A customer pays the agent"
     }
   ],
   "clicks": [
     {
-      "atSeconds": 0.848,
+      "atSeconds": 3.411,
       "to": [
         0.25707600911458334,
         0.3888888888888889
       ],
       "selector": "[data-demo='launch-demo']",
-      "say": "Try the credit flow"
+      "say": "Open the credit flow"
     },
     {
-      "atSeconds": 2.321,
+      "atSeconds": 7.937,
       "to": [
         0.3403401692708333,
-        0.5222222222222223
+        0.5657407407407408
       ],
-      "selector": "#receiver",
-      "say": "The agent tries to pay its own wallet and the vault refuses"
+      "selector": "[data-demo='receiver-self']",
+      "say": "The agent asks the vault to pay its own wallet"
     },
     {
-      "atSeconds": 2.961,
+      "atSeconds": 9.438,
       "to": [
         0.2959676106770833,
-        0.6333333333333333
+        0.7203703703703703
       ],
       "selector": "[data-demo='trigger-escrow']",
-      "say": "Ask the vault to fund the vendor channel"
+      "say": "The vault refuses"
+    },
+    {
+      "atSeconds": 13.606,
+      "to": [
+        0.3403401692708333,
+        0.5231481481481481
+      ],
+      "selector": "[data-demo='receiver-vendor']",
+      "say": "Now an approved vendor, above the cap"
+    },
+    {
+      "atSeconds": 15.089,
+      "to": [
+        0.2959676106770833,
+        0.7203703703703703
+      ],
+      "selector": "[data-demo='trigger-escrow']",
+      "say": "Refused again"
+    },
+    {
+      "atSeconds": 20.681,
+      "to": [
+        0.2959676106770833,
+        0.7203703703703703
+      ],
+      "selector": "[data-demo='trigger-escrow']",
+      "say": "The vault funds the channel"
+    },
+    {
+      "atSeconds": 24.85,
+      "to": [
+        0.26802164713541665,
+        0.9138888888888889
+      ],
+      "selector": "[data-demo='route-revenue']",
+      "say": "A customer pays the agent"
     }
   ]
 }

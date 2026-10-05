@@ -4,7 +4,8 @@ What a reader should know before relying on anything here.
 
 ## What ran, and where
 
-- Every recorded transaction ran on a **local Anvil fork of Monad testnet**. State changes stayed in the fork. Nothing was broadcast to Monad testnet or mainnet.
+- Every recorded run ran on a **local Anvil fork of Monad testnet**. State changes stayed in the fork.
+- Exactly two transactions were broadcast to **Monad testnet**: deploying `MockAUSD` and deploying `CreditVault` (see `.kit/deployment.json`). Nothing has been sent to the deployed vault. Nothing was broadcast to mainnet.
 - The **x402 batch settlement** contract in those runs is the real canonical contract, forked from Monad. Its voucher signature checks are the real ones.
 - The **token** is `MockAUSD`, a test token with open minting. It is not AUSD or USDC.
 - **No facilitator** was involved. The vendor claimed directly as its own receiver authorizer.

@@ -37,22 +37,8 @@
     "**/*.mts"
   ],
   "exclude": [
-    "agent",
-    "components/ablation-benchmark.tsx",
-    "components/console-tour.tsx",
-    "components/dashboard-shell.tsx",
-    "components/security-lab.tsx",
     "contracts",
-    "lib/escrow.ts",
     "lib/forge-std",
-    "lib/network-resilience.ts",
-    "lib/rpc.ts",
-    "lib/solver.ts",
-    "lib/solver.ts.bak",
-    "lib/sponsors.ts",
-    "node_modules",
-    "tools/keys-generate.ts",
-    "tools/seam-check.ts",
-    "tools/verify.ts"
+    "node_modules"
   ]
 }
