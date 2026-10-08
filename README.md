@@ -4,6 +4,8 @@ Credit for AI agents that can only spend where their sponsor allows.
 
 A lender vault is the **payer** of x402 batch settlement payment channels. An AI agent holds only a **voucher signing key**, never the money. It repays from its own revenue, builds a credit record any vendor can read, and its sponsor can lock less collateral as that record grows.
 
+![Danom landing page and credit flow](docs/demo.gif)
+
 Built for [Monad Metropolis](https://monad.xyz/developers/hackathons/metropolis), primary track **Trust, Identity and AI Infrastructure**.
 
 ## How it works
