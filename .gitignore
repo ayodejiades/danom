@@ -27,7 +27,7 @@ __pycache__/
 public/audio/
 docs/demo.mp4
 docs/fallback.mp4
-docs/*.gif
+# docs/demo.gif is committed so the README can show it
 
 # Editors
 .vscode/
