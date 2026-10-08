@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ConnectWallet } from "@/components/connect-wallet";
 
 const LINKS = [
   { href: "/", label: "Overview" },
@@ -10,12 +11,13 @@ export function SiteNav({ active }: { active: string }) {
   return (
     <header className="sticky top-0 z-20 px-4 pt-4">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 rounded-[1.75rem] border border-[var(--border)] bg-white/85 py-2 pl-5 pr-2 sm:rounded-[var(--radius-pill)] shadow-[var(--shadow)] backdrop-blur">
-        <Link href="/" className="flex items-center gap-2 text-base font-semibold tracking-tight">
+        <Link href="/" className="order-1 flex items-center gap-2 text-base font-semibold tracking-tight">
           <span aria-hidden className="h-3 w-3 rounded-full bg-[var(--accent)] ring-4 ring-[var(--sky)]" />
           Danom
           <span className="rounded-full bg-[var(--surface-raised)] px-2 py-0.5 font-mono text-xs font-medium text-[var(--accent-ink)]">Monad</span>
         </Link>
-        <nav aria-label="Primary" className="flex flex-wrap items-center gap-1 text-sm font-semibold">
+        <div className="order-2 sm:order-3"><ConnectWallet /></div>
+        <nav aria-label="Primary" className="order-3 flex w-full flex-wrap items-center gap-1 text-sm font-semibold sm:order-2 sm:w-auto">
           {LINKS.map((l) => (
             <Link
               key={l.href}
