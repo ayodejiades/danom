@@ -19,6 +19,7 @@
 # Project files
 !/.gitignore
 !/.vercelignore
+!/.gitleaksignore
 !/.env.example
 !/package.json
 !/pnpm-lock.yaml
