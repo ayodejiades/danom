@@ -5,13 +5,15 @@ import { monad, monadTestnet } from "wagmi/chains";
 import { injected, mock } from "wagmi/connectors";
 
 const DEMO_ACCOUNT = "0x000000000000000000000000000000000000dEaD" as const;
-const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "1";
+// The mock wallet is opt in. DEMO_MODE (offline fixtures) must not swap the real wallet for it,
+// because the deployed site runs with DEMO_MODE=1 and still has to connect a real wallet.
+const useMockWallet = process.env.NEXT_PUBLIC_WALLET_MOCK === "1";
 
 export const chains = [monadTestnet, monad] as const;
 
 export const wagmiConfig = createConfig({
   chains,
-  connectors: isDemoMode ? [mock({ accounts: [DEMO_ACCOUNT], features: { defaultConnected: false } })] : [injected()],
+  connectors: useMockWallet ? [mock({ accounts: [DEMO_ACCOUNT], features: { defaultConnected: false } })] : [injected()],
   transports: {
     [monadTestnet.id]: http(process.env.NEXT_PUBLIC_RPC_URL || undefined),
     [monad.id]: http(process.env.NEXT_PUBLIC_MONAD_RPC || undefined),
