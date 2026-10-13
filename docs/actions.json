@@ -1,8 +1,8 @@
 {
-  "recordedAt": "2026-10-13T14:09:25.383+00:00",
+  "recordedAt": "2026-10-13T14:15:12.981+00:00",
   "baseUrl": "http://localhost:3210",
   "demoMode": false,
-  "durationSeconds": 35.833333,
+  "durationSeconds": 35.283333,
   "viewport": {
     "width": 1920,
     "height": 1080
@@ -15,48 +15,48 @@
     },
     {
       "index": 1,
-      "atSeconds": 3.977,
+      "atSeconds": 3.947,
       "say": "Open the credit flow"
     },
     {
       "index": 2,
-      "atSeconds": 7.931,
+      "atSeconds": 7.97,
       "say": "The agent asks the vault to pay its own wallet"
     },
     {
       "index": 3,
-      "atSeconds": 9.849,
+      "atSeconds": 9.884,
       "say": "The vault refuses"
     },
     {
       "index": 4,
-      "atSeconds": 14.475,
+      "atSeconds": 14.524,
       "say": "Now an approved vendor, above the cap"
     },
     {
       "index": 5,
-      "atSeconds": 16.438,
+      "atSeconds": 16.463,
       "say": "Refused again"
     },
     {
       "index": 6,
-      "atSeconds": 21.078,
+      "atSeconds": 21.195,
       "say": "Thirty is inside the cap"
     },
     {
       "index": 7,
-      "atSeconds": 23.296,
+      "atSeconds": 22.895,
       "say": "The vault funds the channel"
     },
     {
       "index": 8,
-      "atSeconds": 28.139,
+      "atSeconds": 27.503,
       "say": "A customer pays the agent"
     }
   ],
   "clicks": [
     {
-      "atSeconds": 4.063,
+      "atSeconds": 4.025,
       "to": [
         0.2657063802083333,
         0.6546006944444445
@@ -65,7 +65,7 @@
       "say": "Open the credit flow"
     },
     {
-      "atSeconds": 7.949,
+      "atSeconds": 7.987,
       "to": [
         0.3403401692708333,
         0.8617332175925926
@@ -74,7 +74,7 @@
       "say": "The agent asks the vault to pay its own wallet"
     },
     {
-      "atSeconds": 9.864,
+      "atSeconds": 9.919,
       "to": [
         0.3019002278645833,
         1.0302951388888888
@@ -83,7 +83,7 @@
       "say": "The vault refuses"
     },
     {
-      "atSeconds": 14.493,
+      "atSeconds": 14.533,
       "to": [
         0.3403401692708333,
         0.28858506944444445
@@ -92,7 +92,7 @@
       "say": "Now an approved vendor, above the cap"
     },
     {
-      "atSeconds": 16.455,
+      "atSeconds": 16.539,
       "to": [
         0.3019002278645833,
         0.49973958333333335
@@ -101,7 +101,7 @@
       "say": "Refused again"
     },
     {
-      "atSeconds": 23.482,
+      "atSeconds": 22.902,
       "to": [
         0.30137939453125,
         0.4988136574074074
@@ -110,7 +110,7 @@
       "say": "The vault funds the channel"
     },
     {
-      "atSeconds": 28.148,
+      "atSeconds": 27.53,
       "to": [
         0.26579182942708335,
         0.7253255208333333

@@ -99,7 +99,7 @@ export function Teller() {
         <ol className="flex flex-col gap-1 font-mono text-xs">
           {entries.slice(0, 4).map((e) => (
             <li key={e.n} className="print-in flex items-baseline justify-between gap-3">
-              <span className="truncate text-[var(--fg-muted)]">{String(e.n).padStart(3, "0")} · {e.amount}.00 → {e.to}</span>
+              <span className="truncate text-[var(--fg-muted)]">{String(e.n).padStart(3, "0")} · {e.amount}.00 to {e.to}</span>
               <span className={`shrink-0 font-semibold ${e.reason ? "text-[var(--danger)]" : "text-[var(--ok)]"}`}>{e.reason ?? "Funded"}</span>
             </li>
           ))}

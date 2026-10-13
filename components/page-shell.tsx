@@ -29,7 +29,7 @@ export function SiteFooter() {
           {onChain.map((c) => (
             <div key={c.label} className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-[color-mix(in_srgb,var(--fg)_14%,transparent)] py-3">
               <dt className="caption">{c.label}</dt>
-              <dd><a href={c.href} target="_blank" rel="noreferrer" className={`font-mono ${link}`}>{short(c.addr)} ↗</a></dd>
+              <dd><a href={c.href} target="_blank" rel="noreferrer" className={`font-mono ${link}`}>{short(c.addr)}</a></dd>
             </div>
           ))}
           <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-[color-mix(in_srgb,var(--fg)_14%,transparent)] py-3">

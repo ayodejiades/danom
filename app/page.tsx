@@ -53,8 +53,8 @@ export default function Home() {
     { title: "Spend only where allowed", body: "The sponsor names the vendors. A payment to the agent's own wallet or to a stranger is refused by the contract, not by a policy document.", proof: "ReceiverNotAllowed", kind: "reverts with" },
     { title: "A cap on every channel", body: "Each channel is limited to a per channel cap, and total debt is limited by the credit ceiling.", proof: "OverPerBorrowCap", kind: "reverts with" },
     { title: "Stop it in one transaction", body: "Revoking the line ends new funding at once. Escrow already committed comes back after the channel's withdraw delay.", proof: "LineInactive", kind: "reverts with" },
-    { title: "Revenue repays the loan first", body: "Payments from customers are routed through the vault. Interest and principal are settled before the agent receives the remainder.", proof: `${rev.customerPaidAusd} in → ${rev.debtBeforeAusd} to the loan`, kind: "recorded run" },
-    { title: "A record any vendor can read", body: "Lifetime repaid principal is kept per agent, so the record follows the agent to a new sponsor and lowers the collateral that sponsor must lock.", proof: `${g.repaidPrincipalAusd} repaid → tier 1`, kind: "recorded run" },
+    { title: "Revenue repays the loan first", body: "Payments from customers are routed through the vault. Interest and principal are settled before the agent receives the remainder.", proof: `${rev.debtBeforeAusd} of ${rev.customerPaidAusd} to the loan`, kind: "recorded run" },
+    { title: "A record any vendor can read", body: "Lifetime repaid principal is kept per agent, so the record follows the agent to a new sponsor and lowers the collateral that sponsor must lock.", proof: `${g.repaidPrincipalAusd} repaid, tier 1`, kind: "recorded run" },
     { title: "Receipts you can check", body: "Every receipt carries a digest anyone can recompute in the browser.", proof: `${proof.receipts.length} digests`, kind: "recorded run" },
   ];
 
@@ -85,7 +85,7 @@ export default function Home() {
               </p>
               <div className="flex flex-wrap items-center gap-x-7 gap-y-4 pt-1">
                 <Link href="/demo" data-demo="launch-demo" className="btn btn-primary text-base">
-                  Try the credit flow <span aria-hidden>→</span>
+                  Try the credit flow
                 </Link>
                 <Link href="/proof" className="link-rule font-semibold">See the recorded run</Link>
               </div>
@@ -103,7 +103,7 @@ export default function Home() {
                 {refusals.map((r) => (
                   <li key={r.attempt} className="flex items-center gap-3 whitespace-nowrap px-6">
                     <span className="text-[var(--fg-muted)]">{r.attempt}</span>
-                    <span aria-hidden>→</span>
+                    <span aria-hidden className="text-[var(--border)]">/</span>
                     <span className="font-semibold text-[var(--danger)]">{r.refusedWith}</span>
                   </li>
                 ))}
@@ -160,7 +160,6 @@ export default function Home() {
                   <div className="flex items-center gap-3">
                     <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-[1.5px] border-[var(--line)] bg-[var(--paper)] font-[family-name:var(--font-display)] text-xl">{s.n}</span>
                     <span aria-hidden className="h-0 flex-1 border-t-[1.5px] border-dashed border-[var(--line)]" />
-                    <span aria-hidden className="-ml-3 text-sm">▸</span>
                   </div>
                   <p className="caption pt-2">{s.who}</p>
                   <h3 className="text-xl font-semibold tracking-tight">{s.title}</h3>
@@ -223,7 +222,7 @@ export default function Home() {
             <h2 className="max-w-3xl text-5xl leading-[1.0] sm:text-7xl">Fund a channel, hit a refusal, watch the record <em>grow.</em></h2>
             <p className="max-w-xl text-lg text-[var(--fg-muted)]">The credit flow runs the vault&apos;s rules in your browser. No wallet needed.</p>
             <Link href="/demo" className="btn btn-primary text-base">
-              Try the credit flow <span aria-hidden>→</span>
+              Try the credit flow
             </Link>
           </div>
         </section>
