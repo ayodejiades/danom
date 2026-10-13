@@ -14,7 +14,7 @@ const AGENT = "0xA6E4700000000000000000000000000000000002";
 const UNKNOWN = "0x5717000000000000000000000000000000000003";
 
 const RECEIVERS = [
-  { id: VENDOR, key: "receiver-vendor", label: "Acme API (approved vendor)" },
+  { id: VENDOR, key: "receiver-vendor", label: "Kestrel Search API (approved vendor)" },
   { id: AGENT, key: "receiver-self", label: "The agent's own wallet" },
   { id: UNKNOWN, key: "receiver-unknown", label: "An unknown wallet" },
 ];
@@ -36,8 +36,6 @@ const INITIAL_LINE: CreditLine = {
 };
 const INITIAL_RECORD: AgentRecord = { repaidPrincipal: BigInt(0), revenueRouted: BigInt(0), defaults: 0 };
 const POOL = toUnits(5000);
-
-const TILES = ["bg-[var(--sky)]", "bg-[#d6f8ea]", "bg-[#fff0a8]", "bg-[#ffdcd5]", "bg-[var(--surface-raised)]", "bg-[#d6f8ea]"];
 
 interface Row { id: number; day: number; action: string; ok: boolean; note: string }
 
@@ -127,38 +125,40 @@ export default function Demo() {
     { label: "Pool idle cash", value: fromUnits(cash), hint: "collateral is never lent" },
   ], [debt, limit, tier, ltv, nextTierAt, record, agentBalance, cash, line]);
 
-  const input = "w-full rounded-[var(--radius-sm)] border border-[var(--border)] bg-white px-3 py-2 font-mono text-sm outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--sky)]";
-  const btn = "rounded-[var(--radius-pill)] px-4 py-2 text-base font-semibold transition-all duration-300 active:scale-[0.98]";
-  const primary = `${btn} bg-[var(--accent)] text-[var(--accent-contrast)] hover:bg-[var(--navy)] hover:text-white`;
-  const secondary = `${btn} border border-[var(--border)] bg-white hover:border-[var(--accent)] hover:bg-[var(--surface)]`;
+  const input = "w-full rounded-[var(--radius-sm)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)] px-3 py-2 font-mono text-base outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--sky)]";
+  const primary = "btn btn-primary";
+  const secondary = "btn btn-sm";
+  const card = "rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)] p-6";
+  const fieldLabel = "caption mb-2 block";
 
   return (
     <PageShell
       active="/demo"
-      title="Try the credit flow"
+      eyebrow="Simulation · the vault's rules in your browser"
+      title={<>Try the credit <em>flow</em></>}
       intro={
         <p>
-          This runs the vault&apos;s rules in your browser using the same functions the tests check against the contract. It is a simulation. The recorded run on the real x402 contract is on the <a className="font-semibold text-[var(--accent-ink)] underline" href="/proof">recorded run</a> page.
+          This runs the vault&apos;s rules in your browser using the same functions the tests check against the contract. It is a simulation. The recorded run on the real x402 contract is on the <a className="link-rule font-semibold text-[var(--fg)]" href="/proof">recorded run</a> page.
         </p>
       }
     >
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-demo="list">
-          {stats.map((s, i) => (
-            <div key={s.label} className={`rounded-[var(--radius)] p-5 ${TILES[i % TILES.length]}`}>
-              <p className="text-sm font-semibold text-[var(--navy-soft)]">{s.label}</p>
-              <p className="mt-1 font-mono text-3xl font-semibold">{s.value}</p>
-              <p className="mt-1 text-xs text-[var(--navy-soft)] [text-wrap:pretty]">{s.hint}</p>
+        <dl className="grid gap-px overflow-hidden rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--fg)] sm:grid-cols-2 lg:grid-cols-3" data-demo="list">
+          {stats.map((s) => (
+            <div key={s.label} className="bg-[var(--paper)] p-5">
+              <dt className="caption">{s.label}</dt>
+              <dd className="mt-2 font-[family-name:var(--font-display)] text-5xl leading-none tracking-tight">{s.value}</dd>
+              <dd className="mt-2 text-xs text-[var(--fg-muted)] [text-wrap:pretty]">{s.hint}</dd>
             </div>
           ))}
-        </div>
+        </dl>
 
-        {overdue && <p className="rounded-[var(--radius-sm)] border border-[var(--sun)] bg-[var(--warn-bg)] px-4 py-3 text-sm">The line is overdue with debt outstanding. Anyone can now liquidate it, which would record a default and pin the agent to tier 0.</p>}
+        {overdue && <p className="rounded-[var(--radius-sm)] border-[1.5px] border-[var(--fg)] bg-[var(--warn-bg)] px-4 py-3 text-sm">The line is overdue with debt outstanding. Anyone can now liquidate it, which would record a default and pin the agent to tier 0.</p>}
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
           <div className="flex flex-col gap-5">
-            <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-6">
-              <h2 className="mb-4 text-xl font-semibold">The agent asks the vault to pay a vendor</h2>
-              <p className="mb-1 text-xs text-[var(--fg-muted)]" id="receiver-label">Who gets paid</p>
+            <section className={card}>
+              <h2 className="mb-5 text-2xl">The agent asks the vault to pay a vendor</h2>
+              <p className={fieldLabel} id="receiver-label">Who gets paid</p>
               <div role="radiogroup" aria-labelledby="receiver-label" className="mb-3 grid gap-2">
                 {RECEIVERS.map((r) => (
                   <button
@@ -168,21 +168,21 @@ export default function Demo() {
                     aria-checked={receiver === r.id}
                     data-demo={r.key}
                     onClick={() => setReceiver(r.id)}
-                    className={`rounded-[var(--radius-sm)] border px-3 py-2 text-left text-sm ${receiver === r.id ? "border-[var(--accent)] bg-[var(--surface-raised)]" : "border-[var(--border)] bg-white hover:bg-[var(--surface)]"}`}
+                    className={`rounded-[var(--radius-sm)] border-[1.5px] px-3 py-2 text-left text-sm font-medium transition-colors duration-200 ${receiver === r.id ? "border-[var(--fg)] bg-[var(--fg)] text-[var(--paper)]" : "border-[var(--border)] hover:border-[var(--fg)]"}`}
                   >
                     {r.label}
                   </button>
                 ))}
               </div>
-              <label className="mb-1 block text-xs text-[var(--fg-muted)]" htmlFor="amount">Channel amount (per channel cap is 40)</label>
-              <input id="amount" data-demo="provider-input" className={`${input} mb-3`} value={amount} inputMode="decimal" onChange={(e) => setAmount(e.target.value)} />
+              <label className={fieldLabel} htmlFor="amount">Channel amount (per channel cap is 40)</label>
+              <input id="amount" data-demo="provider-input" className={`${input} mb-4`} value={amount} inputMode="decimal" onChange={(e) => setAmount(e.target.value)} />
               <button type="button" data-demo="trigger-escrow" className={primary} onClick={fund}>Ask the vault to fund the channel</button>
             </section>
 
-            <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-6">
-              <h2 className="mb-4 text-xl font-semibold">Money coming in</h2>
-              <label className="mb-1 block text-xs text-[var(--fg-muted)]" htmlFor="revenue">A customer pays the agent</label>
-              <input id="revenue" className={`${input} mb-3`} value={revenue} inputMode="decimal" onChange={(e) => setRevenue(e.target.value)} />
+            <section className={card}>
+              <h2 className="mb-5 text-2xl">Money coming in</h2>
+              <label className={fieldLabel} htmlFor="revenue">A customer pays the agent</label>
+              <input id="revenue" className={`${input} mb-4`} value={revenue} inputMode="decimal" onChange={(e) => setRevenue(e.target.value)} />
               <div className="flex flex-wrap gap-2">
                 <button type="button" data-demo="route-revenue" className={secondary} onClick={pay}>Route the payment</button>
                 <button type="button" className={secondary} onClick={() => repay(false)}>Sponsor repays 10</button>
@@ -190,8 +190,8 @@ export default function Demo() {
               </div>
             </section>
 
-            <section className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-6">
-              <h2 className="mb-4 text-xl font-semibold">Sponsor and time</h2>
+            <section className={card}>
+              <h2 className="mb-5 text-2xl">Sponsor and time</h2>
               <div className="flex flex-wrap gap-2">
                 <button type="button" className={secondary} onClick={revoke}>{line.active ? "Revoke the line" : "Reopen the line"}</button>
                 <button type="button" className={secondary} onClick={() => advance(7)}>Advance 7 days</button>
@@ -202,19 +202,20 @@ export default function Demo() {
           </div>
 
           <section className="flex flex-col gap-4">
-            <div aria-live="polite" className={`min-h-[3.5rem] rounded-[var(--radius)] border px-4 py-3 text-sm [text-wrap:pretty] ${message ? (message.ok ? "border-[var(--accent)] bg-[var(--surface-raised)]" : "border-[var(--danger)] bg-[#fdecef]") : "border-[var(--border)] text-[var(--fg-muted)]"}`}>
-              {message ? message.text : "Pick a vendor and an amount, then ask the vault to fund the channel. Try the agent's own wallet or an amount above 40 to see a refusal."}
+            <div aria-live="polite" className={`flex min-h-[5rem] items-center gap-5 rounded-[var(--radius)] border-[1.5px] px-5 py-4 text-sm [text-wrap:pretty] ${message ? (message.ok ? "border-[var(--ok)] bg-[var(--tint-ok)]" : "border-[var(--danger)] bg-[var(--tint-danger)]") : "border-dashed border-[var(--border)] text-[var(--fg-muted)]"}`}>
+              {message ? <span key={rows.length} className={`stamp stamp-in shrink-0 text-sm ${message.ok ? "stamp-funded" : "stamp-refused"}`}>{message.ok ? "Allowed" : "Refused"}</span> : null}
+              <p>{message ? message.text : "Pick a vendor and an amount, then ask the vault to fund the channel. Try the agent's own wallet or an amount above 40 to see a refusal."}</p>
             </div>
-            <div className="overflow-hidden rounded-[var(--radius)] border border-[var(--border)]">
+            <div className="overflow-hidden rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)]">
               <table className="w-full text-left text-sm">
-                <thead className="bg-[var(--surface)] text-[var(--fg-muted)]"><tr><th className="px-3 py-2 font-medium">Day</th><th className="px-3 py-2 font-medium">Action</th><th className="px-3 py-2 font-medium">Result</th></tr></thead>
+                <thead className="border-b-[1.5px] border-[var(--fg)]"><tr><th className="caption px-3 py-3 font-medium">Day</th><th className="caption px-3 py-3 font-medium">Action</th><th className="caption px-3 py-3 font-medium">Result</th></tr></thead>
                 <tbody>
-                  {rows.length === 0 && <tr><td colSpan={3} className="px-3 py-6 text-center text-[var(--fg-muted)]">No actions yet.</td></tr>}
+                  {rows.length === 0 && <tr><td colSpan={3} className="px-3 py-10 text-center text-[var(--fg-muted)]">The ledger is empty. Every action you take is entered here.</td></tr>}
                   {rows.map((r) => (
-                    <tr key={r.id} data-demo="row" className="border-t border-[var(--border)] align-top">
+                    <tr key={r.id} data-demo="row" className="print-in border-t border-[var(--border)] align-top">
                       <td className="px-3 py-2 font-mono">{r.day}</td>
                       <td className="px-3 py-2">{r.action}</td>
-                      <td className={`px-3 py-2 ${r.ok ? "text-[var(--ok)]" : "text-[var(--danger)]"}`}>{r.ok ? "Allowed" : "Refused"}</td>
+                      <td className={`px-3 py-2 font-mono text-xs font-semibold uppercase tracking-wider ${r.ok ? "text-[var(--ok)]" : "text-[var(--danger)]"}`}>{r.ok ? "Allowed" : "Refused"}</td>
                     </tr>
                   ))}
                 </tbody>

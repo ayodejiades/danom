@@ -6,40 +6,41 @@ type Run = Record<string, unknown> & { id: string; title: string };
 const runs = proof.runs as unknown as Run[];
 const refusals = (runs.find((r) => r.id === "refusals") as unknown as { refusals: { attempt: string; expected: string; refusedWith: string }[] }).refusals;
 const keyRuns = runs.filter((r) => r.id !== "refusals");
-const TONES = ["bg-[var(--sky)]", "bg-[#d6f8ea]", "bg-[#fff0a8]", "bg-[#ffdcd5]"];
 const label = (k: string) => k.replace(/Ausd$/, "").replace(/([A-Z])/g, " $1").toLowerCase();
 
 export default function Proof() {
   return (
     <PageShell
       active="/proof"
-      title="The recorded run"
+      eyebrow={`Local fork of chain ${proof.chainId} · ${proof.transactions.length} transactions`}
+      title={<>The recorded <em>run</em></>}
       intro={
         <>
-          <p className="rounded-[var(--radius-sm)] border border-[var(--sun)] bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--fg)]">{proof.note}</p>
+          <p className="rounded-[var(--radius-sm)] border-[1.5px] border-[var(--fg)] bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--fg)]">{proof.note}</p>
           <p className="text-sm">Mode <span className="font-mono">{proof.verificationMode}</span>. Generated {proof.generatedAt}. Re-run it with <span className="font-mono">pnpm proof:local</span>.</p>
         </>
       }
     >
         <section className="flex flex-col gap-3">
-          <h2 className="text-3xl font-semibold tracking-tight">Contracts</h2>
-          <dl className="grid gap-2 rounded-[var(--radius)] bg-[var(--navy)] p-6 text-sm md:grid-cols-[max-content_1fr] md:gap-x-6">
+          <h2 className="text-4xl">Contracts</h2>
+          <dl className="grid gap-x-8 gap-y-3 rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)] p-6 text-sm md:grid-cols-[max-content_1fr]">
             {Object.entries(proof.contracts).map(([name, addr]) => (
               <div key={name} className="contents">
-                <dt className="font-semibold text-[var(--mint)]">{name}</dt>
-                <dd className="break-all font-mono text-[var(--sky)]">{addr}{name === "x402BatchSettlement" ? " (canonical, has code on Monad testnet 10143 and mainnet 143)" : " (local fork only)"}</dd>
+                <dt className="caption !text-[var(--fg)]">{name}</dt>
+                <dd className="break-all font-mono text-[var(--fg-muted)]">{addr}{name === "x402BatchSettlement" ? " (canonical, has code on Monad testnet 10143 and mainnet 143)" : " (local fork only)"}</dd>
               </div>
             ))}
           </dl>
         </section>
 
-        <section className="grid gap-4 md:grid-cols-2">
+        <section className="grid gap-5 md:grid-cols-2">
           {keyRuns.map((r, i) => (
-            <div key={r.id} className={`rounded-[var(--radius)] p-6 ${TONES[i % TONES.length]}`}>
-              <h3 className="mb-4 text-xl font-semibold">{r.title}</h3>
-              <dl className="grid grid-cols-[1fr_auto] gap-x-4 gap-y-1 text-sm">
+            <div key={r.id} className="rise rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)] p-6">
+              <p className="caption mb-2">Run {String(i + 1).padStart(2, "0")}</p>
+              <h3 className="mb-5 text-xl font-semibold tracking-tight">{r.title}</h3>
+              <dl className="grid grid-cols-[1fr_auto] gap-x-4 text-sm">
                 {Object.entries(r).filter(([k]) => k !== "id" && k !== "title").map(([k, v]) => (
-                  <div key={k} className="contents"><dt className="text-[var(--navy-soft)]">{label(k)}</dt><dd className="text-right font-mono">{String(v)}</dd></div>
+                  <div key={k} className="col-span-2 grid grid-cols-subgrid border-t border-dashed border-[var(--border)] py-1.5"><dt className="text-[var(--fg-muted)]">{label(k)}</dt><dd className="text-right font-mono font-medium">{String(v)}</dd></div>
                 ))}
               </dl>
             </div>
@@ -47,10 +48,10 @@ export default function Proof() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h2 className="text-3xl font-semibold tracking-tight">Attempts that were refused</h2>
-          <div className="overflow-x-auto rounded-[var(--radius)] border border-[var(--border)] shadow-[var(--shadow)]">
+          <h2 className="text-4xl">Attempts that were refused</h2>
+          <div className="overflow-x-auto rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)]">
             <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="bg-[var(--surface-raised)] text-[var(--navy-soft)]"><tr><th className="px-4 py-3 font-semibold">Attempt</th><th className="px-4 py-3 font-semibold">Expected</th><th className="px-4 py-3 font-semibold">Chain said</th></tr></thead>
+              <thead className="border-b-[1.5px] border-[var(--fg)] text-[var(--fg-muted)]"><tr><th className="px-4 py-3 font-semibold">Attempt</th><th className="px-4 py-3 font-semibold">Expected</th><th className="px-4 py-3 font-semibold">Chain said</th></tr></thead>
               <tbody>
                 {refusals.map((a) => (
                   <tr key={a.attempt} className="border-t border-[var(--border)]">
@@ -65,16 +66,16 @@ export default function Proof() {
         </section>
 
         <section className="flex flex-col gap-3">
-          <h2 className="text-3xl font-semibold tracking-tight">Receipts, checked in your browser</h2>
+          <h2 className="text-4xl">Receipts, checked in your browser</h2>
           <p className="max-w-3xl text-sm text-[var(--fg-muted)] [text-wrap:pretty]">Each digest is recomputed from the receipt&apos;s own fields. It proves a receipt was not edited after the fact. It is not a signature.</p>
           <ReceiptVerifier receipts={proof.receipts as unknown as ReceiptRow[]} chainId={proof.chainId} contract={proof.contracts.CreditVault} />
         </section>
 
         <section className="flex flex-col gap-3">
-          <h2 className="text-3xl font-semibold tracking-tight">Transactions ({proof.transactions.length})</h2>
-          <ol className="grid gap-2 text-sm">
+          <h2 className="text-4xl">Transactions ({proof.transactions.length})</h2>
+          <ol className="grid text-sm">
             {proof.transactions.map((t, i) => (
-              <li key={t.hash} className="flex flex-wrap gap-x-3 rounded-[var(--radius-sm)] bg-[var(--surface)] px-4 py-2"><span className="font-mono text-[var(--fg-muted)]">{String(i + 1).padStart(2, "0")}</span><span>{t.step}</span><span className="font-mono text-[var(--fg-muted)]">block {t.block}</span></li>
+              <li key={t.hash} className="flex flex-wrap gap-x-4 border-t border-dashed border-[var(--border)] py-2"><span className="font-mono text-[var(--fg-muted)]">{String(i + 1).padStart(2, "0")}</span><span>{t.step}</span><span className="font-mono text-[var(--fg-muted)]">block {t.block}</span></li>
             ))}
           </ol>
         </section>

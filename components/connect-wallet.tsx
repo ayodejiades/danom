@@ -4,11 +4,9 @@ import { useSyncExternalStore } from "react";
 import { useAccount, useConnect, useDisconnect, useSwitchChain } from "wagmi";
 import { monadTestnet } from "wagmi/chains";
 
-const base =
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-pill)] px-4 py-2 text-sm font-semibold transition-all duration-300 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60";
-const solid = `${base} bg-[var(--navy)] text-white hover:bg-[var(--accent)] hover:text-[var(--accent-contrast)]`;
-const outline = `${base} border border-[var(--navy)] bg-white text-[var(--fg)] hover:bg-[var(--navy)] hover:text-white`;
-const warn = `${base} bg-[var(--sun)] text-[var(--accent-contrast)] hover:bg-[var(--navy)] hover:text-white`;
+const solid = "btn btn-sm btn-primary";
+const outline = "btn btn-sm";
+const warn = "btn btn-sm btn-warn";
 
 function shortAddress(address: string): string {
   return `${address.slice(0, 6)}…${address.slice(-4)}`;
@@ -34,7 +32,7 @@ export function ConnectWallet() {
     }
     return (
       <button type="button" data-demo="disconnect" className={outline} title="Disconnect wallet" onClick={() => disconnect()}>
-        <span aria-hidden className="h-2 w-2 rounded-full bg-[var(--mint)]" />
+        <span aria-hidden className="h-2 w-2 rounded-full bg-[var(--ok)]" />
         <span className="font-mono">{shortAddress(address)}</span>
       </button>
     );
