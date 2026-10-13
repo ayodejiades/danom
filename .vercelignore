@@ -1,0 +1,17 @@
+# What never leaves this machine when deploying with the Vercel CLI.
+.env
+.env.*
+!.env.example
+.git
+.claude
+.vercel
+.next
+node_modules
+contracts/out
+cache
+broadcast
+story
+public/audio
+docs/demo.mp4
+docs/fallback.mp4
+*.tsbuildinfo
