@@ -11,7 +11,7 @@
  * is MockAUSD (open mint), the agent is a script and not a model, and no x402 facilitator is used
  * (the vendor claims directly as the receiver authorizer).
  *
- *   PRIVATE_KEY=0x… pnpm live:run     broadcast to Monad testnet (needs about 1 MON)
+ *   PRIVATE_KEY=0x… pnpm live:run     broadcast to Monad testnet (needs about 4 MON; Monad charges for the gas limit)
  *   pnpm live:dry                      the same code on a local Anvil fork, no key needed
  */
 import { spawn } from "node:child_process";
@@ -102,7 +102,8 @@ async function main() {
 
     const have = await pub.getBalance({ address: F });
     console.log(`${DRY ? "DRY RUN (local fork)" : "LIVE (Monad testnet)"} funder ${F} balance ${(Number(have) / 1e18).toFixed(3)} MON`);
-    if (have < parseEther("0.6")) throw new Error("funder needs at least 0.6 MON for gas (the agent and vendor get 0.15 each)");
+    // Monad charges for the gas limit, not the gas used, so every 800k-limit call reserves up to ~0.15 MON.
+    if (have < parseEther("4")) throw new Error("funder needs at least 4 MON for gas (the agent and vendor get 0.8 each)");
 
     const vaultAbi = artifact("CreditVault");
     const tokenAbi = artifact("MockAUSD");
@@ -130,8 +131,8 @@ async function main() {
 
     // Fresh agent and vendor keys make every run self-contained: a new line, new channels.
     const run = BigInt(Date.now());
-    await step("funder sends the agent gas", await funder.sendTransaction({ to: AG, value: parseEther("0.15") }));
-    await step("funder sends the vendor gas", await funder.sendTransaction({ to: VN, value: parseEther("0.15") }));
+    await step("funder sends the agent gas", await funder.sendTransaction({ to: AG, value: parseEther("0.8") }));
+    await step("funder sends the vendor gas", await funder.sendTransaction({ to: VN, value: parseEther("0.8") }));
     await step("mint test stablecoin to the funder", await call(funder, TOKEN, tokenAbi, "mint", [F, toUnits(3000)]));
     await step("funder approves the vault", await call(funder, TOKEN, tokenAbi, "approve", [VAULT, toUnits(1_000_000)]));
     await step("lender supplies 1000 to the vault", await V(funder, "supply", [toUnits(1000)]));
