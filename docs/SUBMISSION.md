@@ -26,7 +26,9 @@ Credit for AI agents that can only spend where their sponsor allows: the vault p
 - Revenue repays first. Customers pay the agent through the vault, and the loan is settled before the agent receives the rest.
 - Lifetime repaid principal is kept per agent, not per sponsor. That record follows the agent to a new sponsor and raises its tier, so the same collateral supports more credit. A default pins the agent back to tier 0.
 
-**A real paid call, end to end.** The site hosts a paid API at `/api/vendor/gas`. Unpaid, it answers HTTP 402 with a price. An agent retries with a signed voucher in the payment header, the vendor checks that voucher against the x402 settlement contract on Monad testnet, and only then serves the data. The money comes from escrow the vault funded on the agent's behalf, and the vendor claims and settles it on chain. On the Live agent page a judge can do this in the browser, because the demo agent's private key is published there on purpose. With that key in hand, asking the live vault to pay any other address reverts with `ReceiverNotAllowed`.
+**A real paid call, end to end.** The site hosts a paid API at `/api/vendor/gas`. Unpaid, it answers HTTP 402 with a price. An agent retries with a signed voucher in the payment header. The vendor has Monad's hosted x402 facilitator verify it, checks the escrow on chain, and only then serves the data. The money comes from escrow the vault funded on the agent's behalf, and the vendor claims and settles it on chain. On the Live agent page a judge can do this in the browser, because the demo agent's private key is published there on purpose. With that key in hand, asking the live vault to pay any other address reverts with `ReceiverNotAllowed`.
+
+**A model in the loop.** The same tools are handed to a language model. In the recorded runs a Qwen model stated a plan, read the price from the 402, bought one report through the vault and answered with the figures. Told to pay 50 to a stranger, it obeyed and asked the vault, and the vault refused. The policy lives in the contract, so it holds whatever the model decides.
 
 **What is real.** `CreditVault` is deployed on Monad testnet at `0x959c59B1a46545e6AE2Fcba48A37bD93D93787dD` and runs against the canonical x402 batch settlement contract at `0x4020074e9dF2ce1deE5A9C1b5c3f541D02a10003`. One full credit cycle of 19 transactions ran on testnet: fund a 40.00 channel, claim a signed voucher, settle, refund, reconcile, repay, route revenue, revoke. The agent ended with 0.00 of the stablecoin. A 100.00 customer payment repaid the 40.00 loan first and the agent received 60.00. Four of four attempts outside the policy were refused with the expected error. Every transaction is linked from the site's recorded run page and listed in `LIVE_RUN.json`.
 
@@ -34,7 +36,7 @@ A longer recorded run of 50 transactions on a fork of Monad testnet covers tier 
 
 **What makes it useful.** The limits are enforced by the contract, not by a policy document. A payment to the agent's own wallet reverts with `ReceiverNotAllowed`, one above the cap with `OverPerBorrowCap`, one after revoke with `LineInactive`. The site lets a judge try this without a wallet: the credit flow page runs the same rules in the browser.
 
-**Honest limits.** This is a testnet preview. The token is a test token, the contracts are not audited, the agent is scripted (no model decides what to buy), and no x402 facilitator is involved. The demo vendor keeps no state between requests. An agent and an approved vendor that collude can claim a channel's full escrow, so the channel deposit is the most that can be lost. Tier thresholds are demo parameters, not calibrated risk numbers. The repository's `CLAIM_LEDGER.md` pairs every claim with its evidence and its limitation, and `pnpm claim:verify` fails if a claim outruns its evidence.
+**Honest limits.** This is a testnet preview. The token is a test token, the contracts are not audited, the model in the recorded runs is a small local one, and the facilitator verifies vouchers but does not settle. The demo vendor keeps no state between requests. An agent and an approved vendor that collude can claim a channel's full escrow, so the channel deposit is the most that can be lost. Tier thresholds are demo parameters, not calibrated risk numbers. The repository's `CLAIM_LEDGER.md` pairs every claim with its evidence and its limitation, and `pnpm claim:verify` fails if a claim outruns its evidence.
 
 ## Go-to-market and user acquisition
 
@@ -61,7 +63,7 @@ https://monad-metropolis-one.vercel.app
 
 No login or wallet is needed.
 
-1. Open "Live agent". Press "Call the API": the paid endpoint answers 402 with its price. Press "Sign and pay": your browser signs a voucher with the demo agent's key and the same endpoint answers 200 with data, paid from vault escrow on Monad testnet.
+1. Open "Live agent". The top panel shows a model-driven run; pick the third task to see the model told to pay a stranger and the vault refuse. Then press "Call the API": the paid endpoint answers 402 with its price. Press "Sign and pay": your browser signs a voucher with the demo agent's key and the same endpoint answers 200 with data, verified by Monad's x402 facilitator and paid from vault escrow on Monad testnet.
 2. Still on "Live agent", press "Pay the agent itself" and "41 to the vendor". The live vault answers `ReceiverNotAllowed` and `OverPerBorrowCap`. These are simulations against the deployed contract, so nothing is sent.
 3. Open "Recorded run" for the testnet transactions with explorer links, and "Credit flow" for an in-browser simulation of tiers, repayment and revocation.
 
