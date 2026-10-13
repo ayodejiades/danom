@@ -1,44 +1,10 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
-import { Mark, SiteNav } from "@/components/site-nav";
-import deployment from "@/.kit/deployment.json";
+import { SiteNav } from "@/components/site-nav";
 
-const short = (a: string) => `${a.slice(0, 8)}…${a.slice(-6)}`;
-
-// The footer is the foot of the ledger sheet: where the vault lives on chain, then the plain status line.
 export function SiteFooter() {
-  const link = "link-rule decoration-[color-mix(in_srgb,var(--fg)_30%,transparent)]";
-  const onChain = [
-    { label: "Vault", addr: deployment.contractAddress, href: deployment.explorerContract },
-    { label: "x402 settlement", addr: deployment.x402BatchSettlement, href: `https://testnet.monadscan.com/address/${deployment.x402BatchSettlement}` },
-    { label: "Deployment tx", addr: deployment.txHash, href: deployment.explorerTx },
-  ];
   return (
-    <footer className="bg-[var(--navy)]">
-      <div className="mx-auto grid w-full max-w-6xl gap-12 px-6 pb-10 pt-16 md:grid-cols-[1.1fr_1.4fr]">
-        <div className="flex max-w-sm flex-col gap-4">
-          <p className="flex items-center gap-2.5 font-[family-name:var(--font-display)] text-3xl leading-none"><Mark />Danom</p>
-          <p className="text-sm text-[var(--fg-muted)]">Credit for AI agents on Monad. The agent signs, the vault pays, and revenue repays the loan first.</p>
-          <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 pt-2 text-sm">
-            <Link href="/" className={link}>Overview</Link>
-            <Link href="/demo" className={link}>Credit flow</Link>
-            <Link href="/proof" className={link}>Recorded run</Link>
-          </nav>
-        </div>
-        <dl className="flex flex-col text-sm">
-          {onChain.map((c) => (
-            <div key={c.label} className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-[color-mix(in_srgb,var(--fg)_14%,transparent)] py-3">
-              <dt className="caption">{c.label}</dt>
-              <dd><a href={c.href} target="_blank" rel="noreferrer" className={`font-mono ${link}`}>{short(c.addr)}</a></dd>
-            </div>
-          ))}
-          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-t border-[color-mix(in_srgb,var(--fg)_14%,transparent)] py-3">
-            <dt className="caption">Status</dt>
-            <dd className="max-w-sm text-right text-[var(--fg-muted)]">Testnet preview. Not audited. The token is a test token.</dd>
-          </div>
-        </dl>
-      </div>
-      <p className="caption mx-auto w-full max-w-6xl border-t border-[color-mix(in_srgb,var(--fg)_14%,transparent)] px-6 py-5">Built for Monad Metropolis · chain {deployment.chainId}</p>
+    <footer className="border-t-[1.5px] border-[var(--line)] bg-[var(--navy)]">
+      <p className="mx-auto w-full max-w-6xl px-6 py-5 text-sm text-[var(--fg-muted)]">© 2026 Danom. All rights reserved.</p>
     </footer>
   );
 }
