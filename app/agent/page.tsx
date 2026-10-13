@@ -125,19 +125,19 @@ export default function AgentPage() {
       <section className="-mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)]">
         <div className="flex flex-col gap-6">
           <div className={card}>
-            <p className="caption mb-2">Step 1</p>
+            <p className="caption mb-2">No payment</p>
             <h2 className="mb-3 text-2xl">Ask without paying</h2>
             <p className="mb-5 text-sm text-[var(--fg-muted)]">The vendor sells a gas and block report for Monad testnet at {units(PRICE)} per call.</p>
             <button type="button" data-demo="x402-unpaid" className="btn" disabled={busy !== null} onClick={unpaid}>Call the API</button>
           </div>
           <div className={card}>
-            <p className="caption mb-2">Step 2</p>
+            <p className="caption mb-2">With a voucher</p>
             <h2 className="mb-3 text-2xl">Pay with the agent&apos;s voucher</h2>
             <p className="mb-5 text-sm text-[var(--fg-muted)]">Your browser signs a voucher with the agent&apos;s key and retries. The vendor has Monad&apos;s x402 facilitator verify it, checks the escrow on chain, and only then answers.</p>
             <button type="button" data-demo="x402-pay" className="btn btn-primary" disabled={busy !== null} onClick={pay}>Sign and pay</button>
           </div>
           <div className={card}>
-            <p className="caption mb-2">Step 3</p>
+            <p className="caption mb-2">With the leaked key</p>
             <h2 className="mb-3 text-2xl">Now try to steal it</h2>
             <p className="mb-5 text-sm text-[var(--fg-muted)]">You have the agent&apos;s key. Ask the live vault to send the money somewhere else.</p>
             <div className="flex flex-wrap gap-3">
@@ -182,7 +182,7 @@ export default function AgentPage() {
           </div>
           <ul className="flex flex-col gap-3 text-sm text-[var(--fg-muted)]">
             <li className="border-t border-[var(--border)] pt-3"><span className="font-semibold text-[var(--fg)]">What the key can do.</span> Sign vouchers, and ask the vault to fund a channel to the one vendor the sponsor approved, <span className="font-mono">{short(VENDOR)}</span>.</li>
-            <li className="border-t border-[var(--border)] pt-3"><span className="font-semibold text-[var(--fg)]">What it cannot do.</span> Move the money anywhere else. The vault at <span className="font-mono">{short(VAULT)}</span> reverts, as step 3 shows.</li>
+            <li className="border-t border-[var(--border)] pt-3"><span className="font-semibold text-[var(--fg)]">What it cannot do.</span> Move the money anywhere else. The vault at <span className="font-mono">{short(VAULT)}</span> reverts, as the buttons above show.</li>
             <li className="border-t border-[var(--border)] pt-3"><span className="font-semibold text-[var(--fg)]">The most a thief can do.</span> Spend the credit line at that vendor, up to the limit, and burn the agent&apos;s gas. The sponsor revokes the line in one transaction.</li>
           </ul>
         </div>

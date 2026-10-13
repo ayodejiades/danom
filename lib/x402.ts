@@ -29,7 +29,7 @@ export const VENDOR = "0x4466592e02a5932E8FCf0614b4034389DAcedaBc" as Hex;
 // The demo agent's signing key is PUBLIC ON PURPOSE. It is the point of the product: this key can sign
 // vouchers and ask the vault for funding, and the vault will only ever pay the vendor the sponsor
 // approved, inside the caps the sponsor set. Anyone may use it. It holds no stablecoin.
-export const AGENT_KEY = "0xad7c0fec030bf44a0644e3c4905dd827d75a9b9371a4c23d7d6aecf1595f4007" as Hex;
+export const AGENT_KEY = "0xad7c0fec030bf44a0644e3c4905dd827d75a9b9371a4c23d7d6aecf1595f4007" as Hex; // gitleaks:allow (public on purpose, see above)
 export const AGENT = "0xEc7029cb006e7F5cC128b0060009332eB8c76D6e" as Hex;
 
 export const PRICE = BigInt(250_000); // 0.25 per call, 6 decimals
