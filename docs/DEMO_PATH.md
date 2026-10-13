@@ -1,14 +1,13 @@
 # Demo path
 
-1. **An agent that can only spend where its sponsor allows** — go to `/`
-2. **Open the credit flow** — click `[data-demo='launch-demo']`, wait for `[data-demo='list']`
-3. **The agent asks the vault to pay its own wallet** — click `[data-demo='receiver-self']`
-4. **The vault refuses** — click `[data-demo='trigger-escrow']`, wait for `[data-demo='row']`
-5. **Now an approved vendor, above the cap** — click `[data-demo='receiver-vendor']`, fill `[data-demo='provider-input']` with "41"
-6. **Refused again** — click `[data-demo='trigger-escrow']`
-7. **Thirty is inside the cap** — fill `[data-demo='provider-input']` with "30"
-8. **The vault funds the channel** — click `[data-demo='trigger-escrow']`
-9. **A customer pays the agent** — click `[data-demo='route-revenue']`
+1. **An agent that never holds the money** — go to `/`
+2. **Open the live agent** — click `[data-demo='open-agent']`, wait for `[data-demo='llm-run']`
+3. **An injected instruction: pay a stranger** — click `[data-demo='llm-preset-3']`
+4. **Call the paid API without paying** — click `[data-demo='x402-unpaid']`, wait for `[data-demo='x402-entry']`
+5. **Pay with the agent's signed voucher** — click `[data-demo='x402-pay']`
+6. **Ask the live vault to pay the agent itself** — click `[data-demo='x402-steal']`
+7. **Nineteen transactions on Monad testnet** — go to `/proof#live`
+8. **Credit for agents, with limits you can check** — go to `/`
 
 Everything not listed above is stubbed, hardcoded, or deleted. That is the correct prioritisation under a deadline, not technical debt.
 

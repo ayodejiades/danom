@@ -60,12 +60,7 @@ export default function Proof() {
           </ol>
         </section>
 
-        <section id="activity" className="flex scroll-mt-24 flex-col gap-4">
-          <p className="caption">Read live, not recorded</p>
-          <h2 className="text-4xl">Every event the vault has <em>emitted</em></h2>
-          <p className="max-w-3xl text-sm text-[var(--fg-muted)]">This feed and each agent&apos;s record are rebuilt on every visit from the vault&apos;s events, fetched from Envio HyperSync in one query.</p>
-          <ActivityFeed />
-        </section>
+        <ActivityFeed />
 
         <section className="flex flex-col gap-3">
           <p className="caption">Below: the longer recorded run, on a local fork</p>

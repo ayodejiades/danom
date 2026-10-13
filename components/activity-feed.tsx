@@ -11,19 +11,24 @@ interface Activity {
 // The vault's history and each agent's record, rebuilt from events that Envio HyperSync returns in one query.
 export function ActivityFeed() {
   const [data, setData] = useState<Activity | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(false);
   useEffect(() => {
     let live = true;
     fetch("/api/activity", { cache: "no-store" })
-      .then(async (r) => { const j = await r.json(); if (live) { if (r.ok) setData(j); else setError(j.error ?? "unavailable"); } })
-      .catch((e) => { if (live) setError((e as Error).message); });
+      .then(async (r) => { const j = await r.json(); if (live) { if (r.ok) setData(j); else setError(true); } })
+      .catch(() => { if (live) setError(true); });
     return () => { live = false; };
   }, []);
 
-  if (error) return <p className="rounded-[var(--radius-sm)] border-[1.5px] border-[var(--line)] bg-[var(--warn-bg)] px-4 py-3 text-sm">The indexed feed is unavailable: {error}</p>;
-  if (!data) return <p className="text-sm text-[var(--fg-muted)]">Asking Envio HyperSync for the vault&apos;s events…</p>;
+  // No token on this deployment, or HyperSync is unreachable: show nothing rather than a broken section.
+  if (error || !data) return null;
   return (
-    <div className="flex flex-col gap-5">
+    <section id="activity" className="flex scroll-mt-24 flex-col gap-5">
+      <div className="flex flex-col gap-3">
+        <p className="caption">Read live, not recorded</p>
+        <h2 className="text-4xl">Every event the vault has <em>emitted</em></h2>
+        <p className="max-w-3xl text-sm text-[var(--fg-muted)]">This feed and each agent&apos;s record are rebuilt on every visit from the vault&apos;s events, fetched from Envio HyperSync in one query.</p>
+      </div>
       <p className="caption">{data.totalEvents} events · blocks {data.fromBlock} to {data.toBlock} · {data.source}</p>
       <div className="overflow-x-auto rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--paper)]">
         <table className="w-full min-w-[640px] text-left text-sm">
@@ -48,6 +53,6 @@ export function ActivityFeed() {
           </li>
         ))}
       </ol>
-    </div>
+    </section>
   );
 }

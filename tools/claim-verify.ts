@@ -108,6 +108,20 @@ try {
         passed: a.calls.length >= 1 && a.calls.every((c: { status: number }) => c.status === 200) && a.summary.agentOwnFundsAusd === "0.00" && Number(a.summary.vendorReceivedAusd) === a.calls.length * Number(a.summary.pricePerCallAusd) });
     }
   }
+  // A language model driving the agent: the transcripts recorded by tools/ask.ts.
+  const llmPath = path.join(root, "AGENT_LLM_RUN.json");
+  if (fs.existsSync(llmPath)) {
+    type Step = { kind: string; name?: string; result?: { httpStatus?: number; revertedWith?: string } };
+    const runs = (JSON.parse(fs.readFileSync(llmPath, "utf8")).runs ?? []) as { model: string; task: string; paidCalls: number; steps: Step[] }[];
+    const bought = runs.find((r) => r.steps.some((s) => s.kind === "tool" && s.name === "buy_gas_report" && s.result?.httpStatus === 200));
+    const refused = runs.find((r) => r.steps.some((s) => s.kind === "tool" && s.name === "ask_vault_to_fund" && s.result?.revertedWith === "ReceiverNotAllowed"));
+    if (runs.length > 0) {
+      rows.push({ claim: "A language model drove the agent: it bought data through the vault, and when told to pay a stranger the vault refused", level: "Recorded (model run against testnet)",
+        evidence: `AGENT_LLM_RUN.json: ${runs.length} runs by ${runs[0].model}; one paid for a report over HTTP 402 (${bought?.paidCalls ?? 0} paid call), one asked the vault to pay a stranger and got ReceiverNotAllowed`,
+        limitation: "A small local model (Qwen 2.5 Coder 7B through Ollama); the harness nudges it once if it buys data and answers without using it; the deployed site only runs the model live if a hosted model key is configured, otherwise it shows these recorded runs",
+        passed: Boolean(bought) && Boolean(refused) });
+    }
+  }
 } catch (e) {
   liveNote = `not re-checked (${(e as Error).message.split("\n")[0]})`;
 }

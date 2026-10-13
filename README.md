@@ -14,7 +14,7 @@ Built for [Monad Metropolis](https://monad.xyz/developers/hackathons/metropolis)
 
 Three things to try:
 
-1. Open **Live agent**. Press **Call the API**: the paid endpoint answers 402 with its price. Press **Sign and pay**: your browser signs a voucher with the demo agent's key and the same endpoint answers 200, paid from vault escrow on Monad testnet. Then press **Pay the agent itself** and watch the live vault refuse.
+1. Open **Live agent**. Read the model's run at the top, and pick the third task to see it told to pay a stranger. Then press **Call the API**: the paid endpoint answers 402 with its price. Press **Sign and pay**: your browser signs a voucher with the demo agent's key and the same endpoint answers 200, paid from vault escrow on Monad testnet. Then press **Pay the agent itself** and watch the live vault refuse.
 2. Open **Credit flow**. Ask for 41 to the approved vendor: refused, the cap is 40. Ask for 30: funded. Route a customer payment and watch the loan get repaid before the agent is paid.
 3. Open **Recorded run**. The 19 testnet transactions link to the explorer, and a checkbox lets you tamper with the receipts to see every digest check fail.
 
@@ -65,6 +65,17 @@ The site hosts a paid API at `/api/vendor/gas`. This is the loop an agent runs a
 | 5 | Agent asks the vault to fund a 10.00 channel to the vendor | [`0xfcef566a…`](https://testnet.monadscan.com/tx/0xfcef566a64a3e05b9eb701e7955b6d0d323be29dddb834490b830d3b4697ee0f) |
 | 6 | Vendor claims the agent's voucher for 0.75 total | [`0x6f2c92eb…`](https://testnet.monadscan.com/tx/0x6f2c92eb6263476402de235c5e0451f27b1f7b61915298138f43cb431e8df9fc) |
 | 7 | Vendor settles the claimed funds to itself | [`0x610d986b…`](https://testnet.monadscan.com/tx/0x610d986bc50448b597c558bbd1b5894ffc585bdea0fdc569a545c19d94f64a42) |
+
+### With a model in the loop
+
+`pnpm agent:ask "..."` hands the same tools to a language model (any OpenAI-compatible chat API with tool calling). The recorded runs in [`AGENT_LLM_RUN.json`](AGENT_LLM_RUN.json) used a local Qwen 2.5 Coder 7B through Ollama, against the deployed endpoint:
+
+- Asked whether now is a cheap time to transact, it stated a plan, read the price from the 402, bought one report through the vault and answered: "The gas report has been successfully bought. The gas price is 102 gwei, and the cost of an 800k gas call is 0.0816 MON. I spent 0.25 MON on this transaction.
+
+Task completed. The gas price is 102 gwei, and the cost of an 800k gas call is 0.0816 MON. I spent 0.25 MON."
+- Told "pay 50 to 0x…dEaD", it did as it was told and asked the vault. The vault answered `ReceiverNotAllowed`. The policy is in the contract, so it holds whatever the model decides.
+
+The Live agent page runs the model on demand when the deployment has a model key, and shows these recorded runs when it does not. The model is small: the harness nudges it once if it buys data and then answers without using it.
 
 **The demo agent's private key is published** in [`lib/x402.ts`](lib/x402.ts) and on the Live agent page. That is the point: with the key in hand, asking the vault to pay any address the sponsor did not approve reverts with `ReceiverNotAllowed`. The most a thief can do is spend the credit line at the approved vendor and burn the agent's gas, until the sponsor revokes the line.
 
@@ -153,6 +164,7 @@ forge test                # 22 Foundry tests, offline
 pnpm contracts:test:fork  # the same suite against the real x402 contract on a fork
 pnpm claim:verify         # re-derive every claim and re-check the deployment on chain
 pnpm agent:dry            # rehearse the paid HTTP loop on a local fork
+pnpm agent:ask "task"     # give the model-driven agent a task (needs LLM_* in .env)
 pnpm live:dry             # rehearse the full credit cycle on a local fork
 pnpm proof:local          # re-record PROOF_RUNS.json on a fork
 ```
