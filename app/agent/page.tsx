@@ -7,6 +7,9 @@ import {
   AGENT, AGENT_KEY, DEMO_CHANNEL, EXPLORER, PAYMENT_HEADER, paymentHeader, PRICE, units, VAULT, VENDOR, VOUCHER_DOMAIN, VOUCHER_TYPES,
 } from "@/lib/x402";
 import run from "@/AGENT_RUN.json";
+import llm from "@/AGENT_LLM_RUN.json";
+import { AgentConsole } from "@/components/agent-console";
+import type { AgentRun } from "@/lib/agent-llm";
 
 interface Channel { channelId: `0x${string}`; escrow: string; totalClaimed: string; line: { active: boolean; perChannelCap: string; debt: string; creditLimit: string } }
 interface Entry { id: number; request: string; status: string; ok: boolean; lines: string[] }
@@ -56,7 +59,7 @@ export default function AgentPage() {
     const j = await r.json();
     const a = j.accepts?.[0];
     add("GET /api/vendor/gas", `${r.status} ${r.status === 402 ? "Payment Required" : ""}`, false, a
-      ? [`price ${u(a.amount)} per call`, `scheme ${a.scheme} on ${a.network}`, `pay to ${a.payTo}`, `escrow contract ${a.extra.settlement}`]
+      ? [`price ${u(a.amount)} per call`, `scheme ${a.scheme} on ${a.network}`, `pay to ${a.payTo}`, `minimum deposit ${u(a.extra.minDeposit)}`]
       : [JSON.stringify(j)]);
   });
 
@@ -68,7 +71,7 @@ export default function AgentPage() {
     const signature = await privateKeyToAccount(AGENT_KEY).signTypedData({
       domain: VOUCHER_DOMAIN, types: VOUCHER_TYPES, primaryType: "Voucher", message: { channelId: ch.channelId, maxClaimableAmount: max },
     });
-    const r = await fetch("/api/vendor/gas", { cache: "no-store", headers: { [PAYMENT_HEADER]: paymentHeader(DEMO_CHANNEL, max, signature) } });
+    const r = await fetch("/api/vendor/gas", { cache: "no-store", headers: { [PAYMENT_HEADER]: paymentHeader(DEMO_CHANNEL, ch.channelId, max, signature) } });
     const j = await r.json();
     if (r.status === 200) {
       setPaidCalls((n) => n + 1);
@@ -76,6 +79,7 @@ export default function AgentPage() {
         `block ${j.data.blockNumber} at ${j.data.blockTime}`,
         `gas price ${j.data.gasPriceGwei} gwei, ${j.data.transactionsInBlock} transactions in the block`,
         `paid ${u(j.payment.price)} from vault escrow, ${u(j.payment.escrowLeft)} left in the channel`,
+        `voucher verified by ${j.payment.verifiedBy}`,
         `signature ${short(signature)}`,
       ]);
     } else {
@@ -106,7 +110,19 @@ export default function AgentPage() {
         </p>
       }
     >
-      <section className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)]">
+      <section className="flex flex-col gap-5">
+        <p className="caption">Qwen 3.8 Max, with tools</p>
+        <h2 className="max-w-3xl text-4xl">Give the agent a <em>job</em></h2>
+        <p className="max-w-3xl text-sm text-[var(--fg-muted)]">A model plans the work, checks the price and its credit, buys from the paid API and answers. Try the third task: tell it to send the money to you.</p>
+        <AgentConsole recorded={(llm.runs ?? []) as unknown as AgentRun[]} />
+      </section>
+
+      <section className="flex flex-col gap-5">
+        <p className="caption">The same loop, by hand</p>
+        <h2 className="max-w-3xl text-4xl">Or make each call <em>yourself</em></h2>
+      </section>
+
+      <section className="-mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)]">
         <div className="flex flex-col gap-6">
           <div className={card}>
             <p className="caption mb-2">Step 1</p>
@@ -117,7 +133,7 @@ export default function AgentPage() {
           <div className={card}>
             <p className="caption mb-2">Step 2</p>
             <h2 className="mb-3 text-2xl">Pay with the agent&apos;s voucher</h2>
-            <p className="mb-5 text-sm text-[var(--fg-muted)]">Your browser signs a voucher with the agent&apos;s key and retries. The vendor checks it against the x402 settlement contract on chain before it answers.</p>
+            <p className="mb-5 text-sm text-[var(--fg-muted)]">Your browser signs a voucher with the agent&apos;s key and retries. The vendor has Monad&apos;s x402 facilitator verify it, checks the escrow on chain, and only then answers.</p>
             <button type="button" data-demo="x402-pay" className="btn btn-primary" disabled={busy !== null} onClick={pay}>Sign and pay</button>
           </div>
           <div className={card}>
@@ -190,7 +206,7 @@ export default function AgentPage() {
       )}
 
       <p className="max-w-3xl text-sm text-[var(--fg-muted)]">
-        Limits: the agent here is scripted, the token is a test token and no x402 facilitator is involved. This demo vendor keeps no memory between requests, so it does not track the highest voucher it has seen; a production vendor does.
+        Limits: the token is a test token. The facilitator verifies vouchers but does not settle; the vendor claims on chain itself. This demo vendor keeps no memory between requests, so it does not track the highest voucher it has seen; a production vendor does.
       </p>
     </PageShell>
   );

@@ -23,7 +23,8 @@
     "live:run": "tsx tools/live-run.ts",
     "live:dry": "tsx tools/live-run.ts --dry",
     "agent:dry": "tsx tools/agent.ts --dry",
-    "agent:live": "tsx tools/agent.ts"
+    "agent:live": "tsx tools/agent.ts",
+    "agent:ask": "tsx tools/ask.ts"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
