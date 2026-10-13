@@ -22,7 +22,7 @@ export default function Proof() {
         </>
       }
     >
-        <section className="flex flex-col gap-5">
+        <section id="live" className="flex scroll-mt-24 flex-col gap-5">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div className="flex flex-col gap-2">
               <p className="caption">Chain {live.chainId} · {live.generatedAt.slice(0, 10)}</p>
