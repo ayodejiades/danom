@@ -104,7 +104,7 @@ try {
     if ((a.transactions ?? []).length > 0) {
       rows.push({ claim: "An agent bought data from a paid HTTP endpoint (402, then a signed voucher) and vault escrow paid the vendor on Monad testnet", level: "On chain (testnet)",
         evidence: `AGENT_RUN.json: ${a.calls.length} paid calls at ${a.summary.pricePerCallAusd}, vendor received ${a.summary.vendorReceivedAusd} on chain, agent's own funds ${a.summary.agentOwnFundsAusd}, ${a.transactions.length} transactions`,
-        limitation: "The agent is scripted, with no model choosing what to buy; no facilitator; the payment header layout was not tested against the reference x402 client; the demo vendor keeps no state between requests; the demo agent's key is public by design",
+        limitation: "This recorded run was scripted and predates facilitator verification; the facilitator verifies but does not settle; the demo vendor keeps no state between requests; the demo agent's key is public by design",
         passed: a.calls.length >= 1 && a.calls.every((c: { status: number }) => c.status === 200) && a.summary.agentOwnFundsAusd === "0.00" && Number(a.summary.vendorReceivedAusd) === a.calls.length * Number(a.summary.pricePerCallAusd) });
     }
   }
@@ -128,7 +128,7 @@ const notClaimed = [
   "- Organic usage. The testnet activity is one scripted run (LIVE_RUN.json) in which a single funded wallet played lender, sponsor, customer and keeper. The longer run in PROOF_RUNS.json, including tier graduation, the portable record and liquidation, happened on a local Anvil fork.",
   "- Anything on Monad mainnet.",
   "- Real AUSD or USDC. The token in every run is MockAUSD.",
-  "- Any use of the Monad x402 facilitator. The vendor claims directly as receiver authorizer.",
+  "- Settlement through the x402 facilitator. It verifies vouchers; the vendor claims on chain itself as receiver authorizer.",
   "- Dynamic, Privy, Envio (HyperIndex or HyperSync) or Chainlink integrations. See docs/SPONSOR_INTEGRATIONS.md.",
   "- Audited or production ready contracts, or calibrated credit risk parameters.",
 ].join("\n");
@@ -157,7 +157,7 @@ fs.writeFileSync(path.join(root, "WHAT_IS_REAL.md"), [
   "| x402 batch settlement contract | The real canonical contract, at the same address on Monad testnet and mainnet. Used on a fork and in the live testnet run. |",
   "| Vouchers | Real EIP-712 signatures checked by the real contract. |",
   "| Token | MockAUSD. |",
-  "| Monad x402 facilitator | Exists and lists batch-settlement for Monad. Not called. |",
+  "| Monad x402 facilitator | Verifies every voucher the vendor accepts. Does not settle for this vendor. |",
   "| Sponsor SDKs (Dynamic, Privy) | Not integrated. |",
   "| Indexer | Built on plain RPC. Not run against a live deployment. |",
   "",

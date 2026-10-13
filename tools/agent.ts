@@ -132,7 +132,7 @@ async function main() {
     if (LOCAL_VENDOR) {
       server = http.createServer(async (req, res) => {
         const h = req.headers[PAYMENT_HEADER.toLowerCase()];
-        const reply = await handleVendorRequest(pub, typeof h === "string" ? h : null, `http://127.0.0.1:${VENDOR_PORT}/api/vendor/gas`);
+        const reply = await handleVendorRequest(pub, typeof h === "string" ? h : null, `http://127.0.0.1:${VENDOR_PORT}/api/vendor/gas`, !DRY);
         res.writeHead(reply.status, { "content-type": "application/json", ...reply.headers });
         res.end(JSON.stringify(reply.body));
       });
@@ -167,16 +167,16 @@ async function main() {
     }
     console.log(`  channel ${ch.channelId.slice(0, 10)}… holds ${units(ch.balance - ch.totalClaimed)} of vault money; claimed so far ${units(ch.totalClaimed)}`);
 
-    const calls: { n: number; voucherTotal: string; status: number; blockNumber: string; gasPriceGwei: number }[] = [];
+    const calls: { n: number; voucherTotal: string; status: number; blockNumber: string; gasPriceGwei: number; verifiedBy: string }[] = [];
     let last = { max: ch.totalClaimed, signature: "0x" as Hex };
     for (let n = 1; n <= CALLS; n++) {
       const max = ch.totalClaimed + PRICE * BigInt(n);
       const signature = await agent.account.signTypedData({ domain: VOUCHER_DOMAIN, types: VOUCHER_TYPES, primaryType: "Voucher", message: { channelId: ch.channelId, maxClaimableAmount: max } });
-      const res = await fetch(url, { headers: { [PAYMENT_HEADER]: paymentHeader(DEMO_CHANNEL, max, signature) } });
-      const body = (await res.json()) as { data?: { blockNumber: string; gasPriceGwei: number }; error?: string };
+      const res = await fetch(url, { headers: { [PAYMENT_HEADER]: paymentHeader(DEMO_CHANNEL, ch.channelId, max, signature) } });
+      const body = (await res.json()) as { data?: { blockNumber: string; gasPriceGwei: number }; payment?: { verifiedBy: string }; error?: string };
       if (res.status !== 200 || !body.data) throw new Error(`paid call ${n} failed with ${res.status}: ${body.error ?? "no data"}`);
-      console.log(`  call ${n}: signed a voucher for ${units(max)} total -> 200 OK  block ${body.data.blockNumber}, gas ${body.data.gasPriceGwei} gwei`);
-      calls.push({ n, voucherTotal: units(max), status: res.status, blockNumber: body.data.blockNumber, gasPriceGwei: body.data.gasPriceGwei });
+      console.log(`  call ${n}: signed a voucher for ${units(max)} total -> 200 OK  block ${body.data.blockNumber}, gas ${body.data.gasPriceGwei} gwei (verified by ${body.payment?.verifiedBy})`);
+      calls.push({ n, voucherTotal: units(max), status: res.status, blockNumber: body.data.blockNumber, gasPriceGwei: body.data.gasPriceGwei, verifiedBy: body.payment?.verifiedBy ?? "" });
       last = { max, signature };
       if (n < CALLS) await new Promise((r) => setTimeout(r, 1200));
     }
@@ -208,7 +208,7 @@ async function main() {
       const out = {
         generatedAt: new Date().toISOString(), network: "Monad Testnet", chainId: 10143, vendorUrl: url,
         agent: AGENT, vendor: VENDOR, sponsor: SPONSOR, channelId: ch.channelId,
-        note: "A scripted agent, a test token and no facilitator. The HTTP calls and every transaction below are real.",
+        note: "A scripted agent and a test token. Vouchers are verified by Monad's hosted x402 facilitator; the vendor claims on chain itself. The HTTP calls and every transaction below are real.",
         calls, summary,
         // Setup transactions happen once; keep them from the first run so the record stays complete.
         transactions: [...((prev.transactions ?? []) as typeof tx).filter((t) => /^(mint|sponsor)/.test(t.step) && !tx.some((n) => n.step === t.step)), ...tx],

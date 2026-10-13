@@ -22,6 +22,14 @@ const TIERS = [
   { tier: "3", repaid: "2,000 or more", ltv: 250, note: "Any default drops the agent back to tier 0." },
 ];
 
+// What 100 of sponsor collateral backs at each tier, and whose money is at risk. From TIER_LTV_BPS in lib/credit.ts.
+const ECONOMICS = [
+  { record: "New agent", tier: "0", owes: "75", exposed: "Nobody beyond the sponsor. The lender is over-covered." },
+  { record: "100 repaid", tier: "1", owes: "100", exposed: "The sponsor's collateral covers all of it." },
+  { record: "500 repaid", tier: "2", owes: "150", exposed: "50 rides on the agent's record. Lenders carry it." },
+  { record: "2,000 repaid", tier: "3", owes: "250", exposed: "150 rides on the record. One default sends the agent back to tier 0." },
+];
+
 const FAQ = [
   { q: "Can the agent run off with the money?", a: "No. The agent holds a voucher signing key and nothing else. The vault escrows funds in x402 channels to vendors the sponsor approved. One limit remains: an agent and an approved vendor that collude can claim a channel's full escrow, so the channel deposit is the most that can be lost." },
   { q: "What happens if the agent does not repay?", a: "Once a line is overdue with debt outstanding, anyone can liquidate it. The sponsor's collateral covers the debt, the rest returns to the sponsor, and the default pins the agent to tier 0." },
@@ -196,6 +204,39 @@ export default function Home() {
                 </li>
               ))}
             </ol>
+          </div>
+        </section>
+
+        <section className="border-t-[1.5px] border-[var(--line)] bg-[var(--surface)]">
+          <div className="mx-auto grid w-full max-w-6xl gap-x-16 gap-y-12 px-6 py-24 lg:grid-cols-[1fr_1.3fr]">
+            <div className="flex flex-col gap-5">
+              <p className="caption">The economics</p>
+              <h2 className="text-5xl leading-[1.02]">Why a sponsor would <em>bother</em></h2>
+              <dl className="flex flex-col gap-5 text-sm">
+                <div><dt className="font-semibold">Why not hand the agent a spending cap?</dt><dd className="mt-1 text-[var(--fg-muted)]">A cap spends the sponsor&apos;s own money and has to be pre-funded. Here the sponsor&apos;s capital is a guarantee and lenders&apos; capital does the spending. The agent&apos;s key holds nothing, and every repayment builds a record a cap never produces.</dd></div>
+                <div><dt className="font-semibold">Is tier 0 really credit?</dt><dd className="mt-1 text-[var(--fg-muted)]">No. For a new agent this is a guarantee with a spending policy. Credit starts at tier 2, when the agent may owe more than its sponsor locked.</dd></div>
+                <div><dt className="font-semibold">What is not solved?</dt><dd className="mt-1 text-[var(--fg-muted)]">Pricing that risk. The thresholds are demo parameters, and a record can be farmed at the cost of interest. Calibrating tiers needs real repayment data.</dd></div>
+              </dl>
+            </div>
+            <div className="flex flex-col gap-3">
+              <p className="caption">What 100 of locked collateral backs</p>
+              <div className="overflow-x-auto rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--paper)]">
+                <table className="w-full min-w-[520px] text-left text-sm">
+                  <thead className="border-b-[1.5px] border-[var(--line)]"><tr><th className="caption px-4 py-3 font-medium">Agent&apos;s record</th><th className="caption px-4 py-3 font-medium">Tier</th><th className="caption px-4 py-3 font-medium">May owe up to</th><th className="caption px-4 py-3 font-medium">Whose money is exposed</th></tr></thead>
+                  <tbody>
+                    {ECONOMICS.map((e) => (
+                      <tr key={e.tier} className="border-t border-dashed border-[var(--border)] align-top">
+                        <td className="px-4 py-3">{e.record}</td>
+                        <td className="px-4 py-3 font-mono">{e.tier}</td>
+                        <td className="px-4 py-3 font-[family-name:var(--font-display)] text-2xl leading-none">{e.owes}</td>
+                        <td className="px-4 py-3 text-[var(--fg-muted)]">{e.exposed}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-xs text-[var(--fg-muted)]">The limit is also earned: it starts at a base the sponsor sets and grows by each unit of principal repaid, up to the ceiling in the table. The demo line locks 400 against a starting limit of 100.</p>
+            </div>
           </div>
         </section>
 
