@@ -28,13 +28,30 @@ Three things to try:
 
 The limits are contract reverts. A payment to the agent's own wallet reverts with `ReceiverNotAllowed`, one above the cap with `OverPerBorrowCap`, and one after the sponsor revokes with `LineInactive`.
 
+## Why a sponsor would bother
+
+What 100 of locked collateral backs, by the agent's record:
+
+| Agent's record | Tier | May owe up to | Whose money is exposed |
+|---|---|---|---|
+| New agent | 0 | 75 | Nobody beyond the sponsor. The lender is over-covered. |
+| 100 repaid | 1 | 100 | The sponsor's collateral covers all of it. |
+| 500 repaid | 2 | 150 | 50 rides on the agent's record. Lenders carry it. |
+| 2,000 repaid | 3 | 250 | 150 rides on the record. One default sends the agent back to tier 0. |
+
+The limit is also earned: it starts at a base the sponsor sets and grows by each unit of principal repaid, up to the ceiling above. The demo line locks 400 against a starting limit of 100.
+
+- **Why not hand the agent a spending cap?** A cap spends the sponsor's own money and has to be pre-funded. Here the sponsor's capital is a guarantee and lenders' capital does the spending. The agent's key holds nothing, and every repayment builds a record a cap never produces.
+- **Is tier 0 really credit?** No. For a new agent this is a guarantee with a spending policy. Credit starts at tier 2, when the agent may owe more than its sponsor locked.
+- **What is not solved?** Pricing that risk. The thresholds are demo parameters, and a record can be farmed at the cost of interest. Calibrating tiers needs real repayment data.
+
 ## A paid API call, end to end
 
 The site hosts a paid API at `/api/vendor/gas`. This is the loop an agent runs against it:
 
 1. The agent requests the data and gets **HTTP 402** with a price (0.25 per call) and where to escrow it.
 2. If its channel to that vendor is empty, the agent asks the vault to fund it. The money is the vault's. The agent holds none.
-3. The agent signs a cumulative voucher and retries with it in the payment header. The vendor checks the voucher against the x402 settlement contract on Monad testnet (the channel pays this vendor, holds enough escrow, and the signer is its `payerAuthorizer`) and answers **200** with the data.
+3. The agent signs a cumulative voucher and retries with it in the payment header, as a batch-settlement `voucher` payload. The vendor has **Monad's hosted x402 facilitator** verify it (`x402-facilitator.molandak.org/verify`), checks on chain that the channel's escrow covers it, and answers **200** with the data.
 4. The vendor claims the last voucher on chain and settles the funds to itself.
 
 `tools/agent.ts` ran this on Monad testnet on 2026-10-13: 3 paid calls, the vendor received 0.75 on chain, and the agent's own balance stayed 0.00. The record is [`AGENT_RUN.json`](AGENT_RUN.json).
@@ -51,7 +68,7 @@ The site hosts a paid API at `/api/vendor/gas`. This is the loop an agent runs a
 
 **The demo agent's private key is published** in [`lib/x402.ts`](lib/x402.ts) and on the Live agent page. That is the point: with the key in hand, asking the vault to pay any address the sponsor did not approve reverts with `ReceiverNotAllowed`. The most a thief can do is spend the credit line at the approved vendor and burn the agent's gas, until the sponsor revokes the line.
 
-Limits: the agent is scripted and no model decides what to buy. No x402 facilitator is involved, and the header layout was not tested against the reference x402 client. The demo vendor keeps no state between requests, so it does not track the highest voucher it has seen.
+Limits: the facilitator verifies vouchers but does not settle; the vendor claims on chain itself. The vault funds the channel directly, not through the scheme's deposit payload. The demo vendor keeps no state between requests, so it does not track the highest voucher it has seen.
 
 ## Live on Monad testnet
 
@@ -105,7 +122,7 @@ The run is scripted. One funded wallet played lender, sponsor, customer and keep
 | Recorded run | `PROOF_RUNS.json`: 50 transactions on a local fork of Monad testnet, 8 of 8 refusals matched. It covers tier graduation, the portable record and liquidation, which the live run does not. |
 | Tests | 22 Foundry tests pass offline against a mock, and the same suite passes against the real x402 contract on a fork. 12 TypeScript tests pass. |
 | Token | `MockAUSD`, a test token with open minting. Not AUSD or USDC. |
-| x402 facilitator | Monad hosts one that lists batch settlement. This project does not call it. |
+| x402 facilitator | Monad's hosted facilitator verifies every voucher the vendor accepts. It does not settle for this vendor. |
 | Dynamic, Privy, Envio | Not integrated. See [`docs/SPONSOR_INTEGRATIONS.md`](docs/SPONSOR_INTEGRATIONS.md). |
 
 [`CLAIM_LEDGER.md`](CLAIM_LEDGER.md) pairs every claim with its evidence and its limitation. `pnpm claim:verify` regenerates it and exits non zero if a claim outruns its evidence.

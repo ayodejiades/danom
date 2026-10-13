@@ -23,10 +23,10 @@ export const SEAMS: Seam[] = [
   {
     name: "Monad x402 facilitator",
     role: "Hosted verify and settle service that would relay deposits, claims and refunds.",
-    status: "NOT_INTEGRATED",
+    status: "REAL_ON_TESTNET",
     codePath: "none",
-    evidence: "https://x402-facilitator.molandak.org/supported lists batch-settlement for eip155:10143 and eip155:143.",
-    notClaimed: "The proof run has the vendor claim directly as receiver authorizer. No request was sent to the facilitator.",
+    evidence: "The vendor route posts every voucher to https://x402-facilitator.molandak.org/verify and serves only when it answers isValid. A forged voucher is rejected with invalid_batch_settlement_evm_voucher_signature. See lib/x402.ts.",
+    notClaimed: "Verification only. The facilitator does not settle or claim for this vendor, and the vault funds channels directly, not through a deposit payload.",
   },
   {
     name: "Dynamic",
