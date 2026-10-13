@@ -26,13 +26,15 @@ Credit for AI agents that can only spend where their sponsor allows: the vault p
 - Revenue repays first. Customers pay the agent through the vault, and the loan is settled before the agent receives the rest.
 - Lifetime repaid principal is kept per agent, not per sponsor. That record follows the agent to a new sponsor and raises its tier, so the same collateral supports more credit. A default pins the agent back to tier 0.
 
+**A real paid call, end to end.** The site hosts a paid API at `/api/vendor/gas`. Unpaid, it answers HTTP 402 with a price. An agent retries with a signed voucher in the payment header, the vendor checks that voucher against the x402 settlement contract on Monad testnet, and only then serves the data. The money comes from escrow the vault funded on the agent's behalf, and the vendor claims and settles it on chain. On the Live agent page a judge can do this in the browser, because the demo agent's private key is published there on purpose. With that key in hand, asking the live vault to pay any other address reverts with `ReceiverNotAllowed`.
+
 **What is real.** `CreditVault` is deployed on Monad testnet at `0x959c59B1a46545e6AE2Fcba48A37bD93D93787dD` and runs against the canonical x402 batch settlement contract at `0x4020074e9dF2ce1deE5A9C1b5c3f541D02a10003`. One full credit cycle of 19 transactions ran on testnet: fund a 40.00 channel, claim a signed voucher, settle, refund, reconcile, repay, route revenue, revoke. The agent ended with 0.00 of the stablecoin. A 100.00 customer payment repaid the 40.00 loan first and the agent received 60.00. Four of four attempts outside the policy were refused with the expected error. Every transaction is linked from the site's recorded run page and listed in `LIVE_RUN.json`.
 
 A longer recorded run of 50 transactions on a fork of Monad testnet covers tier graduation (the same collateral supported 100.00 of credit, then 245.00 after three repaid rounds), the portable record and liquidation, with 8 of 8 refusals matched. 22 vault tests pass offline and against the real x402 contract on a fork.
 
 **What makes it useful.** The limits are enforced by the contract, not by a policy document. A payment to the agent's own wallet reverts with `ReceiverNotAllowed`, one above the cap with `OverPerBorrowCap`, one after revoke with `LineInactive`. The site lets a judge try this without a wallet: the credit flow page runs the same rules in the browser.
 
-**Honest limits.** This is a testnet preview. The token is a test token, the contracts are not audited, and the live run is scripted with throwaway agent and vendor keys. An agent and an approved vendor that collude can claim a channel's full escrow, so the channel deposit is the most that can be lost. Tier thresholds are demo parameters, not calibrated risk numbers. The repository's `CLAIM_LEDGER.md` pairs every claim with its evidence and its limitation, and `pnpm claim:verify` fails if a claim outruns its evidence.
+**Honest limits.** This is a testnet preview. The token is a test token, the contracts are not audited, the agent is scripted (no model decides what to buy), and no x402 facilitator is involved. The demo vendor keeps no state between requests. An agent and an approved vendor that collude can claim a channel's full escrow, so the channel deposit is the most that can be lost. Tier thresholds are demo parameters, not calibrated risk numbers. The repository's `CLAIM_LEDGER.md` pairs every claim with its evidence and its limitation, and `pnpm claim:verify` fails if a claim outruns its evidence.
 
 ## Go-to-market and user acquisition
 
@@ -59,8 +61,8 @@ https://monad-metropolis-one.vercel.app
 
 No login or wallet is needed.
 
-1. Open the site. In the "Teller window" on the first screen, press "Ask the vault" with "The agent's own wallet" selected. The slip is stamped Refused with `ReceiverNotAllowed`.
-2. Open "Credit flow". Pick the approved vendor, enter 41 and ask the vault to fund the channel: refused, above the 40 cap. Enter 30: funded. Then "Route the payment" to see revenue repay the loan first.
-3. Open "Recorded run". The first section lists the 19 testnet transactions with explorer links. Further down, tick the checkbox above the receipts table to see every digest check fail when an amount is changed by one unit.
+1. Open "Live agent". Press "Call the API": the paid endpoint answers 402 with its price. Press "Sign and pay": your browser signs a voucher with the demo agent's key and the same endpoint answers 200 with data, paid from vault escrow on Monad testnet.
+2. Still on "Live agent", press "Pay the agent itself" and "41 to the vendor". The live vault answers `ReceiverNotAllowed` and `OverPerBorrowCap`. These are simulations against the deployed contract, so nothing is sent.
+3. Open "Recorded run" for the testnet transactions with explorer links, and "Credit flow" for an in-browser simulation of tiers, repayment and revocation.
 
-To re-check from the repository: `pnpm install`, then `pnpm claim:verify`, `pnpm test` and `forge test`. `pnpm live:dry` rehearses the testnet run on a local fork.
+To re-check from the repository: `pnpm install`, then `pnpm claim:verify`, `pnpm test` and `forge test`. `pnpm agent:dry` rehearses the paid HTTP loop on a local fork, and `pnpm live:dry` rehearses the full credit cycle.

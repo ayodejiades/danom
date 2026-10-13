@@ -1,1 +1,87 @@
-{ "generatedAt": null, "vendorUrl": null, "calls": [], "transactions": [], "summary": null }
+{
+  "generatedAt": "2026-10-13T22:10:39.124Z",
+  "network": "Monad Testnet",
+  "chainId": 10143,
+  "vendorUrl": "http://127.0.0.1:8553/api/vendor/gas",
+  "agent": "0xEc7029cb006e7F5cC128b0060009332eB8c76D6e",
+  "vendor": "0x4466592e02a5932E8FCf0614b4034389DAcedaBc",
+  "sponsor": "0x5950Cf8500c45cFaE8fA1eCD242a4469Bd5951Ff",
+  "channelId": "0xfac80abd627bde65dd744d341f695708f0e84b3e70c981ddc16bf2b1aeb41c3a",
+  "note": "A scripted agent, a test token and no facilitator. The HTTP calls and every transaction below are real.",
+  "calls": [
+    {
+      "n": 1,
+      "voucherTotal": "0.25",
+      "status": 200,
+      "blockNumber": "70796214",
+      "gasPriceGwei": 102
+    },
+    {
+      "n": 2,
+      "voucherTotal": "0.50",
+      "status": 200,
+      "blockNumber": "70796221",
+      "gasPriceGwei": 102
+    },
+    {
+      "n": 3,
+      "voucherTotal": "0.75",
+      "status": 200,
+      "blockNumber": "70796226",
+      "gasPriceGwei": 102
+    }
+  ],
+  "summary": {
+    "paidCalls": 3,
+    "pricePerCallAusd": "0.25",
+    "vendorReceivedAusd": "0.75",
+    "agentOwnFundsAusd": "0.00",
+    "agentDebtAusd": "10.00",
+    "channelEscrowLeftAusd": "9.25",
+    "channelTotalClaimedAusd": "0.75"
+  },
+  "transactions": [
+    {
+      "step": "sponsor opens a line for the agent: 400 collateral, 100 limit, 40 per channel, 30 days",
+      "hash": "0xcc6cf5e6002c066b7c0c379074350932bf895493671ddb2c7d0f0a7ecb9403cf",
+      "block": "70796195",
+      "explorer": "https://testnet.monadscan.com/tx/0xcc6cf5e6002c066b7c0c379074350932bf895493671ddb2c7d0f0a7ecb9403cf"
+    },
+    {
+      "step": "sponsor approves the vendor for this agent",
+      "hash": "0x4d007a33ac7c3b55fbc48d1c1b750700ee377524d96edd7a9c7c46f9fd350b30",
+      "block": "70796199",
+      "explorer": "https://testnet.monadscan.com/tx/0x4d007a33ac7c3b55fbc48d1c1b750700ee377524d96edd7a9c7c46f9fd350b30"
+    },
+    {
+      "step": "sponsor sends the agent gas (MON only, no stablecoin)",
+      "hash": "0x8f715c3e3d960ad65dbf8ac40072884a9f9c371aa9b8c7de2a01252a13715dc1",
+      "block": "70796203",
+      "explorer": "https://testnet.monadscan.com/tx/0x8f715c3e3d960ad65dbf8ac40072884a9f9c371aa9b8c7de2a01252a13715dc1"
+    },
+    {
+      "step": "sponsor sends the vendor gas",
+      "hash": "0x699ef13990f38006f8588754e495445d3eaf7a0c27d104bcfced81ef5b8695e5",
+      "block": "70796207",
+      "explorer": "https://testnet.monadscan.com/tx/0x699ef13990f38006f8588754e495445d3eaf7a0c27d104bcfced81ef5b8695e5"
+    },
+    {
+      "step": "agent asks the vault to fund a 10.00 channel to the vendor",
+      "hash": "0xfcef566a64a3e05b9eb701e7955b6d0d323be29dddb834490b830d3b4697ee0f",
+      "block": "70796211",
+      "explorer": "https://testnet.monadscan.com/tx/0xfcef566a64a3e05b9eb701e7955b6d0d323be29dddb834490b830d3b4697ee0f"
+    },
+    {
+      "step": "vendor claims the agent's voucher for 0.75 total",
+      "hash": "0x6f2c92eb6263476402de235c5e0451f27b1f7b61915298138f43cb431e8df9fc",
+      "block": "70796229",
+      "explorer": "https://testnet.monadscan.com/tx/0x6f2c92eb6263476402de235c5e0451f27b1f7b61915298138f43cb431e8df9fc"
+    },
+    {
+      "step": "vendor settles the claimed funds to itself",
+      "hash": "0x610d986bc50448b597c558bbd1b5894ffc585bdea0fdc569a545c19d94f64a42",
+      "block": "70796233",
+      "explorer": "https://testnet.monadscan.com/tx/0x610d986bc50448b597c558bbd1b5894ffc585bdea0fdc569a545c19d94f64a42"
+    }
+  ]
+}
