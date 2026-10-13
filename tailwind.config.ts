@@ -1,37 +1,38 @@
-// Mirrors the "sui" theme in .kit/theme.json and DESIGN.md. Tailwind v4 itself reads its design tokens from
+// Mirrors the "ledger" theme in .kit/theme.json and DESIGN.md. Tailwind v4 itself reads its design tokens from
 // app/globals.css's `@theme inline` block — this is a documentation/tooling artifact.
 const theme = {
-  "name": "sui",
+  "name": "ledger",
   "mode": "light",
-  "accent": "#4DA2FF",
-  "accentContrast": "#011829",
+  "accent": "#5B3FD6",
+  "accentContrast": "#FBF8F1",
   "surfaces": {
-    "bg": "#FFFFFF",
-    "surface": "#F3F8FF",
-    "surfaceRaised": "#E4F0FF",
-    "border": "#D3E4F8"
+    "bg": "#F2EDE2",
+    "surface": "#EBE5D7",
+    "surfaceRaised": "#E2DBC9",
+    "border": "#CFC6B0"
   },
   "text": {
-    "fg": "#011829",
-    "fgMuted": "#3D5870"
+    "fg": "#17140F",
+    "fgMuted": "#5C5546"
   },
   "pops": {
-    "navy": "#011829",
-    "sky": "#C0E6FF",
-    "mint": "#5BE3B0",
-    "sun": "#FFD84D",
-    "coral": "#FF8A78"
+    "navy": "#17140F",
+    "sky": "#DDD5F7",
+    "mint": "#8FD3AE",
+    "sun": "#D9A92E",
+    "coral": "#D9644A"
   },
   "radii": {
-    "radius": "1.5rem",
-    "radiusSm": "0.75rem",
-    "radiusPill": "9999px"
+    "radius": "6px",
+    "radiusSm": "3px",
+    "radiusPill": "3px"
   },
   "shadows": {
-    "shadow": "0 18px 40px -22px rgba(1,24,41,0.28)"
+    "shadow": "3px 3px 0 #17140F"
   },
   "font": {
     "sans": "Geist",
+    "display": "Fraunces",
     "tabular": "Geist Mono"
   }
 } as const;

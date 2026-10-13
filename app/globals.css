@@ -1,29 +1,34 @@
 @import "tailwindcss";
 
-/* sui — bright, light, rounded: white canvas, deep navy ink, Sui-blue accent with sun, mint and coral pops. */
+/* ledger — security paper and ink: warm paper canvas, near-black ink, one violet ink accent,
+   rubber-stamp red and green for refused and allowed. Token names are kept from the earlier
+   theme so every page inherits the change. */
 :root {
-  --bg: #ffffff;
-  --fg: #011829;
-  --fg-muted: #3d5870;
-  --surface: #f3f8ff;
-  --surface-raised: #e4f0ff;
-  --border: #d3e4f8;
-  --accent: #4da2ff;
-  --accent-ink: #0a62c9;
-  --accent-contrast: #011829;
-  --navy: #011829;
-  --navy-soft: #0b2a44;
-  --sky: #c0e6ff;
-  --mint: #5be3b0;
-  --sun: #ffd84d;
-  --coral: #ff8a78;
-  --danger: #c8283f;
-  --ok: #0a7a55;
-  --warn-bg: #fff4c2;
-  --radius: 1.5rem;
-  --radius-sm: 0.75rem;
-  --radius-pill: 9999px;
-  --shadow: 0 18px 40px -22px rgba(1, 24, 41, 0.28);
+  --bg: #f2ede2;
+  --paper: #fbf8f1;
+  --fg: #17140f;
+  --fg-muted: #5c5546;
+  --surface: #ebe5d7;
+  --surface-raised: #e2dbc9;
+  --border: #cfc6b0;
+  --accent: #5b3fd6;
+  --accent-ink: #4a31b8;
+  --accent-contrast: #fbf8f1;
+  --navy: #17140f;
+  --navy-soft: #3a352b;
+  --sky: #ddd5f7;
+  --mint: #8fd3ae;
+  --sun: #d9a92e;
+  --coral: #d9644a;
+  --danger: #b3261e;
+  --ok: #1f6b45;
+  --warn-bg: #f1e3b3;
+  --tint-ok: #d8e6d3;
+  --tint-danger: #f0d6cd;
+  --radius: 6px;
+  --radius-sm: 3px;
+  --radius-pill: 3px;
+  --shadow: 0 1px 0 rgba(23, 20, 15, 0.06), 0 22px 40px -28px rgba(60, 44, 12, 0.55);
   --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
@@ -32,6 +37,7 @@
   --color-foreground: var(--fg);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
 }
 
 html {
@@ -45,29 +51,175 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Paper grain: one fixed layer over the whole page. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.32;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .45 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+h1, h2 {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 480;
+  letter-spacing: -0.025em;
+  font-variation-settings: "opsz" 144;
+}
 h1, h2, h3 { text-wrap: balance; }
 p { text-wrap: pretty; }
+h1 em, h2 em { font-style: italic; font-weight: 400; color: var(--accent-ink); }
+
+::selection { background: var(--accent); color: var(--accent-contrast); }
 
 :focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 2px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
+/* Letterpress buttons: a hard offset shadow that the press pushes flat. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  white-space: nowrap;
+  border: 1.5px solid var(--fg);
+  border-radius: var(--radius-pill);
+  padding: 0.7rem 1.15rem;
+  font-weight: 600;
+  line-height: 1.2;
+  background: var(--paper);
+  color: var(--fg);
+  box-shadow: 3px 3px 0 var(--fg);
+  transition: transform 0.18s var(--ease-spring), box-shadow 0.18s var(--ease-spring), background-color 0.2s;
+}
+.btn:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--fg); }
+.btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--fg); }
+.btn:disabled { cursor: not-allowed; opacity: 0.6; }
+.btn-primary { background: var(--fg); color: var(--paper); box-shadow: 3px 3px 0 var(--accent); }
+.btn-primary:hover { box-shadow: 5px 5px 0 var(--accent); }
+.btn-primary:active { box-shadow: 0 0 0 var(--accent); }
+.btn-accent { background: var(--accent); color: var(--accent-contrast); }
+.btn-warn { background: var(--sun); }
+.btn-sm { padding: 0.45rem 0.8rem; font-size: 0.875rem; box-shadow: 2px 2px 0 var(--fg); }
+.btn-sm:hover { box-shadow: 3px 3px 0 var(--fg); }
+.btn-sm:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--fg); }
+/* On the ink band the shadow has to be light to read. */
+.on-ink .btn { border-color: var(--paper); box-shadow: 3px 3px 0 var(--accent); }
+.on-ink .btn:hover { box-shadow: 5px 5px 0 var(--accent); }
+.on-ink .btn:active { box-shadow: 0 0 0 var(--accent); }
+
+.link-rule {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 5px;
+  text-decoration-color: var(--border);
+  transition: text-decoration-color 0.2s;
+}
+.link-rule:hover { text-decoration-color: var(--accent); }
+
+/* Small mono label, the "form field caption" of the ledger. */
+.caption {
+  font-family: var(--font-mono), monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+/* Page header band: faint ruled lines, like a ledger sheet. */
 .hero-wash {
   background:
-    radial-gradient(60% 80% at 85% 0%, var(--sky) 0%, transparent 70%),
-    radial-gradient(50% 60% at 0% 100%, #e6fbf2 0%, transparent 70%),
+    repeating-linear-gradient(to bottom, transparent 0 39px, color-mix(in srgb, var(--border) 55%, transparent) 39px 40px),
     var(--bg);
+  border-bottom: 1.5px solid var(--fg);
 }
 
-@keyframes drift {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+/* Receipt paper with a torn, zigzag bottom edge. */
+.receipt {
+  background: var(--paper);
+  filter: drop-shadow(0 18px 22px rgba(60, 44, 12, 0.22));
+  --tooth: 9px;
+  mask:
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(2 * var(--tooth)) var(--tooth) repeat-x,
+    linear-gradient(#000 0 0) top / 100% calc(100% - var(--tooth)) no-repeat;
 }
-.drift { animation: drift 7s var(--ease-spring) infinite; }
+.dashed-rule { border-top: 1.5px dashed var(--border); }
+
+/* Rubber stamp. */
+.stamp {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border: 3px double currentColor;
+  border-radius: 4px;
+  padding: 0.35rem 0.8rem;
+  font-family: var(--font-mono), monospace;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transform: rotate(-7deg);
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+}
+.stamp-refused { color: var(--danger); }
+.stamp-funded { color: var(--ok); }
+@keyframes stamp-in {
+  0% { transform: rotate(-16deg) scale(2.6); opacity: 0; }
+  55% { transform: rotate(-5deg) scale(0.94); opacity: 1; }
+  100% { transform: rotate(-7deg) scale(1); opacity: 0.9; }
+}
+.stamp-in { animation: stamp-in 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
+
+@keyframes print-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+.print-in { animation: print-in 0.35s var(--ease-spring) both; }
+
+/* Ticker tape of refused attempts. */
+@keyframes tape {
+  to { transform: translateX(-50%); }
+}
+.tape { display: flex; width: max-content; animation: tape 60s linear infinite; }
+.tape:hover { animation-play-state: paused; }
+
+/* Banknote rosette slowly turning behind the hero. */
+@keyframes turn {
+  to { transform: rotate(360deg); }
+}
+.rosette { transform-origin: center; animation: turn 240s linear infinite; }
+
+/* Scroll-driven entry, only where the browser supports it. */
+@supports (animation-timeline: view()) {
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(28px); }
+    to { opacity: 1; transform: none; }
+  }
+  .rise {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 45%;
+  }
+  @keyframes bar-grow {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+  .bar-grow {
+    transform-origin: bottom;
+    animation: bar-grow linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 35%;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .drift { animation: none; }
+  .tape, .rosette, .stamp-in, .print-in, .rise, .bar-grow { animation: none; }
   * { transition-duration: 0.01ms !important; }
 }
