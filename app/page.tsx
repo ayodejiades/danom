@@ -88,7 +88,7 @@ export default function Home() {
                 <Link href="/demo" data-demo="launch-demo" className="btn btn-primary text-base">
                   Try the credit flow
                 </Link>
-                <Link href="/proof" className="link-rule font-semibold">See the recorded run</Link>
+                <Link href="/agent" data-demo="open-agent" className="link-rule font-semibold">Watch a live agent pay</Link>
               </div>
             </div>
             <div className="flex justify-center lg:justify-end">

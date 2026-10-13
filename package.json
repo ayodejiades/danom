@@ -21,7 +21,9 @@
     "contracts:test:fork": "forge test --match-contract CreditVaultTest --fork-url ${MONAD_RPC:-https://testnet-rpc.monad.xyz}",
     "deploy:verify": "tsx tools/verify-deployment.ts",
     "live:run": "tsx tools/live-run.ts",
-    "live:dry": "tsx tools/live-run.ts --dry"
+    "live:dry": "tsx tools/live-run.ts --dry",
+    "agent:dry": "tsx tools/agent.ts --dry",
+    "agent:live": "tsx tools/agent.ts"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
