@@ -3,7 +3,8 @@
  *
  *   pnpm agent:ask "Is now a cheap time to send a transaction on Monad testnet?"
  *
- * Needs LLM_API_KEY in .env (Qwen 3.8 Max by default; LLM_BASE_URL and LLM_MODEL override). The agent
+ * Needs LLM_API_KEY, LLM_BASE_URL and LLM_MODEL in .env: any OpenAI-compatible chat API with tool calling,
+ * for example a local Ollama model or a hosted Qwen. The agent
  * calls the deployed paid endpoint unless VENDOR_URL says otherwise. Writes the transcript to AGENT_LLM_RUN.json.
  */
 import fs from "node:fs";
@@ -38,7 +39,9 @@ async function main() {
   if (!process.argv.includes("--no-save")) {
     const file = path.join(root, "AGENT_LLM_RUN.json");
     const prev = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : { runs: [] };
-    fs.writeFileSync(file, JSON.stringify({ vendorUrl, runs: [run, ...(prev.runs ?? [])].slice(0, 3) }, null, 2) + "\n");
+    // Keep the latest run for each distinct task.
+    const runs = [run, ...((prev.runs ?? []) as typeof run[]).filter((r) => r.task !== run.task)].slice(0, 4);
+    fs.writeFileSync(file, JSON.stringify({ vendorUrl, runs }, null, 2) + "\n");
   }
 }
 
