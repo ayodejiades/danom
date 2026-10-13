@@ -3,6 +3,7 @@ import { ConnectWallet } from "@/components/connect-wallet";
 
 const LINKS = [
   { href: "/", label: "Overview" },
+  { href: "/agent", label: "Live agent" },
   { href: "/demo", label: "Credit flow" },
   { href: "/proof", label: "Recorded run" },
 ];

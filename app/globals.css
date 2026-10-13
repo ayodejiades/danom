@@ -1,4 +1,8 @@
-@import "tailwindcss";
+/* Class names are read from these folders only. The scanner otherwise follows .gitignore, and the
+   whitelist there let it wander into the build cache. */
+@import "tailwindcss" source(none);
+@source "../app";
+@source "../components";
 
 /* night ledger — a near-black canvas, paper-coloured type, one luminous Monad violet, and a single lit
    object: the paper receipt. Token names are kept from the earlier themes so every page inherits. */

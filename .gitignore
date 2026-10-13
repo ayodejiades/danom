@@ -45,6 +45,7 @@
 !/WHAT_IS_REAL.md
 !/PROOF_RUNS.json
 !/LIVE_RUN.json
+!/AGENT_RUN.json
 
 # The deployment record the app and the verifier read, and the theme mirror.
 !/.kit/
