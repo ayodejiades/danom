@@ -15,5 +15,11 @@
     "note": "Test token with open minting. Not real AUSD or USDC."
   },
   "x402BatchSettlement": "0x4020074e9dF2ce1deE5A9C1b5c3f541D02a10003",
-  "note": "Deployed contracts only. No lending, channel or repayment transaction has been sent to this deployment yet."
+  "note": "One scripted credit cycle of 19 transactions ran against this deployment on 2026-10-13. See LIVE_RUN.json.",
+  "liveRun": {
+    "file": "LIVE_RUN.json",
+    "transactions": 19,
+    "firstTx": "0x0a9894f3d742dc35b8142aad7e7c3185863501b3169e7951758dc07339f3b904",
+    "lastTx": "0x175ab0a3057732a36a7075ed951262a4bc41cf6d24d57328eeaf593bc3723caf"
+  }
 }
