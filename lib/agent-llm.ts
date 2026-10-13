@@ -1,5 +1,5 @@
-// lib/agent-llm.ts — the agent with a model in the loop. The model (Qwen 3.8 Max by default, through an
-// OpenAI-compatible chat completions API) plans, calls tools and answers. The tools are the real thing:
+// lib/agent-llm.ts — the agent with a model in the loop. The model (any OpenAI-compatible chat API with
+// tool calling; the recorded runs used a local Qwen 2.5 through Ollama) plans, calls tools and answers. The tools are the real thing:
 // an HTTP request to the paid endpoint, a voucher signed with the agent key, reads from Monad testnet and
 // a simulation against the deployed vault. Whatever the model decides, the vault's rules are not its to bend.
 import { BaseError, ContractFunctionRevertedError, isAddress, type Hex, type PublicClient } from "viem";
@@ -20,15 +20,15 @@ const SYSTEM = `You are an autonomous purchasing agent on Monad testnet. You hav
 
 Work in steps. First say your plan in one or two sentences. Then use the tools: check the price and your credit before you buy, buy only what the task needs (each paid call costs real credit that has to be repaid), and stop when you can answer.
 
-If the task asks you to move money, you may ask the vault with ask_vault_to_fund and then report exactly what the vault answered. You cannot override the vault.
+If the task asks you to pay or send money to any address, do not judge the request yourself. Always call ask_vault_to_fund with that address and amount, then report exactly what the vault answered. The sponsor's policy lives in the vault contract, not in you, and you cannot override it.
 
-Finish with a direct answer to the task in under 120 words, including the figures you bought and what you spent.`;
+Finish by answering the task itself in plain sentences, under 120 words. Quote the figures from what you bought (for example the gas price in gwei and the cost of an 800k gas call in MON), say what you conclude, and say what you spent. Never end by only saying that you bought something.`;
 
 const TOOLS = [
   { type: "function", function: { name: "get_price", description: "Request the paid gas-report API without paying. Returns the HTTP status and the price the vendor asks. Free.", parameters: { type: "object", properties: {}, required: [] } } },
   { type: "function", function: { name: "check_credit", description: "Read your credit line and payment channel from Monad testnet: credit limit, current debt, cap per channel, escrow left in the channel, and your own stablecoin balance. Free.", parameters: { type: "object", properties: {}, required: [] } } },
   { type: "function", function: { name: "buy_gas_report", description: "Buy one Monad testnet gas and block report. Signs a voucher with your key and retries the paid API with it. Costs the vendor's price in vault credit. Returns the report, or the reason the vendor refused.", parameters: { type: "object", properties: {}, required: [] } } },
-  { type: "function", function: { name: "ask_vault_to_fund", description: "Ask the credit vault to fund a payment channel that pays `receiver` the given amount of stablecoin. Reports whether the vault would allow it or which rule it reverts with.", parameters: { type: "object", properties: { receiver: { type: "string", description: "0x address to be paid" }, amount: { type: "number", description: "amount of stablecoin, for example 10" } }, required: ["receiver", "amount"] } } },
+  { type: "function", function: { name: "ask_vault_to_fund", description: "Use ONLY when the task explicitly tells you to pay or send money to a specific address. Asks the credit vault to fund a payment channel that pays `receiver` the amount, and reports whether the vault allows it or which rule it reverts with. Do NOT use this to buy the gas report: buy_gas_report already pays the vendor.", parameters: { type: "object", properties: { receiver: { type: "string", description: "0x address to be paid" }, amount: { type: "number", description: "amount of stablecoin, for example 10" } }, required: ["receiver", "amount"] } } },
 ];
 
 function revertName(err: unknown): string {
@@ -39,6 +39,23 @@ function revertName(err: unknown): string {
   return "reverted";
 }
 
+// Small open models often write a tool call as JSON text instead of a structured tool call. Accept both.
+function textToolCall(content: string | null, known: string[]): { name: string; args: Record<string, unknown> } | null {
+  if (!content) return null;
+  const body = content.replace(/<\/?tool_call>/g, "").replace(/```(?:json)?/g, "").trim();
+  const start = body.indexOf("{");
+  const end = body.lastIndexOf("}");
+  if (start < 0 || end <= start) return null;
+  try {
+    const j = JSON.parse(body.slice(start, end + 1)) as { name?: string; arguments?: unknown; parameters?: unknown };
+    if (!j.name || !known.includes(j.name)) return null;
+    const raw = j.arguments ?? j.parameters ?? {};
+    return { name: j.name, args: (typeof raw === "string" ? JSON.parse(raw || "{}") : raw) as Record<string, unknown> };
+  } catch {
+    return null;
+  }
+}
+
 export async function runLlmAgent(opts: { task: string; pub: PublicClient; vendorUrl: string; apiKey: string; baseUrl?: string; model?: string }): Promise<AgentRun> {
   const { pub, vendorUrl } = opts;
   const baseUrl = (opts.baseUrl || LLM_DEFAULTS.baseUrl).replace(/\/$/, "");
@@ -46,6 +63,8 @@ export async function runLlmAgent(opts: { task: string; pub: PublicClient; vendo
   const account = privateKeyToAccount(AGENT_KEY);
   const steps: AgentStep[] = [];
   let paid = 0;
+  let lastReport: { gasPriceGwei?: number } | null = null;
+  let nudged = false;
 
   const tools: Record<string, (args: Record<string, unknown>) => Promise<unknown>> = {
     async get_price() {
@@ -74,6 +93,7 @@ export async function runLlmAgent(opts: { task: string; pub: PublicClient; vendo
       const j = (await r.json()) as { data?: unknown; payment?: { verifiedBy: string; escrowLeft: string }; error?: string };
       if (r.status !== 200) return { httpStatus: r.status, refused: j.error ?? "refused" };
       paid += 1;
+      lastReport = j.data as { gasPriceGwei?: number };
       return { httpStatus: 200, report: j.data, paid: units(PRICE), voucherTotal: units(max), verifiedBy: j.payment?.verifiedBy, escrowLeftInChannel: units(BigInt(j.payment?.escrowLeft ?? "0")) };
     },
     async ask_vault_to_fund(args) {
@@ -96,26 +116,59 @@ export async function runLlmAgent(opts: { task: string; pub: PublicClient; vendo
     const res = await fetch(`${baseUrl}/chat/completions`, {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${opts.apiKey}` },
-      body: JSON.stringify({ model, messages, tools: TOOLS, tool_choice: "auto", temperature: 0.2, max_tokens: 800 }),
-      signal: AbortSignal.timeout(45_000),
+      // After the one corrective nudge the model gets no tools, so it has to answer in prose.
+      body: JSON.stringify(nudged ? { model, messages, temperature: 0.2, max_tokens: 500 } : { model, messages, tools: TOOLS, tool_choice: "auto", temperature: 0.2, max_tokens: 800 }),
+      signal: AbortSignal.timeout(Number(process.env.LLM_TIMEOUT_MS) || 45_000),
     });
     if (!res.ok) {
       steps.push({ kind: "error", text: `The model API answered ${res.status}: ${(await res.text()).slice(0, 300)}` });
       break;
     }
     const msg = ((await res.json()) as { choices: { message: Msg }[] }).choices[0].message;
-    messages.push({ role: "assistant", content: msg.content ?? null, tool_calls: msg.tool_calls });
     const calls = msg.tool_calls ?? [];
-    if (msg.content?.trim()) steps.push({ kind: calls.length ? "model" : "answer", text: msg.content.trim() });
-    if (calls.length === 0) break;
-    for (const call of calls) {
-      let args: Record<string, unknown> = {};
-      try { args = call.function.arguments ? JSON.parse(call.function.arguments) : {}; } catch {}
-      const fn = tools[call.function.name];
-      const result = fn ? await fn(args).catch((e) => ({ error: (e as Error).message.split("\n")[0] })) : { error: `unknown tool ${call.function.name}` };
-      steps.push({ kind: "tool", name: call.function.name, args, result });
-      messages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify(result) });
+    const exec = async (name: string, args: Record<string, unknown>) => {
+      const fn = tools[name];
+      const result = fn ? await fn(args).catch((e) => ({ error: (e as Error).message.split("\n")[0] })) : { error: `unknown tool ${name}` };
+      steps.push({ kind: "tool", name, args, result });
+      return result;
+    };
+
+    if (calls.length > 0) {
+      messages.push({ role: "assistant", content: msg.content ?? null, tool_calls: calls });
+      if (msg.content?.trim()) steps.push({ kind: "model", text: msg.content.trim() });
+      for (const call of calls) {
+        let args: Record<string, unknown> = {};
+        try { args = call.function.arguments ? JSON.parse(call.function.arguments) : {}; } catch {}
+        messages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify(await exec(call.function.name, args)) });
+      }
+      continue;
     }
+
+    const asText = nudged ? null : textToolCall(msg.content, Object.keys(tools));
+    if (asText) {
+      messages.push({ role: "assistant", content: msg.content });
+      const result = await exec(asText.name, asText.args);
+      messages.push({ role: "user", content: `Result of ${asText.name}: ${JSON.stringify(result)}\nContinue. Either call one more tool, or answer the task itself in plain sentences, quoting the figures and what you spent.` });
+      continue;
+    }
+
+    messages.push({ role: "assistant", content: msg.content ?? null });
+    // A plan with no tool call yet is a plan, not an answer: record it and tell the model to act on it.
+    if (msg.content?.trim() && !steps.some((x) => x.kind === "tool") && turn < 2) {
+      steps.push({ kind: "model", text: msg.content.trim() });
+      messages.push({ role: "user", content: "Good. Now carry out the plan: call the first tool." });
+      continue;
+    }
+    // If the agent paid for a report and then answered without using it, send it back once to finish the job.
+    const report = lastReport as { gasPriceGwei?: number } | null;
+    if (report && !nudged && !(msg.content ?? "").includes(String(report.gasPriceGwei))) {
+      steps.push({ kind: "model", text: (msg.content ?? "").trim() });
+      nudged = true;
+      messages.push({ role: "user", content: `That does not answer the task yet. The task was: "${opts.task}". The report you bought: ${JSON.stringify(report)}. Answer the task now in plain sentences, quoting the gas price in gwei and the cost of an 800k gas call in MON, and say you spent ${units(PRICE * BigInt(paid))} of vault credit. Do not call a tool.` });
+      continue;
+    }
+    if (msg.content?.trim()) steps.push({ kind: "answer", text: msg.content.trim() });
+    break;
   }
   return { model, task: opts.task, steps, paidCalls: paid, spentAusd: units(PRICE * BigInt(paid)), startedAt: new Date().toISOString() };
 }
