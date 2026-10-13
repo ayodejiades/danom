@@ -85,7 +85,6 @@ export default function Home() {
           <div aria-hidden className="horizon" />
           <div className="relative mx-auto grid w-full max-w-6xl items-center gap-14 px-6 pb-44 pt-14 lg:grid-cols-[1.25fr_1fr] lg:pt-20">
             <div className="flex flex-col gap-7">
-              <p className="caption">Danom · Credit for AI agents on Monad</p>
               <h1 className="text-[clamp(2.9rem,7.4vw,5.6rem)] leading-[0.96]">
                 Credit for AI agents that can only spend where you <em>allow.</em>
               </h1>

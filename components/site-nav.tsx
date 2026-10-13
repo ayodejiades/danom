@@ -24,7 +24,6 @@ export function SiteNav({ active }: { active: string }) {
         <Link href="/" className="order-1 flex items-center gap-2.5 font-[family-name:var(--font-display)] text-2xl leading-none tracking-tight">
           <Mark />
           Danom
-          <span className="caption hidden border-l border-[var(--border)] pl-2.5 sm:inline">Monad testnet</span>
         </Link>
         <div className="order-2 sm:order-3"><ConnectWallet /></div>
         <nav aria-label="Primary" className="order-3 flex w-full items-center gap-5 text-sm font-medium sm:order-2 sm:ml-auto sm:w-auto sm:gap-7">
