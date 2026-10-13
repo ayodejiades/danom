@@ -1,23 +1,23 @@
 {
-  "name": "ledger",
-  "mode": "light",
-  "accent": "#5B3FD6",
-  "accentContrast": "#FBF8F1",
+  "name": "night-ledger",
+  "mode": "dark",
+  "accent": "#836EF9",
+  "accentContrast": "#0B0A10",
   "surfaces": {
-    "bg": "#F2EDE2",
-    "surface": "#EBE5D7",
-    "surfaceRaised": "#E2DBC9",
-    "border": "#CFC6B0"
+    "bg": "#0B0A10",
+    "surface": "#100E16",
+    "surfaceRaised": "#1C1926",
+    "border": "#2C2838"
   },
   "text": {
-    "fg": "#17140F",
-    "fgMuted": "#5C5546"
+    "fg": "#F1ECE1",
+    "fgMuted": "#A39D90"
   },
   "pops": {
-    "navy": "#17140F",
-    "sky": "#DDD5F7",
+    "navy": "#07060A",
+    "sky": "#CFC4FF",
     "mint": "#8FD3AE",
-    "sun": "#D9A92E",
+    "sun": "#E0B33A",
     "coral": "#D9644A"
   },
   "radii": {
@@ -26,7 +26,7 @@
     "radiusPill": "3px"
   },
   "shadows": {
-    "shadow": "3px 3px 0 #17140F"
+    "shadow": "3px 3px 0 #836EF9"
   },
   "font": {
     "sans": "Geist",

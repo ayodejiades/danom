@@ -16,14 +16,14 @@ export default function Proof() {
       title={<>The recorded <em>run</em></>}
       intro={
         <>
-          <p className="rounded-[var(--radius-sm)] border-[1.5px] border-[var(--fg)] bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--fg)]">{proof.note}</p>
+          <p className="rounded-[var(--radius-sm)] border-[1.5px] border-[var(--line)] bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--fg)]">{proof.note}</p>
           <p className="text-sm">Mode <span className="font-mono">{proof.verificationMode}</span>. Generated {proof.generatedAt}. Re-run it with <span className="font-mono">pnpm proof:local</span>.</p>
         </>
       }
     >
         <section className="flex flex-col gap-3">
           <h2 className="text-4xl">Contracts</h2>
-          <dl className="grid gap-x-8 gap-y-3 rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)] p-6 text-sm md:grid-cols-[max-content_1fr]">
+          <dl className="grid gap-x-8 gap-y-3 rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--paper)] p-6 text-sm md:grid-cols-[max-content_1fr]">
             {Object.entries(proof.contracts).map(([name, addr]) => (
               <div key={name} className="contents">
                 <dt className="caption !text-[var(--fg)]">{name}</dt>
@@ -35,7 +35,7 @@ export default function Proof() {
 
         <section className="grid gap-5 md:grid-cols-2">
           {keyRuns.map((r, i) => (
-            <div key={r.id} className="rise rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)] p-6">
+            <div key={r.id} className="rise rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--paper)] p-6">
               <p className="caption mb-2">Run {String(i + 1).padStart(2, "0")}</p>
               <h3 className="mb-5 text-xl font-semibold tracking-tight">{r.title}</h3>
               <dl className="grid grid-cols-[1fr_auto] gap-x-4 text-sm">
@@ -49,9 +49,9 @@ export default function Proof() {
 
         <section className="flex flex-col gap-3">
           <h2 className="text-4xl">Attempts that were refused</h2>
-          <div className="overflow-x-auto rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)]">
+          <div className="overflow-x-auto rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--paper)]">
             <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="border-b-[1.5px] border-[var(--fg)] text-[var(--fg-muted)]"><tr><th className="px-4 py-3 font-semibold">Attempt</th><th className="px-4 py-3 font-semibold">Expected</th><th className="px-4 py-3 font-semibold">Chain said</th></tr></thead>
+              <thead className="border-b-[1.5px] border-[var(--line)] text-[var(--fg-muted)]"><tr><th className="px-4 py-3 font-semibold">Attempt</th><th className="px-4 py-3 font-semibold">Expected</th><th className="px-4 py-3 font-semibold">Chain said</th></tr></thead>
               <tbody>
                 {refusals.map((a) => (
                   <tr key={a.attempt} className="border-t border-[var(--border)]">

@@ -18,7 +18,7 @@ export function Mark() {
 
 export function SiteNav({ active }: { active: string }) {
   return (
-    <header className="sticky top-0 z-20 border-b-[1.5px] border-[var(--fg)] bg-[color-mix(in_srgb,var(--bg)_88%,transparent)] backdrop-blur-md">
+    <header className="sticky top-0 z-20 border-b-[1.5px] border-[var(--line)] bg-[color-mix(in_srgb,var(--bg)_88%,transparent)] backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-2.5 sm:px-6">
         <Link href="/" className="order-1 flex items-center gap-2.5 font-[family-name:var(--font-display)] text-2xl leading-none tracking-tight">
           <Mark />
