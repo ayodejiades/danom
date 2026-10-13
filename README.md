@@ -14,7 +14,7 @@ Built for [Monad Metropolis](https://monad.xyz/developers/hackathons/metropolis)
 
 Three things to try:
 
-1. On the first screen, press **Ask the vault** with the agent's own wallet selected. The slip is stamped Refused with `ReceiverNotAllowed`.
+1. Open **Live agent**. Press **Call the API**: the paid endpoint answers 402 with its price. Press **Sign and pay**: your browser signs a voucher with the demo agent's key and the same endpoint answers 200, paid from vault escrow on Monad testnet. Then press **Pay the agent itself** and watch the live vault refuse.
 2. Open **Credit flow**. Ask for 41 to the approved vendor: refused, the cap is 40. Ask for 30: funded. Route a customer payment and watch the loan get repaid before the agent is paid.
 3. Open **Recorded run**. The 19 testnet transactions link to the explorer, and a checkbox lets you tamper with the receipts to see every digest check fail.
 
@@ -27,6 +27,31 @@ Three things to try:
 5. **The record.** Lifetime repaid principal is kept per agent, so it follows the agent to a new sponsor. It sets a tier from 0 to 3, and the tier sets how much credit each unit of collateral supports: 75%, 100%, 150%, 250%. A default pins the agent back to tier 0.
 
 The limits are contract reverts. A payment to the agent's own wallet reverts with `ReceiverNotAllowed`, one above the cap with `OverPerBorrowCap`, and one after the sponsor revokes with `LineInactive`.
+
+## A paid API call, end to end
+
+The site hosts a paid API at `/api/vendor/gas`. This is the loop an agent runs against it:
+
+1. The agent requests the data and gets **HTTP 402** with a price (0.25 per call) and where to escrow it.
+2. If its channel to that vendor is empty, the agent asks the vault to fund it. The money is the vault's. The agent holds none.
+3. The agent signs a cumulative voucher and retries with it in the payment header. The vendor checks the voucher against the x402 settlement contract on Monad testnet (the channel pays this vendor, holds enough escrow, and the signer is its `payerAuthorizer`) and answers **200** with the data.
+4. The vendor claims the last voucher on chain and settles the funds to itself.
+
+`tools/agent.ts` ran this on Monad testnet on 2026-10-13: 3 paid calls, the vendor received 0.75 on chain, and the agent's own balance stayed 0.00. The record is [`AGENT_RUN.json`](AGENT_RUN.json).
+
+| # | Step | Transaction |
+|---|---|---|
+| 1 | Sponsor opens a line for the agent: 400 collateral, 100 limit, 40 per channel, 30 days | [`0xcc6cf5e6…`](https://testnet.monadscan.com/tx/0xcc6cf5e6002c066b7c0c379074350932bf895493671ddb2c7d0f0a7ecb9403cf) |
+| 2 | Sponsor approves the vendor for this agent | [`0x4d007a33…`](https://testnet.monadscan.com/tx/0x4d007a33ac7c3b55fbc48d1c1b750700ee377524d96edd7a9c7c46f9fd350b30) |
+| 3 | Sponsor sends the agent gas (MON only, no stablecoin) | [`0x8f715c3e…`](https://testnet.monadscan.com/tx/0x8f715c3e3d960ad65dbf8ac40072884a9f9c371aa9b8c7de2a01252a13715dc1) |
+| 4 | Sponsor sends the vendor gas | [`0x699ef139…`](https://testnet.monadscan.com/tx/0x699ef13990f38006f8588754e495445d3eaf7a0c27d104bcfced81ef5b8695e5) |
+| 5 | Agent asks the vault to fund a 10.00 channel to the vendor | [`0xfcef566a…`](https://testnet.monadscan.com/tx/0xfcef566a64a3e05b9eb701e7955b6d0d323be29dddb834490b830d3b4697ee0f) |
+| 6 | Vendor claims the agent's voucher for 0.75 total | [`0x6f2c92eb…`](https://testnet.monadscan.com/tx/0x6f2c92eb6263476402de235c5e0451f27b1f7b61915298138f43cb431e8df9fc) |
+| 7 | Vendor settles the claimed funds to itself | [`0x610d986b…`](https://testnet.monadscan.com/tx/0x610d986bc50448b597c558bbd1b5894ffc585bdea0fdc569a545c19d94f64a42) |
+
+**The demo agent's private key is published** in [`lib/x402.ts`](lib/x402.ts) and on the Live agent page. That is the point: with the key in hand, asking the vault to pay any address the sponsor did not approve reverts with `ReceiverNotAllowed`. The most a thief can do is spend the credit line at the approved vendor and burn the agent's gas, until the sponsor revokes the line.
+
+Limits: the agent is scripted and no model decides what to buy. No x402 facilitator is involved, and the header layout was not tested against the reference x402 client. The demo vendor keeps no state between requests, so it does not track the highest voucher it has seen.
 
 ## Live on Monad testnet
 
@@ -75,6 +100,7 @@ The run is scripted. One funded wallet played lender, sponsor, customer and keep
 |---|---|
 | `CreditVault` | Deployed on Monad testnet and exercised by the live run above. `pnpm deploy:verify` re-checks it on chain. |
 | x402 batch settlement | The canonical contract, which has code on Monad testnet (10143) and mainnet (143). The vault calls it directly on testnet and on a fork. |
+| Paid API loop | `AGENT_RUN.json`: 3 paid HTTP calls, 7 transactions on Monad testnet, vendor paid 0.75 from vault escrow. |
 | Live run | `LIVE_RUN.json`: 19 transactions on Monad testnet, 4 of 4 refusals matched. |
 | Recorded run | `PROOF_RUNS.json`: 50 transactions on a local fork of Monad testnet, 8 of 8 refusals matched. It covers tier graduation, the portable record and liquidation, which the live run does not. |
 | Tests | 22 Foundry tests pass offline against a mock, and the same suite passes against the real x402 contract on a fork. 12 TypeScript tests pass. |
@@ -109,7 +135,8 @@ pnpm test                 # 12 TypeScript tests
 forge test                # 22 Foundry tests, offline
 pnpm contracts:test:fork  # the same suite against the real x402 contract on a fork
 pnpm claim:verify         # re-derive every claim and re-check the deployment on chain
-pnpm live:dry             # rehearse the live testnet run on a local fork
+pnpm agent:dry            # rehearse the paid HTTP loop on a local fork
+pnpm live:dry             # rehearse the full credit cycle on a local fork
 pnpm proof:local          # re-record PROOF_RUNS.json on a fork
 ```
 
@@ -118,9 +145,10 @@ pnpm proof:local          # re-record PROOF_RUNS.json on a fork
 ## Where things are
 
 - `contracts/src/CreditVault.sol`: the vault. `contracts/src/interfaces/IX402BatchSettlement.sol`: the part of the x402 contract it calls.
+- `lib/x402.ts`: the paid endpoint's protocol, shared by the vendor route, the agent CLI and the browser.
 - `lib/credit.ts`: a TypeScript mirror of the vault's rules, used by the site and pinned to the contract by tests.
-- `tools/`: the live run, the recorded run, the claim checker and the deployment check.
-- `app/`: the landing page, the credit flow and the recorded run page.
+- `tools/`: the agent that pays over HTTP 402, the live run, the recorded run, the claim checker and the deployment check.
+- `app/`: the landing page, the live agent page, the credit flow, the recorded run page and the vendor API.
 - `indexer/`: a viem event indexer for the vault's events.
 
 ## License

@@ -97,6 +97,17 @@ try {
       limitation: "A scripted agent with throwaway agent and vendor keys; one funded wallet played lender, sponsor, customer and keeper; MockAUSD; no facilitator; refusals were checked by simulation, so they sent nothing",
       passed: run.chainId === 10143 && run.transactions.length >= 19 && matched === run.refusals.length && run.summary.agentOwnFundsAusd === "0.00" && run.summary.debtAfterRevenueAusd === "0.00" });
   }
+  // The paid HTTP loop: an agent bought data over 402 and the vault's escrow paid for it (tools/agent.ts).
+  const agentPath = path.join(root, "AGENT_RUN.json");
+  if (fs.existsSync(agentPath)) {
+    const a = JSON.parse(fs.readFileSync(agentPath, "utf8"));
+    if ((a.transactions ?? []).length > 0) {
+      rows.push({ claim: "An agent bought data from a paid HTTP endpoint (402, then a signed voucher) and vault escrow paid the vendor on Monad testnet", level: "On chain (testnet)",
+        evidence: `AGENT_RUN.json: ${a.calls.length} paid calls at ${a.summary.pricePerCallAusd}, vendor received ${a.summary.vendorReceivedAusd} on chain, agent's own funds ${a.summary.agentOwnFundsAusd}, ${a.transactions.length} transactions`,
+        limitation: "The agent is scripted, with no model choosing what to buy; no facilitator; the payment header layout was not tested against the reference x402 client; the demo vendor keeps no state between requests; the demo agent's key is public by design",
+        passed: a.calls.length >= 1 && a.calls.every((c: { status: number }) => c.status === 200) && a.summary.agentOwnFundsAusd === "0.00" && Number(a.summary.vendorReceivedAusd) === a.calls.length * Number(a.summary.pricePerCallAusd) });
+    }
+  }
 } catch (e) {
   liveNote = `not re-checked (${(e as Error).message.split("\n")[0]})`;
 }
