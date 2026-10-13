@@ -85,7 +85,17 @@ try {
     liveNote = `${live.checks.filter((c) => c.ok).length} of ${live.checks.length} on chain checks passed on chain id ${live.chainId}`;
     rows.push({ claim: "CreditVault and MockAUSD are deployed on Monad testnet and wired to the canonical x402 contract", level: "On chain (testnet)",
       evidence: `${liveNote}. Vault ${d.contractAddress}, deployment tx ${d.txHash}`,
-      limitation: "Deployed only. No lending, channel or repayment transaction has been sent to this deployment yet, and the token is MockAUSD", passed: ok });
+      limitation: "The token is MockAUSD and the contracts are not audited", passed: ok });
+  }
+  // The live run: a full credit cycle broadcast to Monad testnet by tools/live-run.ts.
+  const livePath = path.join(root, "LIVE_RUN.json");
+  if (fs.existsSync(livePath)) {
+    const run = JSON.parse(fs.readFileSync(livePath, "utf8"));
+    const matched = run.refusals.filter((r: { expected: string; refusedWith: string }) => r.expected === r.refusedWith).length;
+    rows.push({ claim: "A full credit cycle ran on Monad testnet against the deployed vault and the canonical x402 contract", level: "On chain (testnet)",
+      evidence: `LIVE_RUN.json: ${run.transactions.length} transactions in blocks ${run.transactions[0].block} to ${run.transactions[run.transactions.length - 1].block}, ${matched} of ${run.refusals.length} refusals matched, agent's own funds ${run.summary.agentOwnFundsAusd}, ${run.summary.customerPaidAusd} of revenue repaid ${run.summary.debtBeforeRevenueAusd} of debt first`,
+      limitation: "A scripted agent with throwaway agent and vendor keys; one funded wallet played lender, sponsor, customer and keeper; MockAUSD; no facilitator; refusals were checked by simulation, so they sent nothing",
+      passed: run.chainId === 10143 && run.transactions.length >= 19 && matched === run.refusals.length && run.summary.agentOwnFundsAusd === "0.00" && run.summary.debtAfterRevenueAusd === "0.00" });
   }
 } catch (e) {
   liveNote = `not re-checked (${(e as Error).message.split("\n")[0]})`;
@@ -104,7 +114,7 @@ const table = [
 ].join("\n");
 
 const notClaimed = [
-  "- Any lending, channel, claim or repayment transaction on Monad. Only the two deployment transactions exist on testnet; every run in PROOF_RUNS.json happened on a local Anvil fork.",
+  "- Organic usage. The testnet activity is one scripted run (LIVE_RUN.json) in which a single funded wallet played lender, sponsor, customer and keeper. The longer run in PROOF_RUNS.json, including tier graduation, the portable record and liquidation, happened on a local Anvil fork.",
   "- Anything on Monad mainnet.",
   "- Real AUSD or USDC. The token in every run is MockAUSD.",
   "- Any use of the Monad x402 facilitator. The vendor claims directly as receiver authorizer.",
@@ -132,8 +142,8 @@ fs.writeFileSync(path.join(root, "WHAT_IS_REAL.md"), [
   "",
   "| Layer | Status |",
   "| --- | --- |",
-  "| `CreditVault` (pool, lines, tiers, record, revenue router, liquidation) | Written and tested offline and on a Monad fork. Deployed to Monad testnet (deployment only, no lending activity yet). |",
-  "| x402 batch settlement contract | The real canonical contract, at the same address on Monad testnet and mainnet. Used on a fork. |",
+  "| `CreditVault` (pool, lines, tiers, record, revenue router, liquidation) | Written and tested offline and on a Monad fork. Deployed to Monad testnet, where one scripted credit cycle has run against it (LIVE_RUN.json). |",
+  "| x402 batch settlement contract | The real canonical contract, at the same address on Monad testnet and mainnet. Used on a fork and in the live testnet run. |",
   "| Vouchers | Real EIP-712 signatures checked by the real contract. |",
   "| Token | MockAUSD. |",
   "| Monad x402 facilitator | Exists and lists batch-settlement for Monad. Not called. |",

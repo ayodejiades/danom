@@ -1,6 +1,7 @@
 import { PageShell } from "@/components/page-shell";
 import { ReceiptVerifier, type ReceiptRow } from "@/components/receipt-verifier";
 import proof from "@/PROOF_RUNS.json";
+import live from "@/LIVE_RUN.json";
 
 type Run = Record<string, unknown> & { id: string; title: string };
 const runs = proof.runs as unknown as Run[];
@@ -12,7 +13,7 @@ export default function Proof() {
   return (
     <PageShell
       active="/proof"
-      eyebrow={`Local fork of chain ${proof.chainId} · ${proof.transactions.length} transactions`}
+      eyebrow={`${live.transactions.length} transactions on Monad testnet · ${proof.transactions.length} on a local fork`}
       title={<>The recorded <em>run</em></>}
       intro={
         <>
@@ -21,7 +22,45 @@ export default function Proof() {
         </>
       }
     >
+        <section className="flex flex-col gap-5">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div className="flex flex-col gap-2">
+              <p className="caption">Chain {live.chainId} · {live.generatedAt.slice(0, 10)}</p>
+              <h2 className="text-4xl">Live on Monad <em>testnet</em></h2>
+            </div>
+            <span className="stamp stamp-funded text-sm">On chain</span>
+          </div>
+          <p className="max-w-3xl text-sm text-[var(--fg-muted)]">
+            One full credit cycle, broadcast to the deployed vault and the canonical x402 contract. Every row opens on the explorer. {live.note} One funded wallet played lender, sponsor, customer and keeper, and the agent and vendor were throwaway keys.
+          </p>
+          <dl className="grid gap-px overflow-hidden rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              ["Agent's own funds", live.summary.agentOwnFundsAusd, "it signed vouchers and held nothing"],
+              ["Customer paid", live.summary.customerPaidAusd, `${live.summary.debtBeforeRevenueAusd} repaid the loan first`],
+              ["Agent received", live.summary.agentReceivedAusd, "the remainder, after the loan"],
+              ["Refusals matched", `${live.refusals.filter((r) => r.expected === r.refusedWith).length}/${live.refusals.length}`, "simulated against the live vault"],
+            ].map(([k, v, hint]) => (
+              <div key={k} className="bg-[var(--paper)] p-5">
+                <dt className="caption">{k}</dt>
+                <dd className="mt-2 font-[family-name:var(--font-display)] text-4xl leading-none tracking-tight">{v}</dd>
+                <dd className="mt-2 text-xs text-[var(--fg-muted)]">{hint}</dd>
+              </div>
+            ))}
+          </dl>
+          <ol className="grid rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--paper)] px-5 py-2 text-sm">
+            {live.transactions.map((t, i) => (
+              <li key={t.hash} className="grid grid-cols-[2rem_1fr] items-baseline gap-x-3 gap-y-1 border-t border-dashed border-[var(--border)] py-2.5 first:border-t-0 md:grid-cols-[2rem_1fr_auto_auto]">
+                <span className="font-mono text-[var(--fg-muted)]">{String(i + 1).padStart(2, "0")}</span>
+                <span>{t.step}</span>
+                <span className="font-mono text-xs text-[var(--fg-muted)] max-md:col-start-2">block {t.block}</span>
+                <a href={t.explorer} target="_blank" rel="noreferrer" className="link-rule font-mono text-xs text-[var(--accent-ink)] max-md:col-start-2">{t.hash.slice(0, 10)}…{t.hash.slice(-6)}</a>
+              </li>
+            ))}
+          </ol>
+        </section>
+
         <section className="flex flex-col gap-3">
+          <p className="caption">Below: the longer recorded run, on a local fork</p>
           <h2 className="text-4xl">Contracts</h2>
           <dl className="grid gap-x-8 gap-y-3 rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--paper)] p-6 text-sm md:grid-cols-[max-content_1fr]">
             {Object.entries(proof.contracts).map(([name, addr]) => (

@@ -1,6 +1,6 @@
 // lib/seams.ts — every outside dependency, with the status it really has today. claim:verify writes this
 // table into docs/SPONSOR_INTEGRATIONS.md, so the docs cannot say more than this file does.
-export type SeamStatus = "REAL_ON_FORK" | "BUILT_UNTESTED_LIVE" | "NOT_INTEGRATED" | "NOT_PLANNED";
+export type SeamStatus = "REAL_ON_TESTNET" | "REAL_ON_FORK" | "BUILT_UNTESTED_LIVE" | "NOT_INTEGRATED" | "NOT_PLANNED";
 
 export interface Seam {
   name: string;
@@ -15,10 +15,10 @@ export const SEAMS: Seam[] = [
   {
     name: "x402 batch settlement (canonical contract on Monad)",
     role: "Escrow, cumulative vouchers, claim, settle and refund for every payment the agent makes.",
-    status: "REAL_ON_FORK",
+    status: "REAL_ON_TESTNET",
     codePath: "contracts/src/CreditVault.sol, contracts/src/interfaces/IX402BatchSettlement.sol",
-    evidence: "Contract at 0x4020074e9dF2ce1deE5A9C1b5c3f541D02a10003 has code on Monad testnet (10143) and mainnet (143). Fork tests and tools/local-proof.ts run the vault against it on an Anvil fork.",
-    notClaimed: "The recorded runs happened on a local fork. Only the two deployment transactions were broadcast to Monad testnet.",
+    evidence: "Contract at 0x4020074e9dF2ce1deE5A9C1b5c3f541D02a10003 has code on Monad testnet (10143) and mainnet (143). Fork tests and tools/local-proof.ts run the vault against it on an Anvil fork, and tools/live-run.ts ran one full cycle against it on Monad testnet (LIVE_RUN.json).",
+    notClaimed: "The testnet run is one scripted cycle with test tokens. The longer recorded run, with tier graduation and liquidation, happened on a local fork.",
   },
   {
     name: "Monad x402 facilitator",

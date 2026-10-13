@@ -3,6 +3,7 @@ import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/page-shell";
 import { Teller } from "@/components/teller";
 import proof from "@/PROOF_RUNS.json";
+import live from "@/LIVE_RUN.json";
 
 type Refusal = { attempt: string; expected: string; refusedWith: string };
 const run = <T,>(id: string) => proof.runs.find((r) => r.id === id) as unknown as T;
@@ -26,8 +27,8 @@ const FAQ = [
   { q: "What happens if the agent does not repay?", a: "Once a line is overdue with debt outstanding, anyone can liquidate it. The sponsor's collateral covers the debt, the rest returns to the sponsor, and the default pins the agent to tier 0." },
   { q: "How does a sponsor lock less collateral over time?", a: "Each repaid unit of principal raises the agent's tier. In the recorded run the same collateral supported 100.00 of credit at tier 0 and 245.00 after three repaid rounds. The tier thresholds are demo parameters, not calibrated risk numbers." },
   { q: "Can the record be gamed?", a: "Yes, at a cost. An agent can borrow and repay to build a record, and it pays interest to do so. Tiers above 100% are undercollateralized, which is why lenders carry that risk and why any default resets the tier." },
-  { q: "Is it live?", a: "It is a testnet preview. The vault is deployed on Monad testnet and runs against the canonical x402 batch settlement contract on a fork of it. No lending or channel transaction has been sent to the testnet deployment yet, the token is a test token, and the contracts are not audited." },
-  { q: "Where can I check the claims?", a: "The recorded run page lists every transaction, every refused attempt and each receipt, and recomputes receipt digests in your browser. The repository's claim ledger pairs each claim with its evidence and limits." },
+  { q: "Is it live?", a: "It is a testnet preview. The vault is deployed on Monad testnet, and one scripted credit cycle of 19 transactions has run against it and the canonical x402 batch settlement contract there. The token is a test token, the run used throwaway agent and vendor keys, and the contracts are not audited." },
+  { q: "Where can I check the claims?", a: "The recorded run page links every testnet transaction to the explorer, lists every refused attempt and each receipt, and recomputes receipt digests in your browser. The repository's claim ledger pairs each claim with its evidence and limits." },
 ];
 
 // Banknote rosette: one ellipse turned around the centre, drawn in hairlines.
@@ -62,7 +63,7 @@ export default function Home() {
     [`${matched}/${refusals.length}`, "out of policy attempts refused with the expected error"],
     ["0", "funds the agent holds at any point in the run"],
     ["22", "vault tests, offline and against the real x402 contract on a fork"],
-    [String(proof.chainId), "Monad testnet chain id, where the vault is deployed"],
+    [String(live.transactions.length), "transactions in a full credit cycle on Monad testnet"],
   ];
 
   return (

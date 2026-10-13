@@ -1,0 +1,167 @@
+{
+  "generatedAt": "2026-10-13T21:28:30.418Z",
+  "network": "Monad Testnet",
+  "chainId": 10143,
+  "mode": "MONAD_TESTNET_LIVE",
+  "contracts": {
+    "CreditVault": "0x959c59B1a46545e6AE2Fcba48A37bD93D93787dD",
+    "MockAUSD": "0xffAA4a80Ce47071CC880632be756EBA0cF363F27",
+    "x402BatchSettlement": "0x4020074e9dF2ce1deE5A9C1b5c3f541D02a10003"
+  },
+  "accounts": {
+    "funder": "0x5950Cf8500c45cFaE8fA1eCD242a4469Bd5951Ff",
+    "agent": "0xB42C4C6B9C8436Dd2EB5BAD7E16772cd5ADbBA5A",
+    "vendor": "0xc125B863A465D30Dbc9Cc35C2F6c321664DFDe5c"
+  },
+  "note": "Scripted agent, test token, no facilitator. Every transaction below was sent by tools/live-run.ts.",
+  "summary": {
+    "agentOwnFundsAusd": "0.00",
+    "debtAfterFundAusd": "40.00",
+    "debtAfterReconcileAusd": "25.00",
+    "debtBeforeRevenueAusd": "40.00",
+    "customerPaidAusd": "100.00",
+    "agentReceivedAusd": "60.00",
+    "debtAfterRevenueAusd": "0.00",
+    "vendorReceivedAusd": "65.00",
+    "repaidPrincipalAusd": "65.00",
+    "tier": 0
+  },
+  "refusals": [
+    {
+      "attempt": "agent tries to fund a channel paying itself",
+      "expected": "ReceiverNotAllowed",
+      "refusedWith": "ReceiverNotAllowed"
+    },
+    {
+      "attempt": "agent funds 41 (cap is 40)",
+      "expected": "OverPerBorrowCap",
+      "refusedWith": "OverPerBorrowCap"
+    },
+    {
+      "attempt": "a wallet that is not the agent funds on the agent's line",
+      "expected": "LineInactive",
+      "refusedWith": "LineInactive"
+    },
+    {
+      "attempt": "agent funds after revoke",
+      "expected": "LineInactive",
+      "refusedWith": "LineInactive"
+    }
+  ],
+  "transactions": [
+    {
+      "step": "funder sends the agent gas",
+      "hash": "0x0a9894f3d742dc35b8142aad7e7c3185863501b3169e7951758dc07339f3b904",
+      "block": "70787925",
+      "explorer": "https://testnet.monadscan.com/tx/0x0a9894f3d742dc35b8142aad7e7c3185863501b3169e7951758dc07339f3b904"
+    },
+    {
+      "step": "funder sends the vendor gas",
+      "hash": "0xc6664f50e103237a2d3396450e0bf53f90720fb45c0aeb9936976c85ab1bbd3d",
+      "block": "70787927",
+      "explorer": "https://testnet.monadscan.com/tx/0xc6664f50e103237a2d3396450e0bf53f90720fb45c0aeb9936976c85ab1bbd3d"
+    },
+    {
+      "step": "mint test stablecoin to the funder",
+      "hash": "0xa80d6195e8bc8e68f8d03a3a1b21603ca614bce3927b8d11e9a2d4b87bbde37a",
+      "block": "70787930",
+      "explorer": "https://testnet.monadscan.com/tx/0xa80d6195e8bc8e68f8d03a3a1b21603ca614bce3927b8d11e9a2d4b87bbde37a"
+    },
+    {
+      "step": "funder approves the vault",
+      "hash": "0xbb65fb6b444566dc397cab7e40b6c21507497418f78b89d875b542325757c2f3",
+      "block": "70787933",
+      "explorer": "https://testnet.monadscan.com/tx/0xbb65fb6b444566dc397cab7e40b6c21507497418f78b89d875b542325757c2f3"
+    },
+    {
+      "step": "lender supplies 1000 to the vault",
+      "hash": "0x23a7eb3a32b04fc33e1fbce8d33fbce1e0a2ab17bbfef8c20103ae657f977af5",
+      "block": "70787936",
+      "explorer": "https://testnet.monadscan.com/tx/0x23a7eb3a32b04fc33e1fbce8d33fbce1e0a2ab17bbfef8c20103ae657f977af5"
+    },
+    {
+      "step": "sponsor opens a line for the agent: 400 collateral, 100 base, 40 per channel, 10% APR, 30 days, 50% revenue share",
+      "hash": "0xbdbb2e06fbe06ec497da2307ebcff4f0e73fb4573436c252d44eae00824467b8",
+      "block": "70787938",
+      "explorer": "https://testnet.monadscan.com/tx/0xbdbb2e06fbe06ec497da2307ebcff4f0e73fb4573436c252d44eae00824467b8"
+    },
+    {
+      "step": "sponsor allowlists the vendor",
+      "hash": "0x23e2a4b4750711d02105dc8c51c9f1bfae677a23486e55f9c6a09f7609d2a326",
+      "block": "70787941",
+      "explorer": "https://testnet.monadscan.com/tx/0x23e2a4b4750711d02105dc8c51c9f1bfae677a23486e55f9c6a09f7609d2a326"
+    },
+    {
+      "step": "sponsor allowlists the customer as a revenue payer",
+      "hash": "0x35a9abb4a3318cefbd5e3d81633ac74a7d693d2444c16d90c52a4435803ef97a",
+      "block": "70787943",
+      "explorer": "https://testnet.monadscan.com/tx/0x35a9abb4a3318cefbd5e3d81633ac74a7d693d2444c16d90c52a4435803ef97a"
+    },
+    {
+      "step": "agent asks the vault to fund a 40.00 channel for the vendor (quote 25)",
+      "hash": "0xf6868ade43e5f9800d46dd0fa1b607467d31fe29da0088e47f62bc1bee016b6e",
+      "block": "70787947",
+      "explorer": "https://testnet.monadscan.com/tx/0xf6868ade43e5f9800d46dd0fa1b607467d31fe29da0088e47f62bc1bee016b6e"
+    },
+    {
+      "step": "vendor claims the agent's signed voucher for 25.00",
+      "hash": "0x6ced01d5f3dcb76e0a5bb1fa11659bb5a7acd99ab76f2cb6cbc4e0400554868c",
+      "block": "70787951",
+      "explorer": "https://testnet.monadscan.com/tx/0x6ced01d5f3dcb76e0a5bb1fa11659bb5a7acd99ab76f2cb6cbc4e0400554868c"
+    },
+    {
+      "step": "anyone settles the claimed funds to the vendor",
+      "hash": "0xd3c1ddbfe49e97027a287fe46bd38cc1c8ae8bb9085bd63e15460eacb2795718",
+      "block": "70787954",
+      "explorer": "https://testnet.monadscan.com/tx/0xd3c1ddbfe49e97027a287fe46bd38cc1c8ae8bb9085bd63e15460eacb2795718"
+    },
+    {
+      "step": "vendor refunds the 15 it did not use, straight to the vault",
+      "hash": "0x0766429373e87f6541f09884cd0bec1fc6fdcbe62cbe4af46c3cbc40b63e8259",
+      "block": "70787957",
+      "explorer": "https://testnet.monadscan.com/tx/0x0766429373e87f6541f09884cd0bec1fc6fdcbe62cbe4af46c3cbc40b63e8259"
+    },
+    {
+      "step": "anyone reconciles: debt drops by 15",
+      "hash": "0x54a884acd5435040558715cd4e7d34c5124d76eb31151907b3520a1c78121733",
+      "block": "70787960",
+      "explorer": "https://testnet.monadscan.com/tx/0x54a884acd5435040558715cd4e7d34c5124d76eb31151907b3520a1c78121733"
+    },
+    {
+      "step": "sponsor repays the 25 owed",
+      "hash": "0xacaa440c708e1e6e6235b5950e1edf5b142fd586adfbd7a62e895aa642dc61ec",
+      "block": "70787963",
+      "explorer": "https://testnet.monadscan.com/tx/0xacaa440c708e1e6e6235b5950e1edf5b142fd586adfbd7a62e895aa642dc61ec"
+    },
+    {
+      "step": "agent asks the vault to fund a 40.00 channel for the vendor (quote 40)",
+      "hash": "0xff2ac73a602a8f453f3b3f5dc57b74afff9630fa4b6a13ff17e03a32a241f3fd",
+      "block": "70787966",
+      "explorer": "https://testnet.monadscan.com/tx/0xff2ac73a602a8f453f3b3f5dc57b74afff9630fa4b6a13ff17e03a32a241f3fd"
+    },
+    {
+      "step": "vendor claims the agent's signed voucher for 40.00",
+      "hash": "0x180c904d892c254693a10b1056c579d69ec4c5eb93c9c75f20d52bbd991e9943",
+      "block": "70787969",
+      "explorer": "https://testnet.monadscan.com/tx/0x180c904d892c254693a10b1056c579d69ec4c5eb93c9c75f20d52bbd991e9943"
+    },
+    {
+      "step": "anyone settles the claimed funds to the vendor",
+      "hash": "0x5e7f99eaab4bfab549b483b2dfce395321e5ca17b24bdff9f1a256d1e7082a26",
+      "block": "70787971",
+      "explorer": "https://testnet.monadscan.com/tx/0x5e7f99eaab4bfab549b483b2dfce395321e5ca17b24bdff9f1a256d1e7082a26"
+    },
+    {
+      "step": "a customer pays the agent 100 through the vault: the loan is repaid first",
+      "hash": "0xeefa63292027080c75bb67fe4e1542a1ded59547f032ff142bbed917b41c0657",
+      "block": "70787975",
+      "explorer": "https://testnet.monadscan.com/tx/0xeefa63292027080c75bb67fe4e1542a1ded59547f032ff142bbed917b41c0657"
+    },
+    {
+      "step": "sponsor revokes the line",
+      "hash": "0x175ab0a3057732a36a7075ed951262a4bc41cf6d24d57328eeaf593bc3723caf",
+      "block": "70787982",
+      "explorer": "https://testnet.monadscan.com/tx/0x175ab0a3057732a36a7075ed951262a4bc41cf6d24d57328eeaf593bc3723caf"
+    }
+  ]
+}
