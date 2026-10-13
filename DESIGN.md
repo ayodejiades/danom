@@ -1,31 +1,28 @@
 # Danom — Style Reference
-> security paper and ink: a warm paper canvas, near-black ink, one violet ink accent, and rubber stamps for refused and allowed
+> night ledger: a near-black canvas, paper-coloured type, one luminous Monad violet, and a single lit object, the paper receipt
 
-**Theme:** light. The page reads like a ledger sheet: ruled lines, receipts, clauses and stamps. The only dark surface is the closing band, which runs into the footer.
+**Theme:** dark. The page reads like a ledger kept at night: ruled lines, clauses, stamps and one sheet of real paper under a lamp.
 
-Danom is a credit product, so the interface borrows from the paper that credit used to live on. Headlines are set in a display serif with one italic word in violet ink. Figures are set in a monospaced face. Containers have hard ink borders and almost square corners; buttons are letterpress blocks with a hard offset shadow that the press pushes flat. A refusal is a red stamp and an allowed action is a green one.
+Danom is a credit product, so the interface borrows from the paper that credit used to live on, and sets it in the dark, luminous register of current web3 landing pages. Headlines are a display serif with one italic word in violet. Figures are monospaced. Containers have hairline borders and almost square corners; buttons are letterpress blocks with a hard offset shadow that the press pushes flat. A refusal is a red stamp and an allowed action is a green one. The hero carries three light sources: a glowing horizon arc, a banknote rosette, and the receipt itself.
 
 ## Tokens — Colors
 
 | Name | Value | Token | Role |
 |------|-------|-------|------|
-| Paper | `#F2EDE2` | `--bg` | Page canvas |
-| Fresh Paper | `#FBF8F1` | `--paper` | Receipts, cards, table fills, text on ink |
-| Ink | `#17140F` | `--fg`, `--navy` | Text, hard borders, the closing band |
-| Soft Ink | `#3A352B` | `--navy-soft` | Secondary text on tinted fills |
-| Faded Ink | `#5C5546` | `--fg-muted` | Secondary text (6.6:1 on paper) |
-| Manila | `#EBE5D7` | `--surface` | Alternate section band |
-| Manila Deep | `#E2DBC9` | `--surface-raised` | Quiet fills, muted text on ink |
-| Rule | `#CFC6B0` | `--border` | Hairlines, dashed rules |
-| Violet Ink | `#5B3FD6` | `--accent` | The one accent: button shadow, chart fill, focus ring, active nav rule |
-| Violet Ink Dark | `#4A31B8` | `--accent-ink` | Accent used as text (italic headline word, clause numbers) |
-| Pale Violet | `#DDD5F7` | `--sky` | Accent on ink, input focus ring |
-| Stamp Red | `#B3261E` | `--danger` | Refused |
-| Stamp Green | `#1F6B45` | `--ok` | Allowed, funded, matches |
-| Ochre | `#D9A92E` | `--sun` | Wrong-network button |
-| Notice | `#F1E3B3` | `--warn-bg` | Notice fill |
+| Night | `#0B0A10` | `--bg` | Page canvas |
+| Deep Night | `#07060A` | `--navy` | Closing band and footer |
+| Slate | `#14121B` | `--paper` | Cards, table fills, ticker |
+| Slate Band | `#100E16` | `--surface` | Alternate section band |
+| Paper White | `#F1ECE1` | `--fg` | Text, button outlines |
+| Faded | `#A39D90` | `--fg-muted` | Secondary text (7.4:1 on night) |
+| Hairline | `#2C2838` | `--border` | Row rules, dashed rules |
+| Line | `#3D3750` | `--line` | Card borders, section dividers |
+| Monad Violet | `#836EF9` | `--accent` | The one accent: glow, button shadow, chart fill, focus ring |
+| Violet Light | `#AB9BFF` | `--accent-ink` | Accent as text (italic headline word, clause numbers) |
+| Stamp Red | `#FF7566` | `--danger` | Refused |
+| Stamp Green | `#5FD39A` | `--ok` | Allowed, funded, matches |
 
-Red and green are reserved for the verdict of a check. Violet is the only decorative color.
+Inside `.receipt` the tokens flip back to ink on paper (`--paper: #FBF8F1`, `--fg: #17140F`, red `#B3261E`, green `#1F6B45`), so the receipt is the brightest thing on the page. Red and green only report the verdict of a check. Violet is the only decorative color.
 
 ## Tokens — Typography
 
@@ -39,23 +36,24 @@ Red and green are reserved for the verdict of a check. Violet is the only decora
 
 | Element | Value |
 |---------|-------|
-| cards, tables | `--radius: 6px`, `1.5px` ink border |
+| cards, tables | `--radius: 6px`, `1.5px` `--line` border |
 | inputs, buttons, chips | `--radius-sm` and `--radius-pill`: `3px` |
-| section dividers | `1.5px` ink rule, full width |
+| section dividers | `1.5px` `--line` rule, full width |
 
-There are no soft drop shadows on cards. Depth comes from the hard offset shadow on buttons and the drop shadow under the receipt.
+There are no soft drop shadows on cards. Depth comes from light: the violet glow behind the receipt, the horizon arc (`.horizon`) and the radial glow (`.glow`).
 
 ## Components
 
-- **Button (`.btn`):** paper fill, ink border, `3px 3px 0` ink shadow. Hover lifts it one pixel and lengthens the shadow; press pushes it flat. `.btn-primary` is ink with a violet shadow. `.btn-sm` is the compact size.
+- **Button (`.btn`):** slate fill, paper-white outline and `3px 3px 0` shadow. Hover lifts it one pixel and lengthens the shadow; press pushes it flat. `.btn-primary` is paper-white with a violet shadow. `.btn-sm` is the compact size.
 - **Text link (`.link-rule`):** underlined with a rule that turns violet on hover. Used as the secondary action next to a primary button.
-- **Nav:** a flat bar with an ink rule under it. The active link carries a violet underline.
+- **Nav:** a flat blurred bar with a rule under it. The active link carries a violet underline.
 - **Teller window (`components/teller.tsx`):** the hero. A receipt with a torn edge (`.receipt`) that runs the vault's own funding check from `lib/credit.ts` and stamps the result.
 - **Stamp (`.stamp`):** double-bordered, rotated, mono capitals. `.stamp-refused` or `.stamp-funded`; `.stamp-in` slams it down.
 - **Ticker (`.tape`):** the refused attempts from `PROOF_RUNS.json`, scrolling; pauses on hover.
 - **Clause list:** numbered `§` entries, each paired with the error the contract reverts with or the figure the recorded run produced.
 - **Ledger cells:** stat grids are one bordered block split by ink hairlines, never separate tinted tiles.
-- **Rosette:** a banknote guilloche drawn in hairlines behind the hero and the closing band.
+- **Rosette:** a banknote guilloche drawn in violet hairlines over a radial glow, behind the hero and the closing band.
+- **Horizon:** one very wide circle with a lit rim at the foot of the hero.
 
 ## Page frame
 
@@ -76,8 +74,9 @@ Every route except the landing page renders through `components/page-shell.tsx` 
 - Separate things with rules and space before reaching for a card.
 
 ### Don't
-- Don't add gradients, tinted pastel tiles, pill shapes or soft card shadows.
+- Don't add a second glow color, linear gradients, tinted tiles, pill shapes or soft card shadows.
+- Don't light anything brighter than the receipt.
 - Don't set body text in the display serif, or headlines in the sans.
-- Don't use `--accent` for long text on paper; use `--accent-ink`.
+- Don't use `--accent` for text on night; use `--accent-ink`.
 
 The source of truth is `app/globals.css`; `.kit/theme.json` and `tailwind.config.ts` mirror it.

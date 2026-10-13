@@ -67,12 +67,14 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-30 focus:bg-[var(--navy)] focus:px-4 focus:py-2 focus:text-[var(--paper)]">Skip to content</a>
+      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-30 focus:bg-[var(--navy)] focus:px-4 focus:py-2 focus:text-[var(--fg)]">Skip to content</a>
       <SiteNav active="/" />
       <main id="main" className="flex flex-1 flex-col">
         <section className="relative overflow-hidden">
-          <Rosette className="pointer-events-none absolute -right-40 -top-24 h-[46rem] w-[46rem] text-[var(--accent)] opacity-10 lg:opacity-25 lg:right-[-6rem]" />
-          <div className="relative mx-auto grid w-full max-w-6xl items-center gap-14 px-6 pb-24 pt-14 lg:grid-cols-[1.25fr_1fr] lg:pt-20">
+          <div aria-hidden className="glow absolute -right-64 -top-40 h-[64rem] w-[64rem] max-lg:opacity-60" />
+          <Rosette className="pointer-events-none absolute -right-40 -top-24 h-[46rem] w-[46rem] text-[var(--accent-ink)] opacity-15 lg:right-[-6rem] lg:opacity-60" />
+          <div aria-hidden className="horizon" />
+          <div className="relative mx-auto grid w-full max-w-6xl items-center gap-14 px-6 pb-44 pt-14 lg:grid-cols-[1.25fr_1fr] lg:pt-20">
             <div className="flex flex-col gap-7">
               <p className="caption">Danom · Credit for AI agents on Monad</p>
               <h1 className="text-[clamp(2.9rem,7.4vw,5.6rem)] leading-[0.96]">
@@ -94,7 +96,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section aria-label="Attempts the vault refused in the recorded run" className="overflow-hidden border-y-[1.5px] border-[var(--fg)] bg-[var(--paper)] py-3">
+        <section aria-label="Attempts the vault refused in the recorded run" className="relative overflow-hidden border-y-[1.5px] border-[var(--line)] bg-[var(--paper)] py-3">
           <div className="tape font-mono text-sm">
             {[0, 1].map((copy) => (
               <ul key={copy} aria-hidden={copy === 1} className="flex shrink-0">
@@ -121,7 +123,7 @@ export default function Home() {
           </dl>
         </section>
 
-        <section className="border-t-[1.5px] border-[var(--fg)]">
+        <section className="border-t-[1.5px] border-[var(--line)]">
           <div className="mx-auto grid w-full max-w-6xl gap-x-16 gap-y-10 px-6 py-24 lg:grid-cols-[0.8fr_1.6fr]">
             <div className="flex flex-col gap-4 lg:sticky lg:top-28 lg:self-start">
               <p className="caption">The terms</p>
@@ -146,7 +148,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="border-t-[1.5px] border-[var(--fg)] bg-[var(--surface)]">
+        <section className="border-t-[1.5px] border-[var(--line)] bg-[var(--surface)]">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-14 px-6 py-24">
             <div className="flex flex-col gap-4">
               <p className="caption">The route</p>
@@ -156,8 +158,8 @@ export default function Home() {
               {STEPS.map((s) => (
                 <li key={s.n} className="rise relative flex flex-col gap-3 pr-8">
                   <div className="flex items-center gap-3">
-                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-[1.5px] border-[var(--fg)] bg-[var(--paper)] font-[family-name:var(--font-display)] text-xl">{s.n}</span>
-                    <span aria-hidden className="h-0 flex-1 border-t-[1.5px] border-dashed border-[var(--fg)]" />
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border-[1.5px] border-[var(--line)] bg-[var(--paper)] font-[family-name:var(--font-display)] text-xl">{s.n}</span>
+                    <span aria-hidden className="h-0 flex-1 border-t-[1.5px] border-dashed border-[var(--line)]" />
                     <span aria-hidden className="-ml-3 text-sm">▸</span>
                   </div>
                   <p className="caption pt-2">{s.who}</p>
@@ -169,7 +171,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="border-t-[1.5px] border-[var(--fg)]">
+        <section className="border-t-[1.5px] border-[var(--line)]">
           <div className="mx-auto grid w-full max-w-6xl items-end gap-x-16 gap-y-12 px-6 py-24 lg:grid-cols-[1fr_1.15fr]">
             <div className="flex flex-col gap-5">
               <p className="caption">The record</p>
@@ -184,9 +186,9 @@ export default function Home() {
                 <li key={t.tier} className="row-span-2 grid grid-rows-subgrid gap-y-0">
                   <div className="flex flex-col justify-end gap-3">
                   <p className="font-[family-name:var(--font-display)] text-3xl leading-none sm:text-5xl">{t.ltv}<span className="text-xl sm:text-2xl">%</span></p>
-                  <div aria-hidden className={`bar-grow border-[1.5px] border-[var(--fg)] ${t.ltv > 100 ? "bg-[repeating-linear-gradient(135deg,var(--accent)_0_6px,transparent_6px_10px)]" : "bg-[var(--accent)]"}`} style={{ height: `${t.ltv * 0.9}px` }} />
+                  <div aria-hidden className={`bar-grow border-[1.5px] border-[var(--line)] ${t.ltv > 100 ? "bg-[repeating-linear-gradient(135deg,var(--accent)_0_6px,transparent_6px_10px)]" : "bg-[var(--accent)]"}`} style={{ height: `${t.ltv * 0.9}px` }} />
                   </div>
-                  <div className="mt-3 flex flex-col gap-1 border-t-[1.5px] border-[var(--fg)] pt-2">
+                  <div className="mt-3 flex flex-col gap-1 border-t-[1.5px] border-[var(--line)] pt-2">
                     <p className="caption !text-[var(--fg)]">Tier {t.tier}</p>
                     <p className="font-mono text-xs">{t.repaid} repaid</p>
                     <p className="hidden text-xs text-[var(--fg-muted)] sm:block">{t.note}</p>
@@ -197,7 +199,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="border-t-[1.5px] border-[var(--fg)] bg-[var(--paper)]">
+        <section className="border-t-[1.5px] border-[var(--line)] bg-[var(--paper)]">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 py-24">
             <div className="flex flex-col gap-4">
               <p className="caption">The fine print</p>
@@ -214,12 +216,13 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="on-ink relative overflow-hidden bg-[var(--navy)] text-[var(--paper)]">
-          <Rosette className="pointer-events-none absolute -bottom-72 -right-40 h-[44rem] w-[44rem] text-[var(--sky)] opacity-20" />
-          <div className="relative mx-auto flex w-full max-w-6xl flex-col items-start gap-7 border-b border-[color-mix(in_srgb,var(--paper)_18%,transparent)] px-6 py-24">
-            <h2 className="max-w-3xl text-5xl leading-[1.0] sm:text-7xl">Fund a channel, hit a refusal, watch the record <em className="!text-[var(--sky)]">grow.</em></h2>
-            <p className="max-w-xl text-lg text-[var(--surface-raised)]">The credit flow runs the vault&apos;s rules in your browser. No wallet needed.</p>
-            <Link href="/demo" className="btn text-base">
+        <section className="relative overflow-hidden border-t-[1.5px] border-[var(--line)] bg-[var(--navy)]">
+          <div aria-hidden className="glow absolute -bottom-96 -right-64 h-[64rem] w-[64rem]" />
+          <Rosette className="pointer-events-none absolute -bottom-72 -right-40 h-[44rem] w-[44rem] text-[var(--accent-ink)] opacity-50" />
+          <div className="relative mx-auto flex w-full max-w-6xl flex-col items-start gap-7 border-b border-[color-mix(in_srgb,var(--fg)_14%,transparent)] px-6 py-24">
+            <h2 className="max-w-3xl text-5xl leading-[1.0] sm:text-7xl">Fund a channel, hit a refusal, watch the record <em>grow.</em></h2>
+            <p className="max-w-xl text-lg text-[var(--fg-muted)]">The credit flow runs the vault&apos;s rules in your browser. No wallet needed.</p>
+            <Link href="/demo" className="btn btn-primary text-base">
               Try the credit flow <span aria-hidden>→</span>
             </Link>
           </div>

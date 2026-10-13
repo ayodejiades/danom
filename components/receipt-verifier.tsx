@@ -17,9 +17,9 @@ export function ReceiptVerifier({ receipts, chainId, contract }: { receipts: Rec
         <input type="checkbox" className="h-4 w-4 accent-[var(--accent)]" checked={tamper} onChange={(e) => setTamper(e.target.checked)} />
         Add 1 unit (0.000001) to every amount before recomputing, to see the check fail
       </label>
-      <div className="overflow-x-auto rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)]">
+      <div className="overflow-x-auto rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--paper)]">
         <table className="w-full min-w-[720px] text-left text-sm">
-          <thead className="border-b-[1.5px] border-[var(--fg)] text-[var(--fg-muted)]">
+          <thead className="border-b-[1.5px] border-[var(--line)] text-[var(--fg-muted)]">
             <tr><th className="px-4 py-3 font-semibold">Receipt</th><th className="px-4 py-3 font-semibold">Amount</th><th className="px-4 py-3 font-semibold">Transaction</th><th className="px-4 py-3 font-semibold">Digest</th><th className="px-4 py-3 font-semibold">Check</th></tr>
           </thead>
           <tbody>

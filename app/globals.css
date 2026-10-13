@@ -1,35 +1,47 @@
 @import "tailwindcss";
 
-/* ledger — security paper and ink: warm paper canvas, near-black ink, one violet ink accent,
-   rubber-stamp red and green for refused and allowed. Token names are kept from the earlier
-   theme so every page inherits the change. */
+/* night ledger — a near-black canvas, paper-coloured type, one luminous Monad violet, and a single lit
+   object: the paper receipt. Token names are kept from the earlier themes so every page inherits. */
 :root {
-  --bg: #f2ede2;
-  --paper: #fbf8f1;
-  --fg: #17140f;
-  --fg-muted: #5c5546;
-  --surface: #ebe5d7;
-  --surface-raised: #e2dbc9;
-  --border: #cfc6b0;
-  --accent: #5b3fd6;
-  --accent-ink: #4a31b8;
-  --accent-contrast: #fbf8f1;
-  --navy: #17140f;
-  --navy-soft: #3a352b;
-  --sky: #ddd5f7;
+  --bg: #0b0a10;
+  --paper: #14121b;
+  --fg: #f1ece1;
+  --fg-muted: #a39d90;
+  --surface: #100e16;
+  --surface-raised: #1c1926;
+  --border: #2c2838;
+  --line: #3d3750;
+  --accent: #836ef9;
+  --accent-ink: #ab9bff;
+  --accent-contrast: #0b0a10;
+  --navy: #07060a;
+  --navy-soft: #c9c3b6;
+  --sky: #cfc4ff;
   --mint: #8fd3ae;
-  --sun: #d9a92e;
+  --sun: #e0b33a;
   --coral: #d9644a;
-  --danger: #b3261e;
-  --ok: #1f6b45;
-  --warn-bg: #f1e3b3;
-  --tint-ok: #d8e6d3;
-  --tint-danger: #f0d6cd;
+  --danger: #ff7566;
+  --ok: #5fd39a;
+  --warn-bg: #2a2210;
+  --tint-ok: #10261c;
+  --tint-danger: #2b1412;
   --radius: 6px;
   --radius-sm: 3px;
   --radius-pill: 3px;
-  --shadow: 0 1px 0 rgba(23, 20, 15, 0.06), 0 22px 40px -28px rgba(60, 44, 12, 0.55);
+  --shadow: 0 0 0 1px var(--border), 0 30px 80px -30px rgba(131, 110, 249, 0.45);
   --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Real paper stays paper: inside a receipt the tokens flip back to ink on a light sheet. */
+.receipt {
+  --paper: #fbf8f1;
+  --fg: #17140f;
+  --fg-muted: #5c5546;
+  --border: #cfc6b0;
+  --line: #17140f;
+  --danger: #b3261e;
+  --ok: #1f6b45;
+  color: var(--fg);
 }
 
 @theme inline {
@@ -58,9 +70,8 @@ body::before {
   inset: 0;
   z-index: 40;
   pointer-events: none;
-  opacity: 0.32;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .45 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.07;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 h1, h2 {
@@ -104,15 +115,10 @@ h1 em, h2 em { font-style: italic; font-weight: 400; color: var(--accent-ink); }
 .btn-primary:hover { box-shadow: 5px 5px 0 var(--accent); }
 .btn-primary:active { box-shadow: 0 0 0 var(--accent); }
 .btn-accent { background: var(--accent); color: var(--accent-contrast); }
-.btn-warn { background: var(--sun); }
+.btn-warn { background: var(--sun); color: #17140f; }
 .btn-sm { padding: 0.45rem 0.8rem; font-size: 0.875rem; box-shadow: 2px 2px 0 var(--fg); }
 .btn-sm:hover { box-shadow: 3px 3px 0 var(--fg); }
 .btn-sm:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--fg); }
-/* On the ink band the shadow has to be light to read. */
-.on-ink .btn { border-color: var(--paper); box-shadow: 3px 3px 0 var(--accent); }
-.on-ink .btn:hover { box-shadow: 5px 5px 0 var(--accent); }
-.on-ink .btn:active { box-shadow: 0 0 0 var(--accent); }
-
 .link-rule {
   text-decoration: underline;
   text-decoration-thickness: 1.5px;
@@ -136,13 +142,13 @@ h1 em, h2 em { font-style: italic; font-weight: 400; color: var(--accent-ink); }
   background:
     repeating-linear-gradient(to bottom, transparent 0 39px, color-mix(in srgb, var(--border) 55%, transparent) 39px 40px),
     var(--bg);
-  border-bottom: 1.5px solid var(--fg);
+  border-bottom: 1.5px solid var(--line);
 }
 
 /* Receipt paper with a torn, zigzag bottom edge. */
 .receipt {
   background: var(--paper);
-  filter: drop-shadow(0 18px 22px rgba(60, 44, 12, 0.22));
+  filter: drop-shadow(0 0 60px rgba(131, 110, 249, 0.45)) drop-shadow(0 30px 40px rgba(0, 0, 0, 0.6));
   --tooth: 9px;
   mask:
     conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(2 * var(--tooth)) var(--tooth) repeat-x,
@@ -164,15 +170,14 @@ h1 em, h2 em { font-style: italic; font-weight: 400; color: var(--accent-ink); }
   letter-spacing: 0.14em;
   text-transform: uppercase;
   transform: rotate(-7deg);
-  mix-blend-mode: multiply;
-  opacity: 0.9;
+  opacity: 0.92;
 }
 .stamp-refused { color: var(--danger); }
 .stamp-funded { color: var(--ok); }
 @keyframes stamp-in {
   0% { transform: rotate(-16deg) scale(2.6); opacity: 0; }
   55% { transform: rotate(-5deg) scale(0.94); opacity: 1; }
-  100% { transform: rotate(-7deg) scale(1); opacity: 0.9; }
+  100% { transform: rotate(-7deg) scale(1); opacity: 0.92; }
 }
 .stamp-in { animation: stamp-in 0.42s cubic-bezier(0.2, 0.9, 0.3, 1.2) both; }
 
@@ -188,6 +193,29 @@ h1 em, h2 em { font-style: italic; font-weight: 400; color: var(--accent-ink); }
 }
 .tape { display: flex; width: max-content; animation: tape 60s linear infinite; }
 .tape:hover { animation-play-state: paused; }
+
+/* The lit edge of a planet under the hero: one wide circle, glowing along its rim. */
+.horizon {
+  position: absolute;
+  left: 50%;
+  top: calc(100% - 7rem);
+  width: max(150vw, 110rem);
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--bg) 97%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--sky) 70%, transparent);
+  box-shadow:
+    0 -1px 14px color-mix(in srgb, var(--sky) 70%, transparent),
+    0 -18px 70px color-mix(in srgb, var(--accent) 75%, transparent),
+    0 -60px 220px color-mix(in srgb, var(--accent) 45%, transparent),
+    inset 0 30px 90px -30px color-mix(in srgb, var(--accent) 55%, transparent);
+  pointer-events: none;
+}
+.glow {
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 38%, transparent), transparent);
+  pointer-events: none;
+}
 
 /* Banknote rosette slowly turning behind the hero. */
 @keyframes turn {

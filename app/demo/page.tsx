@@ -125,10 +125,10 @@ export default function Demo() {
     { label: "Pool idle cash", value: fromUnits(cash), hint: "collateral is never lent" },
   ], [debt, limit, tier, ltv, nextTierAt, record, agentBalance, cash, line]);
 
-  const input = "w-full rounded-[var(--radius-sm)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)] px-3 py-2 font-mono text-base outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--sky)]";
+  const input = "w-full rounded-[var(--radius-sm)] border-[1.5px] border-[var(--line)] bg-[var(--paper)] px-3 py-2 font-mono text-base outline-none focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--sky)]";
   const primary = "btn btn-primary";
   const secondary = "btn btn-sm";
-  const card = "rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)] p-6";
+  const card = "rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--paper)] p-6";
   const fieldLabel = "caption mb-2 block";
 
   return (
@@ -152,7 +152,7 @@ export default function Demo() {
           ))}
         </dl>
 
-        {overdue && <p className="rounded-[var(--radius-sm)] border-[1.5px] border-[var(--fg)] bg-[var(--warn-bg)] px-4 py-3 text-sm">The line is overdue with debt outstanding. Anyone can now liquidate it, which would record a default and pin the agent to tier 0.</p>}
+        {overdue && <p className="rounded-[var(--radius-sm)] border-[1.5px] border-[var(--line)] bg-[var(--warn-bg)] px-4 py-3 text-sm">The line is overdue with debt outstanding. Anyone can now liquidate it, which would record a default and pin the agent to tier 0.</p>}
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
           <div className="flex flex-col gap-5">
@@ -206,9 +206,9 @@ export default function Demo() {
               {message ? <span key={rows.length} className={`stamp stamp-in shrink-0 text-sm ${message.ok ? "stamp-funded" : "stamp-refused"}`}>{message.ok ? "Allowed" : "Refused"}</span> : null}
               <p>{message ? message.text : "Pick a vendor and an amount, then ask the vault to fund the channel. Try the agent's own wallet or an amount above 40 to see a refusal."}</p>
             </div>
-            <div className="overflow-hidden rounded-[var(--radius)] border-[1.5px] border-[var(--fg)] bg-[var(--paper)]">
+            <div className="overflow-hidden rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--paper)]">
               <table className="w-full text-left text-sm">
-                <thead className="border-b-[1.5px] border-[var(--fg)]"><tr><th className="caption px-3 py-3 font-medium">Day</th><th className="caption px-3 py-3 font-medium">Action</th><th className="caption px-3 py-3 font-medium">Result</th></tr></thead>
+                <thead className="border-b-[1.5px] border-[var(--line)]"><tr><th className="caption px-3 py-3 font-medium">Day</th><th className="caption px-3 py-3 font-medium">Action</th><th className="caption px-3 py-3 font-medium">Result</th></tr></thead>
                 <tbody>
                   {rows.length === 0 && <tr><td colSpan={3} className="px-3 py-10 text-center text-[var(--fg-muted)]">The ledger is empty. Every action you take is entered here.</td></tr>}
                   {rows.map((r) => (
