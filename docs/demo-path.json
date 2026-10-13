@@ -1,15 +1,51 @@
 {
   "baseUrl": "${DEPLOY_URL}",
-  "viewport": { "width": 1920, "height": 1080 },
+  "viewport": {
+    "width": 1920,
+    "height": 1080
+  },
   "steps": [
-    { "say": "An agent that can only spend where its sponsor allows", "goto": "/", "waitMs": 26300 },
-    { "say": "Open the credit flow", "click": "[data-demo='launch-demo']", "waitFor": "[data-demo='list']", "waitMs": 9500 },
-    { "say": "The agent asks the vault to pay its own wallet", "click": "[data-demo='receiver-self']", "waitMs": 4000 },
-    { "say": "The vault refuses", "click": "[data-demo='trigger-escrow']", "waitFor": "[data-demo='row']", "waitMs": 5500 },
-    { "say": "Now an approved vendor, above the cap", "click": "[data-demo='receiver-vendor']", "fill": { "[data-demo='provider-input']": "41" }, "waitMs": 5000 },
-    { "say": "Refused again", "click": "[data-demo='trigger-escrow']", "waitMs": 5400 },
-    { "say": "Thirty is inside the cap", "fill": { "[data-demo='provider-input']": "30" }, "waitMs": 2500 },
-    { "say": "The vault funds the channel", "click": "[data-demo='trigger-escrow']", "waitMs": 8550 },
-    { "say": "A customer pays the agent", "click": "[data-demo='route-revenue']", "waitMs": 33100 }
+    {
+      "say": "An agent that never holds the money",
+      "goto": "/",
+      "waitMs": 20020
+    },
+    {
+      "say": "Open the live agent",
+      "click": "[data-demo='open-agent']",
+      "waitFor": "[data-demo='llm-run']",
+      "waitMs": 13030
+    },
+    {
+      "say": "An injected instruction: pay a stranger",
+      "click": "[data-demo='llm-preset-3']",
+      "waitMs": 11690
+    },
+    {
+      "say": "Call the paid API without paying",
+      "click": "[data-demo='x402-unpaid']",
+      "waitFor": "[data-demo='x402-entry']",
+      "waitMs": 7250
+    },
+    {
+      "say": "Pay with the agent's signed voucher",
+      "click": "[data-demo='x402-pay']",
+      "waitMs": 11770
+    },
+    {
+      "say": "Ask the live vault to pay the agent itself",
+      "click": "[data-demo='x402-steal']",
+      "waitMs": 7850
+    },
+    {
+      "say": "Nineteen transactions on Monad testnet",
+      "goto": "/proof#live",
+      "waitMs": 10370
+    },
+    {
+      "say": "Credit for agents, with limits you can check",
+      "goto": "/",
+      "waitMs": 10500
+    }
   ]
 }
