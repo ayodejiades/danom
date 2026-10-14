@@ -10,16 +10,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # pnpm has to exist before setup-node, which looks it up to restore the pnpm cache.
+      - name: Set up pnpm
+        if: hashFiles('package.json') != ''
+        uses: pnpm/action-setup@v4
+
       - name: Set up Node
         if: hashFiles('package.json') != ''
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-
-      - name: Enable corepack
-        if: hashFiles('package.json') != ''
-        run: corepack enable
 
       - name: Install (node)
         if: hashFiles('package.json') != ''
@@ -59,7 +60,7 @@ jobs:
         run: pnpm db:migrate
 
       - name: Integration test against the real database
-        if: hashFiles('drizzle.config.ts') != ''
+        if: hashFiles('tests/integration.test.mjs') != ''
         env:
           DATABASE_URL: postgres://kit:kit@localhost:5432/kit_test
           DEMO_MODE: "0"
@@ -82,3 +83,16 @@ jobs:
       - name: Test (python)
         if: hashFiles('pyproject.toml') != ''
         run: uv run pytest
+
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      # Offline: the vault suite runs against the mock settlement contract. The same suite against the
+      # real x402 contract needs a Monad RPC and is run with `pnpm contracts:test:fork`.
+      - name: Contract tests
+        run: forge test
