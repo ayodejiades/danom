@@ -59,9 +59,13 @@ function textToolCall(content: string | null, known: string[]): { name: string; 
 export async function runLlmAgent(opts: { task: string; pub: PublicClient; vendorUrl: string; apiKey: string; baseUrl?: string; model?: string }): Promise<AgentRun> {
   const { pub, vendorUrl } = opts;
   const baseUrl = (opts.baseUrl || LLM_DEFAULTS.baseUrl).replace(/\/$/, "");
-  // Free model tiers are rate limited per model, so a busy primary falls through to the next one.
-  const models = [opts.model || LLM_DEFAULTS.model, ...(process.env.LLM_FALLBACK_MODELS ?? "").split(",").map((m) => m.trim()).filter(Boolean)];
-  let model = models[0];
+  // Providers in order of preference. A Qwen Cloud key, when present, puts Qwen 3.8 Max first. Free tiers
+  // are rate limited per model, so a busy or failing provider falls through to the next one.
+  const providers: { baseUrl: string; apiKey: string; model: string }[] = [];
+  if (process.env.QWEN_API_KEY) providers.push({ baseUrl: (process.env.QWEN_BASE_URL || "https://maas.qwencloudapi.com/compatible-mode/v1").replace(/\/$/, ""), apiKey: process.env.QWEN_API_KEY, model: process.env.QWEN_MODEL || "qwen3.8-max" });
+  for (const m of [opts.model || LLM_DEFAULTS.model, ...(process.env.LLM_FALLBACK_MODELS ?? "").split(",").map((x) => x.trim()).filter(Boolean)]) providers.push({ baseUrl, apiKey: opts.apiKey, model: m });
+  let current = 0;
+  let model = providers[0].model;
   const account = privateKeyToAccount(AGENT_KEY);
   const steps: AgentStep[] = [];
   let paid = 0;
@@ -116,23 +120,23 @@ export async function runLlmAgent(opts: { task: string; pub: PublicClient; vendo
 
   for (let turn = 0; turn < MAX_TURNS; turn++) {
     const body = nudged ? { messages, temperature: 0.2, max_tokens: 500 } : { messages, tools: TOOLS, tool_choice: "auto", temperature: 0.2, max_tokens: 800 };
-    const ask = (m: string) => fetch(`${baseUrl}/chat/completions`, {
+    const ask = (i: number) => fetch(`${providers[i].baseUrl}/chat/completions`, {
       method: "POST",
-      headers: { "content-type": "application/json", authorization: `Bearer ${opts.apiKey}` },
-      body: JSON.stringify({ model: m, ...body }),
+      headers: { "content-type": "application/json", authorization: `Bearer ${providers[i].apiKey}` },
+      body: JSON.stringify({ model: providers[i].model, ...body }),
       signal: AbortSignal.timeout(Number(process.env.LLM_TIMEOUT_MS) || 45_000),
-    });
-    let res = await ask(model);
-    for (const next of models) {
-      if (res.status !== 429) break;
-      if (next === model) continue;
-      model = next;
-      res = await ask(model);
+    }).catch(() => new Response("unreachable", { status: 599 }));
+    let res = await ask(current);
+    // Rate limited, unauthorized or down: move to the next provider and stay there for the rest of the run.
+    while (!res.ok && [401, 403, 404, 429, 500, 502, 503, 599].includes(res.status) && current < providers.length - 1) {
+      current += 1;
+      res = await ask(current);
     }
     if (res.status === 429) {
       await new Promise((r) => setTimeout(r, 6000));
-      res = await ask(model);
+      res = await ask(current);
     }
+    model = providers[current].model;
     if (!res.ok) {
       steps.push({ kind: "error", text: res.status === 429 ? "The model's free tier is rate limited right now. Try again in a minute." : `The model API answered ${res.status}: ${(await res.text()).slice(0, 200)}` });
       break;
