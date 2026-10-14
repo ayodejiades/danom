@@ -8,7 +8,7 @@ This table says what the repository does today, not what it hopes to do.
 |---|---|---|---|---|
 | Best Use of Dynamic | $5,000 | All tracks | **Not integrated** | Install the Dynamic SDK and use its embedded or agent wallet for the sponsor or the agent voucher signer. Needs a Dynamic environment id from the sponsor's account. |
 | Privy | $5,000 | All tracks | **Not integrated** | Use Privy beyond login, for example sponsor wallet provisioning. Needs a Privy app id. |
-| Best Use of Envio | $1,000 | All tracks | **Not integrated** | Read vault events through HyperSync. The endpoint `https://10143.hypersync.xyz` works but requires an API token from app.envio.dev. The indexer today uses plain RPC. |
+| Best Use of Envio | $1,000 | All tracks | **Integrated (HyperSync)** | Done: `app/api/activity/route.ts` reads every vault event through `https://10143.hypersync.xyz` in one query and rebuilds each agent's credit record; the feed is on the recorded run page. HyperIndex is not used. |
 | Best workflow with CRE (Chainlink) | $3,000 | All tracks | Not planned | Could attest that an off chain job paid out before it counts as revenue. |
 | Best use of Nansen | $5,000 pool | All tracks | Not planned | |
 | Best Integration of Cleanverse Verified Identity | $2,000 | Trust, Identity and AI Infrastructure | Not planned | Would gate sponsor or agent onboarding behind Cleanverse identity. Same track as ours. |
@@ -16,4 +16,4 @@ This table says what the repository does today, not what it hopes to do.
 | Best Community Team Project | $5,000 | All tracks | Unknown | Only for teams from Metropolis community supporters. |
 | Agora, Kuru, Perpl, MetaMask | various | Other tracks | Not applicable | Tied to Consumer Payments or Onchain Finance tracks. |
 
-If none of these are integrated before the deadline, the submission competes for the primary track only.
+The submission enters the Envio bounty and the primary track.

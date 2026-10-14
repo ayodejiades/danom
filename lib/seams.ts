@@ -45,12 +45,12 @@ export const SEAMS: Seam[] = [
     notClaimed: "No Privy SDK is installed or called.",
   },
   {
-    name: "Envio",
-    role: "Index credit vault events for the receipts view and the credit record.",
-    status: "BUILT_UNTESTED_LIVE",
-    codePath: "indexer/ (viem getLogs catchup and daemon, Postgres via drizzle)",
-    evidence: "The indexer decodes every CreditVault event and DEMO_MODE serves the recorded events from fixtures/events.json.",
-    notClaimed: "The indexer reads through plain RPC, not HyperIndex or HyperSync, so it does not qualify for the Envio bounty as it stands.",
+    name: "Envio HyperSync",
+    role: "Reads every event the vault has emitted and rebuilds each agent's credit record for the recorded run page.",
+    status: "REAL_ON_TESTNET",
+    codePath: "app/api/activity/route.ts, components/activity-feed.tsx",
+    evidence: "One HyperSync query to https://10143.hypersync.xyz returns all vault logs since the deployment block; the route decodes them and derives funded, repaid and revenue totals per agent. The feed on /proof is built from that response on every visit.",
+    notClaimed: "HyperIndex is not used. The older viem and Postgres indexer in indexer/ is separate and has not been run against the live deployment.",
   },
   {
     name: "Chainlink CRE",

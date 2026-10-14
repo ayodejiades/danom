@@ -16,7 +16,7 @@ Three things to try:
 
 1. Open **Live agent**. Read the model's run at the top, and pick the third task to see it told to pay a stranger. Then press **Call the API**: the paid endpoint answers 402 with its price. Press **Sign and pay**: your browser signs a voucher with the demo agent's key and the same endpoint answers 200, paid from vault escrow on Monad testnet. Then press **Pay the agent itself** and watch the live vault refuse.
 2. Open **Credit flow**. Ask for 41 to the approved vendor: refused, the cap is 40. Ask for 30: funded. Route a customer payment and watch the loan get repaid before the agent is paid.
-3. Open **Recorded run**. The 19 testnet transactions link to the explorer, and a checkbox lets you tamper with the receipts to see every digest check fail.
+3. Open **Recorded run**. A live feed lists every event the vault has emitted, read through Envio HyperSync. The 19 testnet transactions link to the explorer, and a checkbox lets you tamper with the receipts to see every digest check fail.
 
 ## How it works
 
@@ -134,7 +134,8 @@ The run is scripted. One funded wallet played lender, sponsor, customer and keep
 | Tests | 22 Foundry tests pass offline against a mock, and the same suite passes against the real x402 contract on a fork. 12 TypeScript tests pass. |
 | Token | `MockAUSD`, a test token with open minting. Not AUSD or USDC. |
 | x402 facilitator | Monad's hosted facilitator verifies every voucher the vendor accepts. It does not settle for this vendor. |
-| Dynamic, Privy, Envio | Not integrated. See [`docs/SPONSOR_INTEGRATIONS.md`](docs/SPONSOR_INTEGRATIONS.md). |
+| Envio HyperSync | The recorded run page rebuilds the vault's event history and each agent's record from one HyperSync query, on every visit. See `app/api/activity/route.ts`. |
+| Dynamic, Privy | Not integrated. See [`docs/SPONSOR_INTEGRATIONS.md`](docs/SPONSOR_INTEGRATIONS.md). |
 
 [`CLAIM_LEDGER.md`](CLAIM_LEDGER.md) pairs every claim with its evidence and its limitation. `pnpm claim:verify` regenerates it and exits non zero if a claim outruns its evidence.
 

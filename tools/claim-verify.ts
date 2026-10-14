@@ -143,7 +143,7 @@ const notClaimed = [
   "- Anything on Monad mainnet.",
   "- Real AUSD or USDC. The token in every run is MockAUSD.",
   "- Settlement through the x402 facilitator. It verifies vouchers; the vendor claims on chain itself as receiver authorizer.",
-  "- Dynamic, Privy, Envio (HyperIndex or HyperSync) or Chainlink integrations. See docs/SPONSOR_INTEGRATIONS.md.",
+  "- Dynamic, Privy, Chainlink or Envio HyperIndex integrations. Envio HyperSync is used for the event feed. See docs/SPONSOR_INTEGRATIONS.md.",
   "- Audited or production ready contracts, or calibrated credit risk parameters.",
 ].join("\n");
 
