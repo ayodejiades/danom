@@ -1,5 +1,5 @@
 {
-  "vendorUrl": "https://monad-metropolis-one.vercel.app/api/vendor/gas",
+  "vendorUrl": "https://danom-new.vercel.app/api/vendor/gas",
   "runs": [
     {
       "model": "qwen2.5-coder:7b",

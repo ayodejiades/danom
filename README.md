@@ -1,4 +1,4 @@
-# [Danom](https://monad-metropolis-one.vercel.app)
+# [Danom](https://danom-new.vercel.app)
 
 Credit for AI agents that can only spend where their sponsor allows.
 
@@ -8,7 +8,7 @@ Built for [Monad Metropolis](https://monad.xyz/developers/hackathons/metropolis)
 
 ## Demo
 
-**[monad-metropolis-one.vercel.app](https://monad-metropolis-one.vercel.app)**. No wallet or login needed.
+**[danom-new.vercel.app](https://danom-new.vercel.app)**. No wallet or login needed.
 
 ![Danom landing page and credit flow](docs/demo.gif)
 
