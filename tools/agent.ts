@@ -43,7 +43,7 @@ if (fs.existsSync(path.join(root, ".env"))) {
 const FORK_PORT = 8552;
 const VENDOR_PORT = 8553;
 const RPC = DRY ? `http://127.0.0.1:${FORK_PORT}` : process.env.RPC_URL || RPC_URL;
-const DEPLOYED_VENDOR = "https://monad-metropolis-one.vercel.app/api/vendor/gas";
+const DEPLOYED_VENDOR = "https://danom-new.vercel.app/api/vendor/gas";
 const GAS = BigInt(800_000); // estimation under-counts the nested token transfers inside the x402 contract
 
 function revertName(err: unknown): string {

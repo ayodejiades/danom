@@ -21,7 +21,9 @@ function limited(ip: string): boolean {
 }
 
 export async function POST(request: Request) {
-  const apiKey = process.env.LLM_API_KEY;
+  // A model on this machine's localhost is only reachable in local development, never from a hosted deployment.
+  const local = /localhost|127\.0\.0\.1/.test(process.env.LLM_BASE_URL ?? "");
+  const apiKey = local && process.env.VERCEL ? undefined : process.env.LLM_API_KEY;
   if (!apiKey) return NextResponse.json({ error: "No model key is configured on this deployment, so the agent cannot think here. The recorded run below shows one." }, { status: 503 });
   if (limited(request.headers.get("x-forwarded-for")?.split(",")[0] ?? "local")) return NextResponse.json({ error: "Too many runs from this address. Try again in a minute." }, { status: 429 });
   let task = "";

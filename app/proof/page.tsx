@@ -16,12 +16,7 @@ export default function Proof() {
       active="/proof"
       eyebrow={`${live.transactions.length} transactions on Monad testnet · ${proof.transactions.length} on a local fork`}
       title={<>The recorded <em>run</em></>}
-      intro={
-        <>
-          <p className="rounded-[var(--radius-sm)] border-[1.5px] border-[var(--line)] bg-[var(--warn-bg)] px-4 py-3 text-sm text-[var(--fg)]">{proof.note}</p>
-          <p className="text-sm">Mode <span className="font-mono">{proof.verificationMode}</span>. Generated {proof.generatedAt}. Re-run it with <span className="font-mono">pnpm proof:local</span>.</p>
-        </>
-      }
+      intro={<p>What ran on Monad testnet comes first, each transaction linked to the explorer. The longer run on a local fork follows, with its receipts checked in your browser.</p>}
     >
         <section id="live" className="flex scroll-mt-24 flex-col gap-5">
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -63,8 +58,10 @@ export default function Proof() {
         <ActivityFeed />
 
         <section className="flex flex-col gap-3">
-          <p className="caption">Below: the longer recorded run, on a local fork</p>
-          <h2 className="text-4xl">Contracts</h2>
+          <p className="caption">The longer recorded run, on a local fork</p>
+          <h2 className="text-4xl">The fork run&apos;s <em>contracts</em></h2>
+          <p className="rounded-[var(--radius-sm)] border-[1.5px] border-[var(--line)] bg-[var(--warn-bg)] px-4 py-3 text-sm">{proof.note}</p>
+          <p className="text-sm text-[var(--fg-muted)]">Mode <span className="font-mono">{proof.verificationMode}</span>. Generated {proof.generatedAt}. Re-run it with <span className="font-mono">pnpm proof:local</span>.</p>
           <dl className="grid gap-x-8 gap-y-3 rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--paper)] p-6 text-sm md:grid-cols-[max-content_1fr]">
             {Object.entries(proof.contracts).map(([name, addr]) => (
               <div key={name} className="contents">
