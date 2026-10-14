@@ -27,7 +27,7 @@ async function main() {
   const apiKey = process.env.LLM_API_KEY;
   if (!apiKey) throw new Error("LLM_API_KEY is not set in .env");
   const pub = createPublicClient({ chain: monadTestnet, transport: http(process.env.RPC_URL || RPC_URL) }) as PublicClient;
-  const vendorUrl = process.env.VENDOR_URL || "https://monad-metropolis-one.vercel.app/api/vendor/gas";
+  const vendorUrl = process.env.VENDOR_URL || "https://danom-new.vercel.app/api/vendor/gas";
   const run = await runLlmAgent({ task, pub, vendorUrl, apiKey, baseUrl: process.env.LLM_BASE_URL, model: process.env.LLM_MODEL });
   console.log(`model ${run.model}\ntask  ${run.task}\n`);
   for (const s of run.steps) {

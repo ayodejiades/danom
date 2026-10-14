@@ -29,4 +29,6 @@ Include the contract or file, the steps to reproduce, and what an attacker gains
 
 ## Keys
 
-No private key belongs in this repository. `.env` is gitignored, and scripts that broadcast read `PRIVATE_KEY` from the environment only.
+One private key is in this repository on purpose: the demo agent's signing key in `lib/x402.ts`. It holds no stablecoin, and the vault only pays the vendor its sponsor approved, so publishing it is the demonstration. Do not treat it as a secret and do not send it anything of value.
+
+No other key belongs here. `.env` is gitignored and excluded from deploy uploads, and scripts that broadcast read `PRIVATE_KEY` and `VENDOR_PRIVATE_KEY` from the environment only.

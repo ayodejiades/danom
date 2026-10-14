@@ -57,7 +57,7 @@ https://github.com/ayodejiades/danom
 
 ## Live product
 
-https://monad-metropolis-one.vercel.app
+https://danom-new.vercel.app
 
 ## Judge access instructions
 
