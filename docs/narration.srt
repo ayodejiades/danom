@@ -1,24 +1,36 @@
 1
-00:00:00,000 --> 00:00:09,157
-This is Danom, a solo project built for Monad Metropolis. It gives AI agents credit they can only spend where a sponsor allows.
+00:00:00,000 --> 00:00:09,550
+An AI agent has to pay for APIs and data. Give it a wallet, and one leaked key drains it. With Danom, the agent never holds the money.
 
 2
-00:00:09,157 --> 00:00:25,320
-AI agents are starting to buy things on their own: API calls, data, compute. To let one do that today, you hand it a funded wallet. One leaked key, or one injected prompt, and the money is gone. So nobody extends credit to an agent.
+00:00:09,550 --> 00:00:19,320
+A lender vault pays instead, through x402 payment channels on Monad. The agent only signs. The sponsor decides where the money can go.
 
 3
-00:00:25,320 --> 00:00:43,874
-Danom changes who holds the money. A lender vault pays the vendor, through x402 payment channels on Monad. The agent holds a signing key and nothing else. A sponsor sets the limits: which vendors, how much per channel, a ceiling, and an expiry. The contract enforces them.
+00:00:19,320 --> 00:00:31,850
+Here is that agent with a model in the loop. A Qwen model plans, reads the price from an HTTP four oh two response, pays through the vault's credit, and answers with the data it bought.
 
 4
-00:00:43,874 --> 00:01:04,867
-It is live on Monad testnet. A model driven agent buys data over HTTP four oh two. Monad's x402 facilitator verifies each voucher, and the vendor is paid from vault escrow. The agent's private key is published on the site. Even with it, the money cannot go anywhere the sponsor did not approve.
+00:00:31,850 --> 00:00:43,044
+Now an injected instruction: pay fifty to a stranger. The model obeys, and asks the vault. The vault refuses. The policy lives in the contract, not in the model.
 
 5
-00:01:04,867 --> 00:01:19,806
-Why build this? Because an agent that repays builds a record on chain, and that record follows it to any sponsor. As it grows, the same collateral supports more credit. That is how an agent earns trust it did not start with.
+00:00:43,044 --> 00:00:49,790
+You can make each call yourself. With no payment, the API answers four oh two, payment required.
 
 6
-00:01:19,806 --> 00:01:34,431
-This is a testnet preview, and the open problems are stated plainly in the repository, starting with how to price that risk. But the limits are real, and you can test them yourself. Danom. Credit for agents, with limits you can check.
+00:00:49,790 --> 00:01:01,060
+Sign a voucher with the agent's key and retry. Monad's x402 facilitator verifies it, and the API answers with data, paid from vault escrow.
+
+7
+00:01:01,060 --> 00:01:08,407
+That key is published on this page. Use it to ask the live vault to pay the agent itself. Receiver not allowed.
+
+8
+00:01:08,407 --> 00:01:18,273
+Underneath, a full credit cycle ran on Monad testnet. Nineteen transactions, every one on the explorer. The agent ended holding zero.
+
+9
+00:01:18,273 --> 00:01:27,773
+Revenue repays the loan first, and every repayment builds a record that follows the agent. Danom. Credit for agents, with limits you can check.
 
