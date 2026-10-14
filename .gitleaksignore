@@ -1,3 +1,5 @@
 # Not secrets: a public token contract address, and the demo agent key that is published on purpose (see lib/x402.ts).
 a47f22d02cb8de126eb3dc66bc2197934a2f94e6:lib/x402.ts:generic-api-key:18
 a47f22d02cb8de126eb3dc66bc2197934a2f94e6:lib/x402.ts:generic-api-key:28
+e8f7711fbf8a724e621c2404427fbd0f5f094044:lib/x402.ts:generic-api-key:18
+e8f7711fbf8a724e621c2404427fbd0f5f094044:lib/x402.ts:generic-api-key:28
