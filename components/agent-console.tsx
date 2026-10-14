@@ -78,7 +78,7 @@ export function AgentConsole({ recorded }: { recorded: AgentRun[] }) {
       <div data-demo="llm-transcript" aria-live="polite" className="min-h-[20rem] rounded-[var(--radius)] border-[1.5px] border-[var(--line)] bg-[var(--navy)] p-6">
         {busy && <p className="text-sm text-[var(--fg-muted)]">Planning, checking the price, buying, answering. This takes a few seconds.</p>}
         {note && <p className="mb-4 rounded-[var(--radius-sm)] border-[1.5px] border-[var(--line)] bg-[var(--warn-bg)] px-4 py-3 text-sm">{note}</p>}
-        {!busy && shown && (<>{!run && <p className="caption mb-4 !text-[var(--accent-ink)]">A recorded run</p>}<Transcript run={shown} /></>)}
+        {!busy && shown && (<>{!run && <p className="caption mb-4 !text-[var(--accent-ink)]">A recorded run. Press Run the agent for a live one.</p>}<Transcript run={shown} /></>)}
         {!busy && !shown && !note && <p className="text-sm text-[var(--fg-muted)]">The agent&apos;s plan, each tool call and its answer appear here.</p>}
       </div>
     </div>

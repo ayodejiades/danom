@@ -15,4 +15,4 @@ Each row points at something in the repository you can run or read. Nothing here
 
 ## Not claimed
 
-The long recorded run happened on a local fork, not on Monad. The token is a test token. The Monad x402 facilitator verifies vouchers but does not settle for this vendor. The model in the recorded agent runs is a small local one. The contracts are not audited.
+The long recorded run happened on a local fork, not on Monad. The token is a test token. The Monad x402 facilitator verifies vouchers but does not settle for this vendor. The agent's model runs on a rate-limited free tier. The contracts are not audited.

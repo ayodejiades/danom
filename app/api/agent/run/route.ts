@@ -31,6 +31,9 @@ export async function POST(request: Request) {
   if (task.length < 4) return NextResponse.json({ error: "Give the agent a task." }, { status: 400 });
   try {
     const run = await runLlmAgent({ task, pub, vendorUrl: new URL(request.url).origin + "/api/vendor/gas", apiKey, baseUrl: process.env.LLM_BASE_URL, model: process.env.LLM_MODEL });
+    // A run that got no further than a rate limit is not worth showing: tell the page, which falls back to a recorded run.
+    const failed = run.steps.find((x) => x.kind === "error");
+    if (failed && !run.steps.some((x) => x.kind === "answer" || x.kind === "tool")) return NextResponse.json({ error: failed.text }, { status: 429 });
     return NextResponse.json(run, { headers: { "cache-control": "no-store" } });
   } catch (e) {
     return NextResponse.json({ error: (e as Error).message.split("\n")[0] }, { status: 502 });

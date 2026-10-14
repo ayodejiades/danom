@@ -111,7 +111,7 @@ export default function AgentPage() {
       }
     >
       <section className="flex flex-col gap-5">
-        <p className="caption">A Qwen model, with tools</p>
+        <p className="caption">Qwen 3.8, with tools</p>
         <h2 className="max-w-3xl text-4xl">Give the agent a <em>job</em></h2>
         <p className="max-w-3xl text-sm text-[var(--fg-muted)]">A model plans the work, checks the price and its credit, buys from the paid API and answers. Try the third task: tell it to send the money to you.</p>
         <AgentConsole recorded={(llm.runs ?? []) as unknown as AgentRun[]} />

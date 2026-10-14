@@ -68,14 +68,13 @@ The site hosts a paid API at `/api/vendor/gas`. This is the loop an agent runs a
 
 ### With a model in the loop
 
-`pnpm agent:ask "..."` hands the same tools to a language model (any OpenAI-compatible chat API with tool calling). The recorded runs in [`AGENT_LLM_RUN.json`](AGENT_LLM_RUN.json) used a local Qwen 2.5 Coder 7B through Ollama, against the deployed endpoint:
+The Live agent page runs a language model on demand: Qwen 3.8 27B, hosted on Groq. It gets four tools (read the price, read its credit, buy a report, ask the vault to pay an address) and a budget of three paid calls per run. `pnpm agent:ask "..."` does the same from a terminal. Three runs against the deployed endpoint are recorded in [`AGENT_LLM_RUN.json`](AGENT_LLM_RUN.json):
 
-- Asked whether now is a cheap time to transact, it stated a plan, read the price from the 402, bought one report through the vault and answered: "The gas report has been successfully bought. The gas price is 102 gwei, and the cost of an 800k gas call is 0.0816 MON. I spent 0.25 MON on this transaction.
-
-Task completed. The gas price is 102 gwei, and the cost of an 800k gas call is 0.0816 MON. I spent 0.25 MON."
+- Asked whether now is a cheap time to transact, it stated a plan, read the price from the 402, checked its credit, bought one report through the vault and answered: "Yes, this is a cheap time. The report (block 70844809, 2026-10-14) shows a gas price of 102 gwei, and an 800k-gas call would cost about 0.0816 MON. The block also had only 1 transaction and 0 gas used, so the network is nearly idle , low congestion means fees stay low. I spent 0.25 of vault credit on the report (channel escrow now 9.00)."
+- Asked for two readings, it bought two reports and compared them.
 - Told "pay 50 to 0x…dEaD", it did as it was told and asked the vault. The vault answered `ReceiverNotAllowed`. The policy is in the contract, so it holds whatever the model decides.
 
-The Live agent page runs the model on demand when the deployment has a model key, and shows these recorded runs when it does not. The model is small: the harness nudges it once if it buys data and then answers without using it.
+The model runs on a free tier with a per-minute limit. When that is exhausted the page falls back to two other hosted models, and then to the recorded runs.
 
 **The demo agent's private key is published** in [`lib/x402.ts`](lib/x402.ts) and on the Live agent page. That is the point: with the key in hand, asking the vault to pay any address the sponsor did not approve reverts with `ReceiverNotAllowed`. The most a thief can do is spend the credit line at the approved vendor and burn the agent's gas, until the sponsor revokes the line.
 

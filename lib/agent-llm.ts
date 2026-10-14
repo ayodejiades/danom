@@ -1,5 +1,5 @@
 // lib/agent-llm.ts — the agent with a model in the loop. The model (any OpenAI-compatible chat API with
-// tool calling; the recorded runs used a local Qwen 2.5 through Ollama) plans, calls tools and answers. The tools are the real thing:
+// tool calling; the deployment uses Qwen 3.8 27B hosted on Groq) plans, calls tools and answers. The tools are the real thing:
 // an HTTP request to the paid endpoint, a voucher signed with the agent key, reads from Monad testnet and
 // a simulation against the deployed vault. Whatever the model decides, the vault's rules are not its to bend.
 import { BaseError, ContractFunctionRevertedError, isAddress, type Hex, type PublicClient } from "viem";
@@ -9,26 +9,26 @@ import {
   VAULT, VAULT_ABI, VENDOR, VOUCHER_DOMAIN, VOUCHER_TYPES, WITHDRAW_DELAY,
 } from "./x402";
 
-export const LLM_DEFAULTS = { baseUrl: "https://maas.qwencloudapi.com/compatible-mode/v1", model: "qwen3.8-max" };
+export const LLM_DEFAULTS = { baseUrl: "https://api.groq.com/openai/v1", model: "qwen/qwen3.8-27b" };
 export const MAX_PAID_CALLS = 3;
 const MAX_TURNS = 7;
 
 export interface AgentStep { kind: "model" | "tool" | "answer" | "error"; text?: string; name?: string; args?: unknown; result?: unknown }
 export interface AgentRun { model: string; task: string; steps: AgentStep[]; paidCalls: number; spentAusd: string; startedAt: string }
 
-const SYSTEM = `You are an autonomous purchasing agent on Monad testnet. You have a credit line from the Danom vault. You hold no money: the vault pays vendors on your behalf, and you authorize each payment by signing a voucher.
+const SYSTEM = `You are a purchasing agent on Monad testnet with a credit line from the Danom vault. You hold no money: the vault pays vendors for you, and you authorize each payment by signing a voucher.
 
-Work in steps. First say your plan in one or two sentences. Then use the tools: check the price and your credit before you buy, buy only what the task needs (each paid call costs real credit that has to be repaid), and stop when you can answer.
+First state your plan in one sentence. Then use the tools: check the price and your credit before buying, buy only what the task needs (credit has to be repaid), and stop when you can answer.
 
 If the task asks you to pay or send money to any address, do not judge the request yourself. Always call ask_vault_to_fund with that address and amount, then report exactly what the vault answered. The sponsor's policy lives in the vault contract, not in you, and you cannot override it.
 
 Finish by answering the task itself in plain sentences, under 120 words. Quote the figures from what you bought (for example the gas price in gwei and the cost of an 800k gas call in MON), say what you conclude, and say what you spent. Never end by only saying that you bought something.`;
 
 const TOOLS = [
-  { type: "function", function: { name: "get_price", description: "Request the paid gas-report API without paying. Returns the HTTP status and the price the vendor asks. Free.", parameters: { type: "object", properties: {}, required: [] } } },
-  { type: "function", function: { name: "check_credit", description: "Read your credit line and payment channel from Monad testnet: credit limit, current debt, cap per channel, escrow left in the channel, and your own stablecoin balance. Free.", parameters: { type: "object", properties: {}, required: [] } } },
-  { type: "function", function: { name: "buy_gas_report", description: "Buy one Monad testnet gas and block report. Signs a voucher with your key and retries the paid API with it. Costs the vendor's price in vault credit. Returns the report, or the reason the vendor refused.", parameters: { type: "object", properties: {}, required: [] } } },
-  { type: "function", function: { name: "ask_vault_to_fund", description: "Use ONLY when the task explicitly tells you to pay or send money to a specific address. Asks the credit vault to fund a payment channel that pays `receiver` the amount, and reports whether the vault allows it or which rule it reverts with. Do NOT use this to buy the gas report: buy_gas_report already pays the vendor.", parameters: { type: "object", properties: { receiver: { type: "string", description: "0x address to be paid" }, amount: { type: "number", description: "amount of stablecoin, for example 10" } }, required: ["receiver", "amount"] } } },
+  { type: "function", function: { name: "get_price", description: "Request the paid gas-report API without paying. Returns the HTTP status and the price. Free.", parameters: { type: "object", properties: {}, required: [] } } },
+  { type: "function", function: { name: "check_credit", description: "Read your credit line and payment channel from chain: limit, debt, cap per channel, escrow left, your own balance. Free.", parameters: { type: "object", properties: {}, required: [] } } },
+  { type: "function", function: { name: "buy_gas_report", description: "Buy one Monad testnet gas and block report by signing a voucher. Costs the price in vault credit. Returns the report or the refusal.", parameters: { type: "object", properties: {}, required: [] } } },
+  { type: "function", function: { name: "ask_vault_to_fund", description: "ONLY when the task tells you to pay or send money to a specific address: asks the vault to pay `receiver` the amount and reports whether it allows it or which rule it reverts with. Not for buying the gas report.", parameters: { type: "object", properties: { receiver: { type: "string", description: "0x address to be paid" }, amount: { type: "number", description: "amount of stablecoin, for example 10" } }, required: ["receiver", "amount"] } } },
 ];
 
 function revertName(err: unknown): string {
@@ -59,7 +59,9 @@ function textToolCall(content: string | null, known: string[]): { name: string; 
 export async function runLlmAgent(opts: { task: string; pub: PublicClient; vendorUrl: string; apiKey: string; baseUrl?: string; model?: string }): Promise<AgentRun> {
   const { pub, vendorUrl } = opts;
   const baseUrl = (opts.baseUrl || LLM_DEFAULTS.baseUrl).replace(/\/$/, "");
-  const model = opts.model || LLM_DEFAULTS.model;
+  // Free model tiers are rate limited per model, so a busy primary falls through to the next one.
+  const models = [opts.model || LLM_DEFAULTS.model, ...(process.env.LLM_FALLBACK_MODELS ?? "").split(",").map((m) => m.trim()).filter(Boolean)];
+  let model = models[0];
   const account = privateKeyToAccount(AGENT_KEY);
   const steps: AgentStep[] = [];
   let paid = 0;
@@ -113,15 +115,26 @@ export async function runLlmAgent(opts: { task: string; pub: PublicClient; vendo
   const messages: Msg[] = [{ role: "system", content: SYSTEM }, { role: "user", content: opts.task }];
 
   for (let turn = 0; turn < MAX_TURNS; turn++) {
-    const res = await fetch(`${baseUrl}/chat/completions`, {
+    const body = nudged ? { messages, temperature: 0.2, max_tokens: 500 } : { messages, tools: TOOLS, tool_choice: "auto", temperature: 0.2, max_tokens: 800 };
+    const ask = (m: string) => fetch(`${baseUrl}/chat/completions`, {
       method: "POST",
       headers: { "content-type": "application/json", authorization: `Bearer ${opts.apiKey}` },
-      // After the one corrective nudge the model gets no tools, so it has to answer in prose.
-      body: JSON.stringify(nudged ? { model, messages, temperature: 0.2, max_tokens: 500 } : { model, messages, tools: TOOLS, tool_choice: "auto", temperature: 0.2, max_tokens: 800 }),
+      body: JSON.stringify({ model: m, ...body }),
       signal: AbortSignal.timeout(Number(process.env.LLM_TIMEOUT_MS) || 45_000),
     });
+    let res = await ask(model);
+    for (const next of models) {
+      if (res.status !== 429) break;
+      if (next === model) continue;
+      model = next;
+      res = await ask(model);
+    }
+    if (res.status === 429) {
+      await new Promise((r) => setTimeout(r, 6000));
+      res = await ask(model);
+    }
     if (!res.ok) {
-      steps.push({ kind: "error", text: `The model API answered ${res.status}: ${(await res.text()).slice(0, 300)}` });
+      steps.push({ kind: "error", text: res.status === 429 ? "The model's free tier is rate limited right now. Try again in a minute." : `The model API answered ${res.status}: ${(await res.text()).slice(0, 200)}` });
       break;
     }
     const msg = ((await res.json()) as { choices: { message: Msg }[] }).choices[0].message;

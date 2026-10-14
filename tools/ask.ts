@@ -4,7 +4,7 @@
  *   pnpm agent:ask "Is now a cheap time to send a transaction on Monad testnet?"
  *
  * Needs LLM_API_KEY, LLM_BASE_URL and LLM_MODEL in .env: any OpenAI-compatible chat API with tool calling,
- * for example a local Ollama model or a hosted Qwen. The agent
+ * for example Qwen 3.8 27B on Groq, or a local Ollama model. The agent
  * calls the deployed paid endpoint unless VENDOR_URL says otherwise. Writes the transcript to AGENT_LLM_RUN.json.
  */
 import fs from "node:fs";

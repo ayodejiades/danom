@@ -9,7 +9,7 @@ What a reader should know before relying on anything here.
 - The **x402 batch settlement** contract in those runs is the real canonical contract, forked from Monad for the recorded run and used directly on testnet for the live run. Its voucher signature checks are the real ones.
 - The **token** is `MockAUSD`, a test token with open minting. It is not AUSD or USDC.
 - The **paid API loop** (`AGENT_RUN.json`) ran on Monad testnet: 3 paid HTTP calls and 7 transactions, with the vendor served from this machine. The deployed vendor answers the same way and has **Monad's hosted x402 facilitator verify each voucher**. The facilitator does not settle: the vendor claims on chain itself as its own receiver authorizer. The two credit-cycle runs above did not involve the facilitator.
-- The **model-driven runs** (`AGENT_LLM_RUN.json`) used a small local model, Qwen 2.5 Coder 7B through Ollama, against the deployed endpoint. The harness nudges it once if it buys data and answers without using it. The hosted site shows these recorded runs unless a hosted model key is configured.
+- The **model-driven runs** (`AGENT_LLM_RUN.json`) used Qwen 3.8 27B hosted on Groq, against the deployed endpoint. The deployed site runs the same model on demand. It is a free tier with a per-minute limit, so under load the site falls back to two other hosted models and then to the recorded runs. The harness caps each run at three paid calls.
 - The **demo agent's private key is public on purpose** (`lib/x402.ts`). Anyone can sign vouchers with it or burn its gas. That is bounded by the sponsor's limits and the approved vendor.
 
 ## Risks in the design

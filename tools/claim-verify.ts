@@ -118,7 +118,7 @@ try {
     if (runs.length > 0) {
       rows.push({ claim: "A language model drove the agent: it bought data through the vault, and when told to pay a stranger the vault refused", level: "Recorded (model run against testnet)",
         evidence: `AGENT_LLM_RUN.json: ${runs.length} runs by ${runs[0].model}; one paid for a report over HTTP 402 (${bought?.paidCalls ?? 0} paid call), one asked the vault to pay a stranger and got ReceiverNotAllowed`,
-        limitation: "A small local model (Qwen 2.5 Coder 7B through Ollama); the harness nudges it once if it buys data and answers without using it; the deployed site only runs the model live if a hosted model key is configured, otherwise it shows these recorded runs",
+        limitation: "The model is Qwen 3.8 27B on a rate-limited free tier; when the limit is hit the site falls back to other hosted models and then to these recorded runs; each run is capped at three paid calls by the harness",
         passed: Boolean(bought) && Boolean(refused) });
     }
   }
