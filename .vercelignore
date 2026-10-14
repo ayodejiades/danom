@@ -14,4 +14,5 @@ story
 public/audio
 docs/demo.mp4
 docs/fallback.mp4
+docs/pitch.mp4
 *.tsbuildinfo
