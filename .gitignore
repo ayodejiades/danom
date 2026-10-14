@@ -68,5 +68,6 @@ out/
 public/audio/
 docs/demo.mp4
 docs/fallback.mp4
+docs/pitch.mp4
 scripts/deploy_solana_devnet.sh
 scripts/deploy_starknet_sepolia.sh
